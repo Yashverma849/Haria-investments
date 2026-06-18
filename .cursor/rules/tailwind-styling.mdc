@@ -1,0 +1,41 @@
+---
+description: Tailwind CSS v4 and styling conventions
+globs: "**/*.{tsx,css}"
+alwaysApply: false
+---
+
+# Tailwind & Styling
+
+## Setup (this project)
+
+- Tailwind v4 via `@import "tailwindcss"` in `app/globals.css`
+- Design tokens in `:root` and `@theme inline` — extend tokens there, not scattered magic values
+
+```css
+@theme inline {
+  --color-brand: #...;
+}
+```
+
+## Class Patterns
+
+- Mobile-first: base styles, then `sm:`, `md:`, `lg:` breakpoints
+- Group related utilities: layout → spacing → typography → color → state
+- Use `dark:` variants consistently with existing `prefers-color-scheme` tokens
+
+## Do
+
+- Reuse token classes (`bg-background`, `text-foreground`) over hardcoded hex in components
+- Use `flex`/`grid` for layout; avoid absolute positioning unless necessary
+- Prefer `gap-*` over margin hacks between siblings
+
+## Avoid
+
+- `@apply` in component files — keep utilities in JSX unless a global primitive is justified
+- Arbitrary values (`w-[437px]`) without a design reason
+- Inline `style={{}}` when Tailwind covers the case
+
+## Responsive & Motion
+
+- Respect `prefers-reduced-motion` for animations
+- Touch targets: minimum ~44×44px on interactive elements

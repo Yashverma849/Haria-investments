@@ -1,0 +1,40 @@
+---
+description: TypeScript conventions for this project
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# TypeScript Standards
+
+## Types
+
+- Prefer `interface` for object shapes; `type` for unions, intersections, and utilities
+- Avoid `any` — use `unknown` and narrow, or proper generics
+- Export types alongside components when consumed elsewhere
+
+```typescript
+// ✅ Props typed explicitly
+type ButtonProps = {
+  label: string;
+  onClick?: () => void;
+};
+
+// ❌ Implicit any from untyped props
+function Button({ label, onClick }) { ... }
+```
+
+## Imports
+
+- Use `import type` for type-only imports
+- Order: external packages → internal modules → relative → styles
+
+## Naming
+
+- Components: `PascalCase`
+- Hooks: `use` prefix, `camelCase`
+- Files: match default export (`HeroSection.tsx` → `HeroSection`)
+
+## Error Handling
+
+- Let errors surface in server components / route handlers; don't swallow with empty `catch`
+- Use typed error boundaries for client UI failures when needed

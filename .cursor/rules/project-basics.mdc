@@ -1,0 +1,41 @@
+---
+description: Core project conventions for Haria Investments
+alwaysApply: true
+---
+
+# Haria Investments — Project Basics
+
+## Stack
+
+- **Next.js 16** (App Router) — read `node_modules/next/dist/docs/` before writing Next.js code; APIs differ from older versions
+- **React 19**, **TypeScript 5**, **Tailwind CSS v4**
+- Fonts: Geist Sans / Geist Mono via `next/font/google`
+
+## Principles
+
+- Minimize scope — smallest correct diff; no drive-by refactors
+- Match existing patterns before introducing new abstractions
+- Prefer server components; add `"use client"` only when interactivity or browser APIs require it
+- Static assets live in `public/` (e.g. brand video, images)
+
+## File Layout
+
+```
+app/           # routes, layouts, global styles
+  layout.tsx   # root layout + metadata
+  page.tsx     # route pages
+  globals.css  # Tailwind import + design tokens
+public/        # static files
+```
+
+## Commands
+
+- `npm run dev` — local dev
+- `npm run build` — production build
+- `npm run lint` — ESLint
+
+## Do Not
+
+- Commit secrets (`.env`, API keys)
+- Use Pages Router patterns (`getServerSideProps`, `_app.tsx`)
+- Guess Next.js 16 APIs — verify in local docs first
