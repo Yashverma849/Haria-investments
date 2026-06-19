@@ -17,6 +17,7 @@ const navLinkClass =
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -25,10 +26,26 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
-      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <Link href="/" className="group flex items-center gap-3">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ${
+        scrolled
+          ? "border-b border-white/10 bg-black/60 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
+      <nav className="mx-auto grid h-20 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 lg:px-8">
+        <Link href="/" className="group flex items-center gap-3 justify-self-start">
           <Image
             src="/haria-logo.png"
             alt="Haria Investments"
@@ -40,45 +57,41 @@ export default function Navbar() {
           <LogoAnimatedText />
         </Link>
 
-        <ul className="hidden items-center gap-1 lg:flex">
-          {mainNavLinks.slice(0, 2).map((link) => (
-            <li key={link.label}>
-              <Link href={link.href} className={navLinkClass}>
-                {link.label}
-              </Link>
-            </li>
-          ))}
+        <ul className="hidden items-center gap-1 justify-self-center lg:flex">
+          <li>
+            <Link href={mainNavLinks[0].href} className={navLinkClass}>
+              {mainNavLinks[0].label}
+            </Link>
+          </li>
 
           <ServicesMegaMenu />
 
-          {mainNavLinks.slice(2).map((link) => (
+          {mainNavLinks.slice(1).map((link) => (
             <li key={link.label}>
               <Link href={link.href} className={navLinkClass}>
                 {link.label}
               </Link>
             </li>
           ))}
-
-          <li>
-            <Link
-              href={scheduleConsultation.href}
-              className="btn-primary ml-2 rounded-full px-5 py-2 text-sm font-semibold"
-            >
-              {scheduleConsultation.label}
-            </Link>
-          </li>
         </ul>
 
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="flex items-center gap-3 justify-self-end">
           <Link
             href={scheduleConsultation.href}
-            className="btn-primary rounded-full px-4 py-2 text-xs font-semibold"
+            className="btn-primary hidden rounded-full px-5 py-2 text-sm font-semibold lg:inline-flex"
+          >
+            {scheduleConsultation.label}
+          </Link>
+
+          <Link
+            href={scheduleConsultation.href}
+            className="btn-primary rounded-full px-4 py-2 text-xs font-semibold lg:hidden"
           >
             Schedule
           </Link>
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 text-white lg:hidden"
             onClick={() => setMobileOpen((prev) => !prev)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -128,13 +141,6 @@ export default function Navbar() {
             onClick={() => setMobileOpen(false)}
           >
             Home
-          </Link>
-          <Link
-            href="/about"
-            className="block border-b border-white/10 py-4 text-base font-medium text-white"
-            onClick={() => setMobileOpen(false)}
-          >
-            About
           </Link>
 
           <div className="border-b border-white/10 py-4">
@@ -194,7 +200,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {mainNavLinks.slice(2).map((link) => (
+          {mainNavLinks.slice(1).map((link) => (
             <Link
               key={link.label}
               href={link.href}

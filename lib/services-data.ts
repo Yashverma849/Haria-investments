@@ -4,6 +4,7 @@ export type ServiceOffering = {
   description: string;
   href: string;
   image: string;
+  textTone: "light" | "dark";
 };
 
 export const serviceOfferings: ServiceOffering[] = [
@@ -14,7 +15,8 @@ export const serviceOfferings: ServiceOffering[] = [
       "Comprehensive coverage for you and your family's financial security",
     href: "/insurance",
     image:
-      "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&q=80",
+      "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1600&q=80",
+    textTone: "light",
   },
   {
     id: "mutual-funds",
@@ -23,7 +25,8 @@ export const serviceOfferings: ServiceOffering[] = [
       "Strategic investment solutions for long-term wealth creation",
     href: "/investment/mutual-funds",
     image:
-      "https://images.unsplash.com/photo-1642790106117-e829e14a08fe?w=800&q=80",
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80",
+    textTone: "light",
   },
   {
     id: "fixed-income",
@@ -32,7 +35,8 @@ export const serviceOfferings: ServiceOffering[] = [
       "Stable returns through diversified fixed income instruments",
     href: "/investment/fixed-income",
     image:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80",
+      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1600&q=80",
+    textTone: "light",
   },
   {
     id: "commodities",
@@ -40,7 +44,7 @@ export const serviceOfferings: ServiceOffering[] = [
     description:
       "Expert guidance in commodity markets and derivatives",
     href: "/commodities/derivation",
-    image:
-      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+    image: "/Gemini_Generated_Image_hfmgzahfmgzahfmg.png",
+    textTone: "light",
   },
 ];

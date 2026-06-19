@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import { serviceCategories, type ServiceCategory } from "@/lib/nav-links";
 
 type ServiceCardsProps = {
@@ -25,7 +26,7 @@ function ServiceCards({ category }: ServiceCardsProps) {
           },
         ];
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     const grid = gridRef.current;
     if (!grid) return;
 
@@ -89,7 +90,7 @@ function ServiceCards({ category }: ServiceCardsProps) {
           key={card.label}
           href={card.href}
           data-service-card
-          className="group/card relative min-h-[140px] overflow-hidden rounded-xl border border-white/15 bg-brand/[0.03] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl transition-all duration-300 hover:border-brand-light/30 hover:bg-brand/[0.06] hover:shadow-[0_12px_40px_-12px_rgba(47,128,237,0.3)]"
+          className="group/card relative min-h-[140px] overflow-hidden rounded-xl border border-white/15 bg-brand/[0.03] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl transition-all duration-300 hover:border-brand-light/30 hover:bg-brand/[0.06] hover:shadow-[0_12px_40px_-12px_rgba(255,255,255,0.1)]"
           onMouseMove={handleCardMouseMove}
           onMouseLeave={handleCardMouseLeave}
         >
@@ -277,7 +278,7 @@ export default function ServicesMegaMenu() {
     });
   };
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     const dropdown = dropdownRef.current;
     const panel = panelRef.current;
 

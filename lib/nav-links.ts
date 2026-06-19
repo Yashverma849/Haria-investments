@@ -15,10 +15,7 @@ export type ServiceCategory = {
 
 export const mainNavLinks = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Process", href: "/#process" },
   { label: "FAQ", href: "/faq" },
-  { label: "Testimonials", href: "/#testimonials" },
 ] as const;
 
 export const serviceCategories: ServiceCategory[] = [

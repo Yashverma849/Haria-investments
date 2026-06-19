@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import FaqFlipCard from "@/components/faq-flip-card";
 import type { FaqItem } from "@/lib/faq-data";
 
@@ -13,7 +14,7 @@ type FaqGridProps = {
 export default function FaqGrid({ items }: FaqGridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const grid = gridRef.current;

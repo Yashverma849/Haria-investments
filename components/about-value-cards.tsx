@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 
 const valueCards = [
   {
@@ -32,7 +33,7 @@ const valueCards = [
 export default function AboutValueCards() {
   const gridRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const grid = gridRef.current;

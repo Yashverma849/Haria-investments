@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 
 type Stat = {
   value: number;
@@ -58,7 +59,7 @@ export default function AboutStats() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [countStarted, setCountStarted] = useState(false);
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const section = sectionRef.current;

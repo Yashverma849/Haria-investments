@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 
 export default function FaqHero() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     const section = sectionRef.current;
     if (!section) return;
 
@@ -28,7 +29,7 @@ export default function FaqHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-b border-white/10 bg-surface/40 pt-28 pb-20 md:pt-36 md:pb-28"
+      className="relative overflow-hidden border-b border-white/10 bg-background pt-28 pb-20 md:pt-36 md:pb-28"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,color-mix(in_srgb,var(--blue)_18%,transparent),transparent_55%)]" />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">

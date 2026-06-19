@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 
 const HOLD_DURATION = 2.8;
 const FADE_DURATION = 0.7;
@@ -10,7 +11,7 @@ export default function LogoAnimatedText() {
   const nameRef = useRef<HTMLSpanElement>(null);
   const taglineRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     const name = nameRef.current;
     const tagline = taglineRef.current;
     if (!name || !tagline) return;

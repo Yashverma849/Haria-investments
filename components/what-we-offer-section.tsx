@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import { offerings } from "@/lib/offerings-data";
 
 export default function WhatWeOfferSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const section = sectionRef.current;
@@ -101,7 +102,7 @@ export default function WhatWeOfferSection() {
             <article
               key={item.id}
               data-offer-card
-              className="group/offer relative min-h-[320px] overflow-hidden rounded-2xl border border-white/10 bg-brand/[0.03] opacity-0 backdrop-blur-xl transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02] hover:border-brand-light/35 hover:shadow-[0_24px_60px_-24px_rgba(47,128,237,0.45)]"
+              className="group/offer relative min-h-[320px] overflow-hidden rounded-2xl border border-white/10 bg-brand/[0.03] opacity-0 backdrop-blur-xl transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02] hover:border-brand-light/35 hover:shadow-[0_24px_60px_-24px_rgba(255,255,255,0.12)]"
             >
               <div className="absolute inset-[-10%] opacity-35 transition-opacity duration-300 group-hover/offer:opacity-50">
                 <Image

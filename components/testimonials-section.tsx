@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import SectionHeader from "@/components/section-header";
 import {
   testimonialColumnA,
   testimonialColumnB,
@@ -16,7 +17,7 @@ type TestimonialCardProps = {
 
 function TestimonialCard({ item }: TestimonialCardProps) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-surface/90 p-5 backdrop-blur-sm">
+    <article className="rounded-2xl border border-white/10 bg-background/70 p-5 backdrop-blur-sm">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/25 text-xs font-semibold text-brand-light">
@@ -220,38 +221,27 @@ export default function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="border-t border-white/10 bg-background py-20 md:py-28"
+      className="border-t border-white/10 bg-surface py-20 md:py-28"
     >
+      <SectionHeader
+        title="Client Stories"
+        description="For over six decades, families and professionals have relied on us for insurance, investments, and honest guidance. Their stories reflect the trust we work to earn every day."
+      />
+
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-16">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
-              Community
-            </p>
-            <h2 className="mt-4 font-serif text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-[2.75rem]">
-              We believe in the power of clients who trust Haria Investments
-            </h2>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-white/70">
-              For over six decades, families and professionals have relied on us
-              for insurance, investments, and honest guidance. Their stories
-              reflect the trust we work to earn every day.
-            </p>
-          </div>
+        <div ref={marqueeAreaRef} className="relative overscroll-contain">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-surface to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-surface to-transparent" />
 
-          <div ref={marqueeAreaRef} className="relative overscroll-contain">
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-background to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-background to-transparent" />
-
-            <div className="grid grid-cols-2 gap-4">
-              <TestimonialMarqueeColumn
-                items={testimonialColumnA}
-                direction="up"
-              />
-              <TestimonialMarqueeColumn
-                items={testimonialColumnB}
-                direction="down"
-              />
-            </div>
+          <div className="grid grid-cols-2 gap-4">
+            <TestimonialMarqueeColumn
+              items={testimonialColumnA}
+              direction="up"
+            />
+            <TestimonialMarqueeColumn
+              items={testimonialColumnB}
+              direction="down"
+            />
           </div>
         </div>
       </div>

@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeritageStatsTicker from "@/components/heritage-stats-ticker";
+import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 
-const VIDEO_SRC = "/Haria Investments 1-ezremove.mp4";
-const TEXT_REVEAL_TIME = 6.5;
+const VIDEO_SRC = "/The_Second_Complete_Wealth-ezremove.mp4";
+const TEXT_REVEAL_TIME = 2;
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -17,7 +18,7 @@ export default function HeroSection() {
   const contentRef = useRef<HTMLDivElement>(null);
   const animatedRef = useRef(false);
 
-  useEffect(() => {
+  useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const section = sectionRef.current;
@@ -83,7 +84,7 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen min-h-[700px] w-full overflow-hidden"
+      className="relative h-[100dvh] min-h-[32rem] w-full max-w-full overflow-hidden"
     >
       <div ref={videoWrapRef} className="absolute inset-0 will-change-transform">
         <video
@@ -93,7 +94,7 @@ export default function HeroSection() {
           muted
           playsInline
           autoPlay
-          loop={false}
+          loop
           preload="auto"
         />
       </div>
@@ -103,7 +104,7 @@ export default function HeroSection() {
         className="absolute inset-0 bg-gradient-to-r from-background/50 via-background/30 to-background/10"
       />
 
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,transparent_0%,rgb(8_20_40/0.18)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,transparent_0%,rgb(0_0_0/0.35)_100%)]" />
 
       <div
         ref={contentRef}
@@ -149,7 +150,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className="relative left-1/2 mt-8 w-screen max-w-none -translate-x-1/2 px-6 lg:px-8">
+        <div className="-mx-6 mt-8 w-[calc(100%+3rem)] max-w-none border-t border-white/10 lg:-mx-8 lg:w-[calc(100%+4rem)]">
           <HeritageStatsTicker />
         </div>
       </div>

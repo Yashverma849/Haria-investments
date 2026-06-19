@@ -19,7 +19,7 @@ export default function FaqFlipCard({ item }: FaqFlipCardProps) {
       className="flip-card group h-full w-full text-left"
     >
       <div className={`flip-card-inner min-h-[240px] ${flipped ? "is-flipped" : ""}`}>
-        <div className="flip-card-face flip-card-front flex min-h-[240px] flex-col rounded-2xl border border-white/10 bg-surface/80 p-6 backdrop-blur-sm transition-colors group-hover:border-white/20 sm:p-7">
+        <div className="flip-card-face flip-card-front flex min-h-[240px] flex-col rounded-2xl border border-white/10 bg-background/80 p-6 backdrop-blur-sm transition-colors group-hover:border-white/20 sm:p-7">
           <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-brand-light">
             Question
           </span>
