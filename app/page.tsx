@@ -1,4 +1,4 @@
-import About from "@/components/about";
+import { AboutLeaders, AboutPurpose } from "@/components/about";
 import CommitmentSection from "@/components/commitment-section";
 import JourneyCtaSection from "@/components/journey-cta-section";
 import HeroSection from "@/components/hero-section";
@@ -13,8 +13,9 @@ export default function Home() {
     <main className="w-full max-w-full overflow-x-clip">
       <Navbar />
       <HeroSection />
-      <About />
+      <AboutPurpose />
       <ServicesSection />
+      <AboutLeaders />
       <ValuesSection />
       <ProcessSection />
       <CommitmentSection />
