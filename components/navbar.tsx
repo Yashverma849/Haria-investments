@@ -58,15 +58,17 @@ export default function Navbar() {
         </Link>
 
         <ul className="hidden items-center gap-1 justify-self-center lg:flex">
-          <li>
-            <Link href={mainNavLinks[0].href} className={navLinkClass}>
-              {mainNavLinks[0].label}
-            </Link>
-          </li>
+          {mainNavLinks.slice(0, 2).map((link) => (
+            <li key={link.label}>
+              <Link href={link.href} className={navLinkClass}>
+                {link.label}
+              </Link>
+            </li>
+          ))}
 
           <ServicesMegaMenu />
 
-          {mainNavLinks.slice(1).map((link) => (
+          {mainNavLinks.slice(2).map((link) => (
             <li key={link.label}>
               <Link href={link.href} className={navLinkClass}>
                 {link.label}
@@ -135,13 +137,16 @@ export default function Navbar() {
         }`}
       >
         <div className="h-full overflow-y-auto px-6 py-6">
-          <Link
-            href="/"
-            className="block border-b border-white/10 py-4 text-base font-medium text-white"
-            onClick={() => setMobileOpen(false)}
-          >
-            Home
-          </Link>
+          {mainNavLinks.slice(0, 2).map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="block border-b border-white/10 py-4 text-base font-medium text-white"
+              onClick={() => setMobileOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
 
           <div className="border-b border-white/10 py-4">
             <button
@@ -200,7 +205,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {mainNavLinks.slice(1).map((link) => (
+          {mainNavLinks.slice(2).map((link) => (
             <Link
               key={link.label}
               href={link.href}
