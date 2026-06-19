@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LogoAnimatedText from "@/components/logo-animated-text";
 import ServicesMegaMenu from "@/components/services-mega-menu";
@@ -14,7 +15,10 @@ import {
 const navLinkClass =
   "rounded-lg px-4 py-2 text-sm font-medium text-white/85 transition-colors hover:bg-white/5 hover:text-white";
 
+const NAV_OFFSET_PX = 80;
+
 export default function Navbar() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -36,6 +40,28 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const scrollToHero = () => {
+    const hero = document.getElementById("home");
+    if (!hero) return;
+
+    const top =
+      hero.getBoundingClientRect().top + window.scrollY - NAV_OFFSET_PX;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: "smooth",
+    });
+    window.history.replaceState(null, "", "/#home");
+  };
+
+  const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== "/") return;
+
+    event.preventDefault();
+    setMobileOpen(false);
+    scrollToHero();
+  };
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ${
@@ -45,7 +71,12 @@ export default function Navbar() {
       }`}
     >
       <nav className="mx-auto grid h-20 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 lg:px-8">
-        <Link href="/" className="group flex items-center gap-3 justify-self-start">
+        <Link
+          href="/#home"
+          scroll={false}
+          onClick={handleLogoClick}
+          className="group flex items-center gap-3 justify-self-start"
+        >
           <Image
             src="/haria-logo.png"
             alt="Haria Investments"

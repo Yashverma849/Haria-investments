@@ -83,8 +83,9 @@ export default function HeroSection() {
 
   return (
     <section
+      id="home"
       ref={sectionRef}
-      className="relative h-[100dvh] min-h-[32rem] w-full max-w-full overflow-hidden"
+      className="relative h-[100dvh] min-h-[32rem] w-full max-w-full overflow-hidden scroll-mt-20"
     >
       <div ref={videoWrapRef} className="absolute inset-0 will-change-transform">
         <video
