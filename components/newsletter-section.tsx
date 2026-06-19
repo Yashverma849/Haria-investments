@@ -21,10 +21,7 @@ export default function FooterNewsletter() {
 
   return (
     <div className="mt-8">
-      <h3
-        data-footer-heading
-        className="font-serif text-lg font-semibold leading-tight text-white opacity-0"
-      >
+      <h3 className="font-serif text-lg font-semibold leading-tight text-white">
         Newsletter
       </h3>
 

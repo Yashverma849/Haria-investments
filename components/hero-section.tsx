@@ -109,49 +109,51 @@ export default function HeroSection() {
 
       <div
         ref={contentRef}
-        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6 pb-16 pt-28 lg:px-8"
+        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-6 pt-20 lg:px-8"
       >
-        <div className="max-w-2xl">
-          <p
-            data-hero-animate
-            className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-brand-light"
-          >
-            YOUR ONE STOP FINANCIAL SOLUTION
-          </p>
-
-          <h1
-            data-hero-animate
-            className="font-serif text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl"
-          >
-            Your One Stop Solution for Comprehensive Financial Planning
-          </h1>
-
-          <p
-            data-hero-animate
-            className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg"
-          >
-            Insurance, Investments, and Wealth Solutions, All in One Place.
-            Build your financial future with comprehensive planning backed by
-            decades of expertise.
-          </p>
-
-          <div data-hero-animate className="mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              href="/contact"
-              className="btn-primary inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold"
+        <div className="flex min-h-0 flex-1 flex-col justify-start pb-6 pt-6 sm:pt-8 lg:pt-10">
+          <div className="max-w-2xl">
+            <p
+              data-hero-animate
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-brand-light"
             >
-              Schedule Consultation
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/10"
+              YOUR ONE STOP FINANCIAL SOLUTION
+            </p>
+
+            <h1
+              data-hero-animate
+              className="font-serif text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl"
             >
-              Learn More
-            </Link>
+              Your One Stop Solution for Comprehensive Financial Planning
+            </h1>
+
+            <p
+              data-hero-animate
+              className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg"
+            >
+              Insurance, Investments, and Wealth Solutions, All in One Place.
+              Build your financial future with comprehensive planning backed by
+              decades of expertise.
+            </p>
+
+            <div data-hero-animate className="mt-10 flex flex-wrap items-center gap-4">
+              <Link
+                href="/contact"
+                className="btn-primary inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold"
+              >
+                Schedule Consultation
+              </Link>
+              <Link
+                href="/about"
+                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/10"
+              >
+                Learn More
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="-mx-6 mt-8 w-[calc(100%+3rem)] max-w-none border-t border-white/10 lg:-mx-8 lg:w-[calc(100%+4rem)]">
+        <div className="-mx-6 w-[calc(100%+3rem)] max-w-none shrink-0 border-t border-white/10 lg:-mx-8 lg:w-[calc(100%+4rem)]">
           <HeritageStatsTicker />
         </div>
       </div>
