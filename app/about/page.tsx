@@ -18,12 +18,12 @@ export default function AboutPage() {
       <main className="bg-background pb-20 md:pb-28">
         <AboutCompanyIntro />
 
-        <section className="border-t border-white/10 bg-background">
+        <section className="border-t border-white/10 bg-background pt-20 md:pt-28">
           <div id="legacy-leaders" className="scroll-mt-24">
             <AboutSectionHeading
               title="Legacy Leaders"
               description={aboutPeopleIntro}
-              descriptionClassName="max-w-xl text-lg leading-relaxed text-cream/80 sm:text-xl lg:max-w-2xl lg:text-2xl"
+              descriptionClassName="text-fluid-lead max-w-xl text-cream/80 xl:max-w-2xl"
             />
           </div>
 

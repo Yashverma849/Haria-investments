@@ -41,7 +41,7 @@ export default function FaqHero() {
         </p>
         <h1
           data-faq-hero
-          className="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight tracking-tight text-white opacity-0 sm:text-5xl lg:text-6xl"
+          className="mt-4 max-w-3xl text-fluid-page text-balance font-serif font-semibold tracking-tight text-white opacity-0"
         >
           Frequently Asked Questions
         </h1>

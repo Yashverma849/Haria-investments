@@ -133,7 +133,7 @@ export default function JourneyCtaSection() {
         <div data-journey-cta className="mx-auto max-w-4xl p-8 text-center md:p-12">
           <h2
             data-journey-title
-            className="font-serif text-2xl font-semibold text-cream sm:text-3xl lg:text-4xl"
+            className="text-fluid-cta font-serif font-semibold text-cream"
           >
             Ready to Start Your Financial Journey?
           </h2>

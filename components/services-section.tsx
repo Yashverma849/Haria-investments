@@ -130,7 +130,7 @@ export default function ServicesSection() {
                 >
                   <h3
                     data-service-title
-                    className={`font-serif text-lg font-semibold leading-tight tracking-tight break-words transition-all duration-500 sm:text-xl lg:text-2xl group-hover/band:text-2xl sm:group-hover/band:text-3xl lg:group-hover/band:text-4xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] ${titleStyles[service.textTone]}`}
+                    className={`text-fluid-service-title font-serif font-semibold tracking-tight break-words drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] ${titleStyles[service.textTone]}`}
                   >
                     {service.title}
                   </h3>

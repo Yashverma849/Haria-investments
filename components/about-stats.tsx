@@ -113,7 +113,7 @@ export default function AboutStats() {
             data-stat-card
             className="rounded-2xl border border-white/10 bg-background/60 px-8 py-10 text-center opacity-0 backdrop-blur-sm"
           >
-            <dt className="font-serif text-5xl font-semibold tracking-tight text-white sm:text-6xl">
+            <dt className="text-fluid-stat-large font-serif font-semibold tracking-tight text-white">
               <CountUpValue
                 target={stat.value}
                 suffix={stat.suffix}

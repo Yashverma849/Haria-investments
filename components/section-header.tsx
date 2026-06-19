@@ -86,16 +86,16 @@ export default function SectionHeader({
       ref={headerRef}
       className={`mx-auto max-w-7xl px-6 pb-16 md:pb-24 lg:pb-28 lg:px-8 ${className}`}
     >
-      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-16">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] xl:gap-16">
         <h2
           data-section-title
-          className="font-serif text-4xl font-semibold leading-[1.05] tracking-tight text-cream opacity-0 sm:text-5xl lg:text-6xl xl:text-7xl"
+          className="text-fluid-section text-balance font-serif font-semibold tracking-tight text-cream opacity-0"
         >
           {title}
         </h2>
         <p
           data-section-description
-          className={`max-w-md text-base leading-relaxed text-cream/70 opacity-0 lg:ml-auto lg:justify-self-end lg:pt-2 lg:text-right lg:text-lg ${descriptionClassName}`}
+          className={`max-w-md text-fluid-body-hero text-cream/70 opacity-0 xl:ml-auto xl:justify-self-end xl:pt-2 xl:text-right ${descriptionClassName}`}
         >
           {description}
         </p>

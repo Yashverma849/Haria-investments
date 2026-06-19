@@ -47,7 +47,7 @@ function ProcessDetailColumn({
   return (
     <div className="min-w-0">
       <h4
-        className={`text-sm font-semibold uppercase tracking-[0.16em] sm:text-base lg:text-lg ${titleClassName ?? "text-brand-light"}`}
+        className={`text-fluid-process-body font-semibold uppercase tracking-[0.16em] ${titleClassName ?? "text-brand-light"}`}
       >
         {title}
       </h4>
@@ -65,16 +65,16 @@ function ProcessTextContent({
 }) {
   return (
     <>
-      <div className="mb-4 md:mb-5">
-        <span className="font-serif text-base font-semibold text-brand-light sm:text-lg">
+      <div className="mb-3 md:mb-4">
+        <span className="text-fluid-process-body font-serif font-semibold text-brand-light">
           {String(index + 1).padStart(2, "0")}
         </span>
 
-        <h3 className="mt-1 font-serif text-xl font-semibold leading-tight text-cream sm:text-2xl lg:text-3xl">
+        <h3 className="text-fluid-process-title mt-1 font-serif font-semibold text-cream">
           {step.title}
         </h3>
 
-        <p className="mt-2 max-w-4xl text-base leading-relaxed text-cream/75 sm:text-lg lg:text-xl">
+        <p className="text-fluid-process-body mt-2 max-w-4xl text-cream/75">
           {step.summary}
         </p>
       </div>
@@ -85,7 +85,7 @@ function ProcessTextContent({
             {step.whatToExpect.map((item) => (
               <li
                 key={item}
-                className="flex gap-2.5 text-base leading-relaxed text-cream/80 sm:text-lg lg:text-xl"
+                className="text-fluid-process-body flex gap-2.5 text-cream/80"
               >
                 <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-light/80" />
                 <span>{item}</span>
@@ -99,7 +99,7 @@ function ProcessTextContent({
             {step.yourPreparation.map((item) => (
               <li
                 key={item}
-                className="flex gap-2.5 text-base leading-relaxed text-cream/80 sm:text-lg lg:text-xl"
+                className="text-fluid-process-body flex gap-2.5 text-cream/80"
               >
                 <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-light/80" />
                 <span>{item}</span>
@@ -352,7 +352,7 @@ export default function ProcessSection() {
             <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/40 to-charcoal/70" />
           </div>
 
-          <div className="relative z-10 mx-auto h-full max-w-7xl px-6 lg:px-8">
+          <div className="viewport-frame relative z-10 mx-auto h-full max-w-7xl px-6 lg:px-8">
             {processSteps.map((step, index) => (
               <ProcessTextStep
                 key={step.id}

@@ -82,7 +82,7 @@ export default function WhatWeOfferSection() {
           </p>
           <h2
             data-fade-item
-            className="mt-4 font-serif text-3xl font-semibold tracking-tight text-white opacity-0 sm:text-4xl"
+            className="text-fluid-page mt-4 text-balance font-serif font-semibold tracking-tight text-white opacity-0"
           >
             Our Comprehensive Financial Services
           </h2>

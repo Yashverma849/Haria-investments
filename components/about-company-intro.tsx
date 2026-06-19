@@ -117,7 +117,7 @@ export default function AboutCompanyIntro() {
       <div className="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
         <h1
           data-about-title
-          className="font-serif text-4xl font-semibold leading-[1.05] tracking-tight text-white opacity-0 sm:text-5xl lg:text-6xl"
+          className="text-fluid-page text-balance font-serif font-semibold tracking-tight text-white opacity-0"
         >
           About Haria Investments
         </h1>

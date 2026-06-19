@@ -23,11 +23,11 @@ export function AboutPurpose() {
 
 export function AboutLeaders() {
   return (
-    <section className="overflow-x-clip bg-background">
+    <section className="overflow-x-clip border-t border-white/10 bg-background pt-20 md:pt-28">
       <AboutSectionHeading
         title="Legacy Leaders"
         description={aboutPeopleIntro}
-        descriptionClassName="max-w-xl text-lg leading-relaxed text-cream/80 sm:text-xl lg:max-w-2xl lg:text-2xl"
+        descriptionClassName="text-fluid-lead max-w-xl text-cream/80 xl:max-w-2xl"
       />
 
       <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">

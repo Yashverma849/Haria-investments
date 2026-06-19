@@ -19,10 +19,10 @@ function StatCell({
       data-hero-animate
       className="flex flex-col items-center px-3 py-2 text-center opacity-0 sm:px-4"
     >
-      <p className="font-serif text-xl font-semibold tracking-tight text-white sm:text-2xl lg:text-3xl">
+      <p className="text-fluid-stat font-serif font-semibold tracking-tight text-white">
         {value}
       </p>
-      <p className="mt-1 pr-[0.2em] text-xs font-semibold uppercase tracking-[0.2em] text-brand-light sm:text-sm">
+      <p className="text-fluid-stat-label mt-1 pr-[0.2em] font-semibold uppercase tracking-[0.2em] text-brand-light">
         {label}
       </p>
     </div>
