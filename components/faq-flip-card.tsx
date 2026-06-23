@@ -19,20 +19,20 @@ export default function FaqFlipCard({ item }: FaqFlipCardProps) {
       className="flip-card group h-full w-full text-left"
     >
       <div className={`flip-card-inner min-h-[240px] ${flipped ? "is-flipped" : ""}`}>
-        <div className="flip-card-face flip-card-front flex min-h-[240px] flex-col rounded-2xl border border-white/10 bg-background/80 p-6 backdrop-blur-sm transition-colors group-hover:border-white/20 sm:p-7">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-brand-light">
+        <div className="flip-card-face flip-card-front flex min-h-[240px] flex-col rounded-2xl border border-charcoal/10 bg-surface p-6 transition-colors group-hover:border-charcoal/20 sm:p-7">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-charcoal/55">
             Question
           </span>
-          <h2 className="mt-3 font-serif text-xl font-semibold leading-snug text-white">
+          <h2 className="mt-3 font-serif text-xl font-semibold leading-snug text-charcoal">
             {item.question}
           </h2>
         </div>
 
-        <div className="flip-card-face flip-card-back flex min-h-[240px] flex-col rounded-2xl border border-brand/30 bg-gradient-to-br from-surface to-background p-6 sm:p-7">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-accent">
+        <div className="flip-card-face flip-card-back flex min-h-[240px] flex-col rounded-2xl border border-charcoal/15 bg-surface p-6 sm:p-7">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-charcoal/55">
             Answer
           </span>
-          <p className="mt-3 text-sm leading-relaxed text-white/80 sm:text-base">
+          <p className="mt-3 text-sm leading-relaxed text-charcoal/80 sm:text-base">
             {item.answer}
           </p>
         </div>

@@ -78,7 +78,7 @@ export default function Navbar() {
           className="group flex items-center gap-3 justify-self-start"
         >
           <Image
-            src="/haria-logo.png"
+            src="/logo/haria-logo.png"
             alt="Haria Investments"
             width={48}
             height={48}

@@ -8,7 +8,7 @@ export type TeamMember = {
 export const teamMembers: TeamMember[] = [
   {
     name: "Amritlal Devji Haria",
-    image: "/Amritlal-Haria-DJayP5gp.jpg",
+    image: "/legacy legends/Amritlal-Haria-DJayP5gp.jpg",
     bio: [
       "Our journey began with Late Shri Amritlal Devji Haria. Being a graduate, he joined LIC right from its inception. Over the decades, he dedicated his entire career to serving people through insurance, retiring as a Development Officer and later continuing as an agent.",
       "His unwavering commitment touched the lives of thousands of clients, laying a strong foundation for the generations to come.",
@@ -16,7 +16,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     name: "Anil Amritlal Haria",
-    image: "/Anil-Haria-_negvWXL.jpg",
+    image: "/legacy legends/Anil-Haria-_negvWXL.jpg",
     bio: [
       "Carrying this legacy forward, Mr. Anil Amritlal Haria embraced entrepreneurship early on. After beginning his career in the textile business, he chose to dedicate himself fully to the insurance profession to honor his father's vision.",
       "He expanded the family business beyond life insurance into health insurance and broader financial solutions, ensuring that our services evolved with the needs of our clients.",
@@ -24,7 +24,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     name: "Rohan Haria",
-    image: "/Rohan-Haria-D4_UJO8b.jpg",
+    image: "/legacy legends/Rohan-Haria-D4_UJO8b.jpg",
     badge: "Chartered Accountant",
     bio: [
       "A Chartered Accountant with 6 years of specialized experience in the financial services sector, having worked with two of India's most respected firms. During this time, he has developed deep expertise in auditing leading financial institutions, with a particular focus on mutual fund audits.",
@@ -34,7 +34,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     name: "Raj Haria",
-    image: "/Raj-Haria-7cM3NeO4.jpg",
+    image: "/legacy legends/Raj-Haria-7cM3NeO4.jpg",
     badge: "MBA – NMIMS",
     bio: [
       "Raj Haria, an MBA graduate from NMIMS, has been carrying forward his grandfather's legacy. Since 2015, he has expanded into mutual fund business while building strong expertise in life and general insurance.",
@@ -43,7 +43,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     name: "Meet Savla",
-    image: "/Meet-Savla1-c1GMECJ0.jpeg",
+    image: "/legacy legends/Meet-Savla1-c1GMECJ0.jpeg",
     badge: "Technical Specialist",
     bio: [
       "Since 2017, he has been actively engaged in the financial markets, with a strong focus on technical analysis. His approach blends data-driven insights with hands-on market experience, enabling him to identify opportunities, manage risk effectively, and navigate dynamic market conditions with discipline.",

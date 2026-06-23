@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeritageStatsTicker from "@/components/heritage-stats-ticker";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 
-const VIDEO_SRC = "/The_Second_Complete_Wealth-ezremove.mp4";
+const VIDEO_SRC = "/background videos/The_Second_Complete_Wealth-ezremove.mp4";
 const TEXT_REVEAL_TIME = 2;
 
 export default function HeroSection() {

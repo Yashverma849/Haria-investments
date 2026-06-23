@@ -44,7 +44,7 @@ export const serviceOfferings: ServiceOffering[] = [
     description:
       "Expert guidance in commodity markets and derivatives",
     href: "/commodities/derivation",
-    image: "/Gemini_Generated_Image_hfmgzahfmgzahfmg.png",
+    image: "/images/Gemini_Generated_Image_hfmgzahfmgzahfmg.png",
     textTone: "light",
   },
 ];

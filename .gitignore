@@ -20,6 +20,13 @@
 # production
 /build
 
+# project docs (local / Cursor reference — not shipped)
+/project-docs/
+
+# graphify (generated knowledge graph — rebuild locally)
+/graphify-out/
+.graphifyignore
+
 # misc
 .DS_Store
 *.pem

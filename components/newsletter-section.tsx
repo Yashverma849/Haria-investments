@@ -21,7 +21,7 @@ export default function FooterNewsletter() {
 
   return (
     <div className="mt-8">
-      <h3 className="font-serif text-lg font-semibold leading-tight text-white">
+      <h3 className="font-serif text-lg font-semibold leading-tight text-charcoal">
         Newsletter
       </h3>
 
@@ -44,7 +44,7 @@ export default function FooterNewsletter() {
             if (status !== "idle") setStatus("idle");
           }}
           placeholder="Enter your email"
-          className="min-h-11 w-full rounded-full border border-white/20 bg-background/40 px-4 py-2.5 text-sm text-white placeholder:text-white/45 transition-colors focus:border-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          className="min-h-11 w-full rounded-full border border-charcoal/15 bg-white/60 px-4 py-2.5 text-sm text-charcoal placeholder:text-charcoal/45 transition-colors focus:border-charcoal/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal/15"
         />
         <button
           type="submit"
@@ -55,13 +55,13 @@ export default function FooterNewsletter() {
       </form>
 
       {status === "error" ? (
-        <p className="mt-3 text-sm text-white/70" role="alert">
+        <p className="mt-3 text-sm text-charcoal/70" role="alert">
           Please enter a valid email address.
         </p>
       ) : null}
 
       {status === "success" ? (
-        <p className="mt-3 text-sm text-white/70" role="status">
+        <p className="mt-3 text-sm text-charcoal/70" role="status">
           Thank you for subscribing.
         </p>
       ) : null}

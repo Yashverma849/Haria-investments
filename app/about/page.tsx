@@ -24,11 +24,12 @@ export default function AboutPage() {
               title="Legacy Leaders"
               description={aboutPeopleIntro}
               descriptionClassName="text-fluid-lead max-w-xl text-cream/80 xl:max-w-2xl"
+              scrollReplay
             />
           </div>
 
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <LegacyShowcase members={teamMembers} />
+            <LegacyShowcase members={teamMembers} scrollReplay />
           </div>
         </section>
       </main>

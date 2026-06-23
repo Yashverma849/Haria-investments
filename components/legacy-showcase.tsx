@@ -11,11 +11,12 @@ import { type TeamMember } from "@/lib/team-data";
 type LegacyShowcaseProps = {
   members: TeamMember[];
   showReadMore?: boolean;
+  scrollReplay?: boolean;
 };
 
 function LegacyPortrait({ member }: { member: TeamMember }) {
   return (
-    <div className="group/image relative aspect-[3/4] w-[min(72vw,13.5rem)] overflow-hidden rounded-2xl border border-white/10 bg-surface shadow-xl sm:w-56">
+    <div className="group/image relative aspect-[3/4] w-[min(72vw,13.5rem)] overflow-hidden rounded-2xl border border-charcoal/10 bg-surface shadow-xl sm:w-56">
       <Image
         src={member.image}
         alt={member.name}
@@ -55,6 +56,7 @@ function LegacyBio({ member }: { member: TeamMember }) {
 export default function LegacyShowcase({
   members,
   showReadMore = false,
+  scrollReplay = false,
 }: LegacyShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -78,6 +80,84 @@ export default function LegacyShowcase({
         const image = row.querySelector("[data-legacy-image]");
         const text = row.querySelector("[data-legacy-text]");
         const imageLeft = index % 2 === 0;
+
+        if (scrollReplay) {
+          const animateRowIn = () => {
+            gsap.to(row, {
+              opacity: 1,
+              y: 0,
+              duration: 0.85,
+              ease: "power3.out",
+              overwrite: true,
+            });
+
+            if (image) {
+              gsap.to(image, {
+                opacity: 1,
+                x: 0,
+                duration: 0.9,
+                ease: "power3.out",
+                overwrite: true,
+              });
+            }
+
+            if (text) {
+              gsap.to(text, {
+                opacity: 1,
+                x: 0,
+                duration: 0.9,
+                ease: "power3.out",
+                overwrite: true,
+              });
+            }
+          };
+
+          const animateRowOut = () => {
+            gsap.to(row, {
+              opacity: 0,
+              y: 32,
+              duration: 0.55,
+              ease: "power3.in",
+              overwrite: true,
+            });
+
+            if (image) {
+              gsap.to(image, {
+                opacity: 0,
+                x: imageLeft ? -48 : 48,
+                duration: 0.55,
+                ease: "power3.in",
+                overwrite: true,
+              });
+            }
+
+            if (text) {
+              gsap.to(text, {
+                opacity: 0,
+                x: imageLeft ? 48 : -48,
+                duration: 0.55,
+                ease: "power3.in",
+                overwrite: true,
+              });
+            }
+          };
+
+          gsap.set(row, { opacity: 0, y: 32 });
+          if (image) gsap.set(image, { opacity: 0, x: imageLeft ? -48 : 48 });
+          if (text) gsap.set(text, { opacity: 0, x: imageLeft ? 48 : -48 });
+
+          ScrollTrigger.create({
+            trigger: row,
+            start: "top 88%",
+            end: "bottom 12%",
+            onEnter: animateRowIn,
+            onLeave: animateRowOut,
+            onEnterBack: animateRowIn,
+            onLeaveBack: animateRowOut,
+          });
+
+          return;
+        }
 
         gsap.fromTo(
           row,
@@ -133,21 +213,55 @@ export default function LegacyShowcase({
       });
 
       if (readMore) {
-        gsap.fromTo(
-          readMore,
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.75,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: readMore,
-              start: "top 92%",
-              once: true,
+        if (scrollReplay) {
+          const animateReadMoreIn = () => {
+            gsap.to(readMore, {
+              opacity: 1,
+              y: 0,
+              duration: 0.75,
+              ease: "power3.out",
+              overwrite: true,
+            });
+          };
+
+          const animateReadMoreOut = () => {
+            gsap.to(readMore, {
+              opacity: 0,
+              y: 20,
+              duration: 0.55,
+              ease: "power3.in",
+              overwrite: true,
+            });
+          };
+
+          gsap.set(readMore, { opacity: 0, y: 20 });
+
+          ScrollTrigger.create({
+            trigger: readMore,
+            start: "top 92%",
+            end: "bottom 8%",
+            onEnter: animateReadMoreIn,
+            onLeave: animateReadMoreOut,
+            onEnterBack: animateReadMoreIn,
+            onLeaveBack: animateReadMoreOut,
+          });
+        } else {
+          gsap.fromTo(
+            readMore,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.75,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: readMore,
+                start: "top 92%",
+                once: true,
+              },
             },
-          },
-        );
+          );
+        }
       }
     });
 
@@ -159,7 +273,7 @@ export default function LegacyShowcase({
         }
       });
     };
-  }, [members.length, showReadMore]);
+  }, [members.length, showReadMore, scrollReplay]);
 
   return (
     <div ref={containerRef} className="space-y-16 md:space-y-24 lg:space-y-28">

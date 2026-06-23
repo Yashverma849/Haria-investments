@@ -11,7 +11,7 @@ import {
 } from "@/lib/footer-data";
 
 const linkClass =
-  "text-sm text-white/70 transition-colors hover:text-brand-light";
+  "text-sm text-charcoal/70 transition-colors hover:text-charcoal";
 
 function FooterLinkList({ links }: { links: typeof quickLinks }) {
   return (
@@ -40,7 +40,7 @@ function FooterLinkList({ links }: { links: typeof quickLinks }) {
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="font-serif text-lg font-semibold leading-tight text-white">
+    <h3 className="font-serif text-lg font-semibold leading-tight text-charcoal">
       {children}
     </h3>
   );
@@ -77,7 +77,7 @@ export default function Footer() {
               {credentials.map((item) => (
                 <li
                   key={item}
-                  className="text-sm leading-relaxed text-white/70"
+                  className="text-sm leading-relaxed text-charcoal/70"
                 >
                   {item}
                 </li>
@@ -89,7 +89,7 @@ export default function Footer() {
           <FooterColumn>
             <FooterHeading>Contact Us</FooterHeading>
             <address className="mt-4 space-y-3 not-italic">
-              <p className="text-sm leading-relaxed text-white/70">
+              <p className="text-sm leading-relaxed text-charcoal/70">
                 {contactInfo.address.map((line) => (
                   <span key={line} className="block">
                     {line}
@@ -119,30 +119,30 @@ export default function Footer() {
 
         <FooterEngravedBrand />
 
-        <div className="relative z-10 mt-12 flex flex-col gap-6 border-t border-white/10 pt-10 lg:mt-16 md:flex-row md:items-center md:justify-between">
+        <div className="relative z-10 mt-12 flex flex-col gap-6 border-t border-charcoal/10 pt-10 lg:mt-16 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="group flex items-center gap-3">
             <Image
-              src="/haria-logo.png"
+              src="/logo/haria-logo.png"
               alt="Haria Investments Logo"
               width={52}
               height={52}
               className="h-12 w-12 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <div>
-              <p className="font-serif text-lg font-semibold text-white">
+              <p className="font-serif text-lg font-semibold text-charcoal">
                 Haria Investments
               </p>
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-charcoal/55">
                 since 1957
               </p>
             </div>
           </Link>
 
-          <div className="space-y-1 text-sm text-white/60 md:text-right">
+          <div className="space-y-1 text-sm text-charcoal/60 md:text-right">
             <p>© Haria Investments, 2026</p>
             <p>
               Made with{" "}
-              <span className="text-accent" aria-hidden>
+              <span className="text-charcoal/80" aria-hidden>
                 ♥
               </span>{" "}
               by{" "}
@@ -150,7 +150,7 @@ export default function Footer() {
                 href="https://finzarc.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/80 transition-colors hover:text-brand-light"
+                className="text-charcoal/80 transition-colors hover:text-charcoal"
               >
                 Finzarc
               </a>

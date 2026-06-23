@@ -5,6 +5,7 @@ type AboutSectionHeadingProps = {
   description: string;
   className?: string;
   descriptionClassName?: string;
+  scrollReplay?: boolean;
 };
 
 export default function AboutSectionHeading({
@@ -12,6 +13,7 @@ export default function AboutSectionHeading({
   description,
   className,
   descriptionClassName,
+  scrollReplay,
 }: AboutSectionHeadingProps) {
   return (
     <SectionHeader
@@ -19,6 +21,7 @@ export default function AboutSectionHeading({
       description={description}
       className={className}
       descriptionClassName={descriptionClassName}
+      scrollReplay={scrollReplay}
     />
   );
 }

@@ -10,6 +10,9 @@ type SectionHeaderProps = {
   description: string;
   className?: string;
   descriptionClassName?: string;
+  scrollReplay?: boolean;
+  /** Use on off-white surface sections for readable dark type */
+  onSurface?: boolean;
 };
 
 export default function SectionHeader({
@@ -17,6 +20,8 @@ export default function SectionHeader({
   description,
   className = "",
   descriptionClassName = "",
+  scrollReplay = false,
+  onSurface = false,
 }: SectionHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null);
 
@@ -30,12 +35,85 @@ export default function SectionHeader({
     const descriptionEl = header.querySelector("[data-section-description]");
 
     const mm = gsap.matchMedia();
+    let scrollTrigger: ScrollTrigger | null = null;
+
+    const animateIn = () => {
+      if (titleEl) {
+        gsap.to(titleEl, {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          ease: "power4.out",
+          overwrite: true,
+        });
+      }
+
+      if (descriptionEl) {
+        gsap.to(descriptionEl, {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          ease: "power4.out",
+          overwrite: true,
+        });
+      }
+    };
+
+    const animateOut = () => {
+      if (titleEl) {
+        gsap.to(titleEl, {
+          opacity: 0,
+          x: -72,
+          duration: 0.6,
+          ease: "power4.in",
+          overwrite: true,
+        });
+      }
+
+      if (descriptionEl) {
+        gsap.to(descriptionEl, {
+          opacity: 0,
+          x: 72,
+          duration: 0.6,
+          ease: "power4.in",
+          overwrite: true,
+        });
+      }
+    };
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
       gsap.set([titleEl, descriptionEl], { opacity: 1, x: 0 });
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      if (scrollReplay) {
+        gsap.set(titleEl, { opacity: 0, x: -72 });
+        gsap.set(descriptionEl, { opacity: 0, x: 72 });
+
+        scrollTrigger = ScrollTrigger.create({
+          trigger: header,
+          start: "top 88%",
+          end: "bottom 12%",
+          onEnter: animateIn,
+          onLeave: animateOut,
+          onEnterBack: animateIn,
+          onLeaveBack: animateOut,
+        });
+
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+
+          const { top, bottom } = header.getBoundingClientRect();
+          const inView = top < window.innerHeight * 0.88 && bottom > 0;
+
+          if (inView) {
+            animateIn();
+          }
+        });
+
+        return;
+      }
+
       if (titleEl) {
         gsap.fromTo(
           titleEl,
@@ -74,12 +152,13 @@ export default function SectionHeader({
     });
 
     return () => {
+      scrollTrigger?.kill();
       mm.revert();
       ScrollTrigger.getAll().forEach((trigger) => {
         if (trigger.trigger === header) trigger.kill();
       });
     };
-  }, [title, description]);
+  }, [title, description, scrollReplay]);
 
   return (
     <div
@@ -89,13 +168,17 @@ export default function SectionHeader({
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] xl:gap-16">
         <h2
           data-section-title
-          className="text-fluid-section text-balance font-serif font-semibold tracking-tight text-cream opacity-0"
+          className={`text-fluid-section text-balance font-serif font-semibold tracking-tight opacity-0 ${
+            onSurface ? "text-charcoal" : "text-cream"
+          }`}
         >
           {title}
         </h2>
         <p
           data-section-description
-          className={`max-w-md text-fluid-body-hero text-cream/70 opacity-0 xl:ml-auto xl:justify-self-end xl:pt-2 xl:text-right ${descriptionClassName}`}
+          className={`max-w-md text-fluid-body-hero opacity-0 xl:ml-auto xl:justify-self-end xl:pt-2 xl:text-right ${
+            onSurface ? "text-charcoal/70" : "text-cream/70"
+          } ${descriptionClassName}`}
         >
           {description}
         </p>

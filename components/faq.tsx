@@ -7,7 +7,7 @@ export default function Faq() {
     <main>
       <FaqHero />
 
-      <section className="bg-surface py-20 md:py-28">
+      <section className="border-t border-charcoal/10 bg-surface py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <FaqGrid items={faqItems} />
         </div>

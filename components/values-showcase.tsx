@@ -10,7 +10,7 @@ import { values } from "@/lib/values-data";
 const VALUE_TITLES = values.map((value) => value.title.toUpperCase());
 const HOLD_SECONDS = 2;
 const FADE_SECONDS = 0.65;
-const VALUES_BG_IMAGE = "/Gemini_Generated_Image_uemtnquemtnquemt.png";
+const VALUES_BG_IMAGE = "/images/Gemini_Generated_Image_uemtnquemtnquemt.png";
 
 export default function ValuesShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);

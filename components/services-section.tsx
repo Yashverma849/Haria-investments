@@ -85,15 +85,16 @@ export default function ServicesSection() {
     <section
       id="services"
       ref={sectionRef}
-      className="w-full max-w-full overflow-x-clip border-t border-white/10 bg-surface text-cream"
+      className="w-full max-w-full overflow-x-clip border-t border-charcoal/10 bg-surface text-charcoal"
     >
       <SectionHeader
+        onSurface
         title="Our Services"
         description="Insurance, investments, and wealth solutions backed by decades of experience—designed to protect, grow, and diversify your financial future."
         className="py-16 md:py-24 lg:py-28"
       />
 
-      <div data-services-bands className="relative w-full max-w-full overflow-x-clip border-t border-white/10">
+      <div data-services-bands className="relative w-full max-w-full overflow-x-clip border-t border-charcoal/10">
         <div className="relative">
           {serviceOfferings.map((service, index) => (
             <Link

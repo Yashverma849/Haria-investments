@@ -330,18 +330,18 @@ export default function ServicesMegaMenu() {
       >
         <div
           ref={panelRef}
-          className="relative overflow-hidden rounded-2xl border border-white/10 bg-surface/95 shadow-2xl shadow-black/40 backdrop-blur-xl will-change-transform"
+          className="surface-dropdown bg-surface relative overflow-hidden rounded-2xl shadow-2xl shadow-black/15 backdrop-blur-xl will-change-transform"
           style={{ transformStyle: "preserve-3d" }}
           onMouseMove={handlePanelMouseMove}
           onMouseLeave={handlePanelMouseLeave}
         >
           <div
             ref={arrowRef}
-            className="absolute -top-[7px] left-1/2 h-3.5 w-3.5 -translate-x-1/2 rotate-45 border-l border-t border-white/10 bg-surface/95 opacity-0"
+            className="absolute -top-[7px] left-1/2 h-3.5 w-3.5 -translate-x-1/2 rotate-45 border-l border-t border-charcoal/10 bg-[var(--off-white-1)] opacity-0"
           />
 
           <div className="flex min-h-[320px]">
-            <ul ref={listRef} className="w-[220px] shrink-0 border-r border-white/10 p-3">
+            <ul ref={listRef} className="w-[220px] shrink-0 border-r border-charcoal/10 p-3">
               {serviceCategories.map((category) => (
                 <li key={category.label}>
                   <button
@@ -351,8 +351,8 @@ export default function ServicesMegaMenu() {
                     onFocus={() => handleCategoryChange(category)}
                     className={`w-full rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
                       activeCategory.label === category.label
-                        ? "bg-brand/15 font-medium text-brand-light"
-                        : "text-white/75 hover:bg-white/5 hover:text-white"
+                        ? "bg-charcoal/8 font-medium text-charcoal"
+                        : "text-charcoal/70 hover:bg-charcoal/5 hover:text-charcoal"
                     }`}
                   >
                     {category.label}
@@ -363,10 +363,10 @@ export default function ServicesMegaMenu() {
 
             <div className="flex flex-1 flex-col p-4">
               <div ref={headerRef} className="mb-3">
-                <h3 className="text-sm font-semibold text-white">
+                <h3 className="text-sm font-semibold text-charcoal">
                   {activeCategory.label}
                 </h3>
-                <p className="mt-0.5 text-xs text-white/55">
+                <p className="mt-0.5 text-xs text-charcoal/60">
                   {activeCategory.description}
                 </p>
               </div>

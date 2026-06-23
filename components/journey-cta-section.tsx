@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import { scheduleConsultation } from "@/lib/nav-links";
 
-const JOURNEY_CTA_BG_IMAGE = "/Gemini_Generated_Image_1on5j31on5j31on5.png";
+const JOURNEY_CTA_BG_IMAGE = "/images/Gemini_Generated_Image_1on5j31on5j31on5.png";
 
 export default function JourneyCtaSection() {
   const sectionRef = useRef<HTMLElement>(null);

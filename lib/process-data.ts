@@ -1,5 +1,6 @@
 export type ProcessStep = {
   id: string;
+  label: string;
   title: string;
   summary: string;
   whatToExpect: string[];
@@ -7,12 +8,19 @@ export type ProcessStep = {
   outcome: string;
 };
 
+export const PROCESS_HERO = {
+  title: "OUR PROCESS",
+  subtitle:
+    "A systematic, transparent approach designed to reduce anxiety and build confidence throughout your financial planning journey.",
+};
+
 export const processSteps: ProcessStep[] = [
   {
     id: "consultation",
-    title: "Initial Consultation",
+    label: "INITIAL CONSULTATION",
+    title: "Understand & Align",
     summary:
-      "Comprehensive discussion of your financial goals, current situation, and concerns",
+      "Comprehensive discussion of your financial goals, current situation, and concerns.",
     whatToExpect: [
       "No-pressure environment focused on understanding your needs",
       "Comprehensive discussion of financial goals and timeline",
@@ -26,13 +34,14 @@ export const processSteps: ProcessStep[] = [
       "Current insurance policies summary",
     ],
     outcome:
-      "Clear understanding of your needs and our potential value-add",
+      "Clear understanding of your needs and our potential value-add.",
   },
   {
     id: "analysis",
-    title: "Comprehensive Financial Analysis",
+    label: "FINANCIAL ANALYSIS",
+    title: "Deep Dive Assessment",
     summary:
-      "Detailed analysis of your current financial position, risk tolerance, and goal feasibility",
+      "Detailed analysis of your current financial position, risk tolerance, and goal feasibility.",
     whatToExpect: [
       "Advanced planning software for scenario analysis",
       "Risk tolerance assessment and goal feasibility study",
@@ -45,13 +54,14 @@ export const processSteps: ProcessStep[] = [
       "Schedule 90-minute review meeting",
     ],
     outcome:
-      "Comprehensive written plan with implementation timeline and cost estimates",
+      "Comprehensive written plan with implementation timeline and cost estimates.",
   },
   {
     id: "implementation",
-    title: "Implementation & Onboarding",
+    label: "IMPLEMENTATION & ONBOARDING",
+    title: "Strategy Execution",
     summary:
-      "Systematic portfolio construction and account setup based on approved plan",
+      "Systematic portfolio construction and account setup based on approved plan.",
     whatToExpect: [
       "Streamlined account opening with institutional custodians",
       "Systematic investment implementation per approved strategy",
@@ -64,13 +74,14 @@ export const processSteps: ProcessStep[] = [
       "Complete beneficiary designations",
     ],
     outcome:
-      "Fully implemented investment strategy with complete documentation",
+      "Fully implemented investment strategy with complete documentation.",
   },
   {
     id: "ongoing",
-    title: "Ongoing Relationship Management",
+    label: "ONGOING RELATIONSHIP MANAGEMENT",
+    title: "Review & Adapt",
     summary:
-      "Proactive portfolio management with regular reviews and strategic adjustments",
+      "Proactive portfolio management with regular reviews and strategic adjustments.",
     whatToExpect: [
       "Quarterly portfolio reviews and rebalancing",
       "Annual comprehensive plan updates",
@@ -83,6 +94,6 @@ export const processSteps: ProcessStep[] = [
       "Review quarterly reports and updates",
     ],
     outcome:
-      "Consistent progress toward financial goals with ongoing optimization",
+      "Consistent progress toward financial goals with ongoing optimization.",
   },
 ];

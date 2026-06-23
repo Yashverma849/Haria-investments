@@ -221,9 +221,10 @@ export default function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="border-t border-white/10 bg-surface py-20 md:py-28"
+      className="border-t border-charcoal/10 bg-surface py-20 md:py-28"
     >
       <SectionHeader
+        onSurface
         title="Client Stories"
         description="For over six decades, families and professionals have relied on us for insurance, investments, and honest guidance. Their stories reflect the trust we work to earn every day."
       />

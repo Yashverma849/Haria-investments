@@ -1,5 +1,5 @@
 import { AboutLeaders, AboutPurpose } from "@/components/about";
-import CommitmentSection from "@/components/commitment-section";
+// import CommitmentSection from "@/components/commitment-section";
 import JourneyCtaSection from "@/components/journey-cta-section";
 import HeroSection from "@/components/hero-section";
 import Navbar from "@/components/navbar";
@@ -18,7 +18,7 @@ export default function Home() {
       <AboutLeaders />
       <ValuesSection />
       <ProcessSection />
-      <CommitmentSection />
+      {/* <CommitmentSection /> */}
       <TestimonialsSection />
       <JourneyCtaSection />
     </main>

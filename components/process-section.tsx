@@ -1,367 +1,546 @@
 "use client";
 
-import Image from "next/image";
-import { useRef, type ReactNode } from "react";
+import { Inter, Space_Mono } from "next/font/google";
+import { useCallback, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import SectionHeader from "@/components/section-header";
-import { processSteps, type ProcessStep } from "@/lib/process-data";
+import {
+  PROCESS_HERO,
+  processSteps,
+  type ProcessStep,
+} from "@/lib/process-data";
 
-const PROCESS_BG_IMAGE = "/Gemini_Generated_Image_4dwmx4dwmx4dwmx4.png";
+const FOCUS_RATIO = 0.42;
+const EXPAND_ENTER_PROGRESS = 0.44;
+const EXPAND_EXIT_PROGRESS = 0.26;
+const SPINE_THUMB_SIZE = 8;
 
-type ProcessTextStepProps = {
+function getCursorYFromProgress(progress: number, nodeYs: number[]) {
+  if (nodeYs.length === 0) return 0;
+  if (nodeYs.length === 1) return nodeYs[0];
+
+  const scaled = progress * (nodeYs.length - 1);
+  const index = Math.min(Math.floor(scaled), nodeYs.length - 2);
+  const fraction = scaled - index;
+
+  return nodeYs[index] + fraction * (nodeYs[index + 1] - nodeYs[index]);
+}
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-process-inter",
+  weight: ["400", "500", "600", "700"],
+});
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  variable: "--font-process-mono",
+  weight: ["400", "700"],
+});
+
+function ProcessStepGraphic({ index }: { index: number }) {
+  const graphics = [
+    <svg key="consultation" viewBox="0 0 72 72" className="h-full w-full" fill="none" aria-hidden>
+      <path data-process-stroke d="M36 8 L58 22 V50 L36 64 L14 50 V22 Z" stroke="currentColor" strokeWidth="1.2" />
+      <path data-process-stroke d="M36 8 V36 M36 36 L58 22 M36 36 L14 22 M36 36 V64" stroke="currentColor" strokeWidth="1.2" />
+    </svg>,
+    <svg key="analysis" viewBox="0 0 72 72" className="h-full w-full" fill="none" aria-hidden>
+      <path data-process-stroke d="M12 54 L24 40 L36 46 L48 24 L60 30" stroke="currentColor" strokeWidth="1.2" />
+      <path data-process-stroke d="M12 58 H60 M12 14 V58" stroke="currentColor" strokeWidth="1.2" />
+    </svg>,
+    <svg key="implementation" viewBox="0 0 72 72" className="h-full w-full" fill="none" aria-hidden>
+      <rect data-process-stroke x="14" y="38" width="18" height="18" stroke="currentColor" strokeWidth="1.2" />
+      <rect data-process-stroke x="27" y="24" width="18" height="18" stroke="currentColor" strokeWidth="1.2" />
+      <rect data-process-stroke x="40" y="10" width="18" height="18" stroke="currentColor" strokeWidth="1.2" />
+    </svg>,
+    <svg key="ongoing" viewBox="0 0 72 72" className="h-full w-full" fill="none" aria-hidden>
+      <path data-process-stroke d="M36 14 A22 22 0 1 1 20 46" stroke="currentColor" strokeWidth="1.2" />
+      <path data-process-stroke d="M36 24 A12 12 0 1 1 28 42" stroke="currentColor" strokeWidth="1.2" />
+      <path data-process-stroke d="M20 46 L14 52 M20 46 L26 52" stroke="currentColor" strokeWidth="1.2" />
+    </svg>,
+  ];
+
+  return (
+    <div data-process-graphic className="process-step-graphic text-white/70">
+      {graphics[index]}
+    </div>
+  );
+}
+
+function ProcessStepCard({
+  step,
+  index,
+  side,
+  isActive,
+  isNear,
+}: {
   step: ProcessStep;
   index: number;
   side: "left" | "right";
-};
-
-function ProcessTextStep({ step, index, side }: ProcessTextStepProps) {
-  const isFirst = index === 0;
+  isActive: boolean;
+  isNear: boolean;
+}) {
+  const stepNumber = String(index + 1).padStart(2, "0");
+  const initial = step.title.charAt(0).toUpperCase();
 
   return (
     <article
-      data-process-step
-      data-process-side={side}
-      className={`absolute inset-0 flex items-center overflow-hidden ${isFirst ? "visible" : "invisible"}`}
+      data-process-card
+      data-active={isActive ? "true" : "false"}
+      className={`process-step-card process-step-card--${side} ${isActive ? "is-active is-expanded" : ""} ${isNear && !isActive ? "is-near" : ""}`}
+      tabIndex={0}
     >
-      <div
-        data-process-content
-        className={`w-full max-h-full min-h-0 ${isFirst ? "" : "opacity-0"}`}
-      >
-        <ProcessTextContent step={step} index={index} />
+      <div className="process-step-card-shell rounded-lg border border-[#333333] bg-[rgba(10,10,10,0.8)] backdrop-blur-[10px]">
+        <div className="process-step-card-header flex items-stretch gap-0 border-b border-[#333333]">
+          <div className="process-timeline-mono flex w-14 shrink-0 items-center justify-center border-r border-[#333333] text-sm font-medium text-white sm:w-16">
+            {stepNumber}
+          </div>
+          <div className="relative flex min-w-0 flex-1 items-center gap-3 px-4 py-3.5 sm:px-5">
+            <div className="min-w-0 flex-1">
+              <p className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.14em] text-[#a0a0a0] sm:text-xs">
+                {step.label}
+              </p>
+              <h3 className="mt-1 text-base font-semibold tracking-tight text-white sm:text-lg">
+                {step.title}
+              </h3>
+            </div>
+            <ProcessStepGraphic index={index} />
+          </div>
+        </div>
+
+        <div data-process-card-body className="process-step-card-body">
+          <div className="process-step-card-body-inner">
+            <div className="space-y-6 border-t border-[#333333] p-5 sm:p-6">
+              <p className="text-sm leading-relaxed text-[#a0a0a0] sm:text-base">
+                {step.summary}
+              </p>
+
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5">
+                <div>
+                  <h4 className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
+                    What to Expect
+                  </h4>
+                  <ul className="mt-3 space-y-2">
+                    {step.whatToExpect.map((item) => (
+                      <li key={item} className="text-xs leading-relaxed text-[#a0a0a0] sm:text-sm">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
+                    Your Preparation
+                  </h4>
+                  <ul className="mt-3 space-y-2">
+                    {step.yourPreparation.map((item) => (
+                      <li key={item} className="text-xs leading-relaxed text-[#a0a0a0] sm:text-sm">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-stretch gap-0 border-t border-[#333333]">
+              <div className="flex w-14 shrink-0 items-center justify-center border-r border-[#333333] sm:w-16">
+                <span className="process-timeline-mono flex h-8 w-8 items-center justify-center border border-[#333333] text-xs font-medium text-white">
+                  {initial}
+                </span>
+              </div>
+              <div className="relative flex min-w-0 flex-1 items-center px-4 py-4 sm:px-5">
+                <p className="text-sm leading-relaxed text-[#a0a0a0] sm:text-base">
+                  <span className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.14em] text-white sm:text-xs">
+                    Outcome
+                  </span>
+                  <span className="mt-1 block">{step.outcome}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </article>
   );
 }
 
-function ProcessDetailColumn({
-  title,
-  titleClassName,
-  children,
-}: {
-  title: string;
-  titleClassName?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="min-w-0">
-      <h4
-        className={`text-fluid-process-body font-semibold uppercase tracking-[0.16em] ${titleClassName ?? "text-brand-light"}`}
-      >
-        {title}
-      </h4>
-      <div className="mt-2 sm:mt-3">{children}</div>
-    </div>
-  );
-}
-
-function ProcessTextContent({
-  step,
-  index,
-}: {
-  step: ProcessStep;
-  index: number;
-}) {
-  return (
-    <>
-      <div className="mb-3 md:mb-4">
-        <span className="text-fluid-process-body font-serif font-semibold text-brand-light">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-
-        <h3 className="text-fluid-process-title mt-1 font-serif font-semibold text-cream">
-          {step.title}
-        </h3>
-
-        <p className="text-fluid-process-body mt-2 max-w-4xl text-cream/75">
-          {step.summary}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6 lg:gap-8">
-        <ProcessDetailColumn title="What to Expect">
-          <ul className="space-y-1.5 sm:space-y-2">
-            {step.whatToExpect.map((item) => (
-              <li
-                key={item}
-                className="text-fluid-process-body flex gap-2.5 text-cream/80"
-              >
-                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-light/80" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </ProcessDetailColumn>
-
-        <ProcessDetailColumn title="Your Preparation">
-          <ul className="space-y-1.5 sm:space-y-2">
-            {step.yourPreparation.map((item) => (
-              <li
-                key={item}
-                className="text-fluid-process-body flex gap-2.5 text-cream/80"
-              >
-                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-light/80" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </ProcessDetailColumn>
-
-        <ProcessDetailColumn title="Outcome" titleClassName="text-accent">
-          <p className="text-base leading-relaxed text-cream/85 sm:text-lg lg:text-xl">
-            {step.outcome}
-          </p>
-        </ProcessDetailColumn>
-      </div>
-    </>
-  );
-}
-
 export default function ProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const pinWrapperRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const parallaxRef = useRef<HTMLDivElement>(null);
-  const bgSyncRef = useRef<(() => void) | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const spineTrackRef = useRef<SVGLineElement>(null);
+  const spineThumbRef = useRef<SVGRectElement>(null);
+  const spineBranchRef = useRef<SVGPolylineElement>(null);
+  const rowsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const nodesRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const activeIndexRef = useRef(-1);
+  const nearIndexRef = useRef(0);
+  const syncFromScrollRef = useRef<(() => void) | null>(null);
+
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [nearIndex, setNearIndex] = useState(0);
+
+  const getStrokeLength = useCallback((stroke: SVGElement) => {
+    if (stroke instanceof SVGGeometryElement) {
+      return stroke.getTotalLength();
+    }
+
+    if (stroke instanceof SVGGraphicsElement) {
+      const box = stroke.getBBox();
+      return (box.width + box.height) * 2;
+    }
+
+    return 0;
+  }, []);
+
+  const animateRowStrokes = useCallback(
+    (row: HTMLElement | null, expanded: boolean) => {
+      if (!row) return;
+
+      row.querySelectorAll<SVGElement>("[data-process-stroke]").forEach((stroke) => {
+        const length = getStrokeLength(stroke);
+        stroke.style.strokeDasharray = `${length}`;
+        gsap.to(stroke, {
+          strokeDashoffset: expanded ? 0 : length,
+          duration: 0.55,
+          ease: "power2.out",
+          overwrite: true,
+        });
+      });
+    },
+    [getStrokeLength],
+  );
+
+  const setExpandedStep = useCallback(
+    (index: number, rows: HTMLElement[]) => {
+      if (index === activeIndexRef.current) return;
+
+      const previous = activeIndexRef.current;
+      activeIndexRef.current = index;
+      setActiveIndex(index);
+
+      if (previous >= 0) animateRowStrokes(rows[previous], false);
+      if (index >= 0) animateRowStrokes(rows[index], true);
+
+      gsap.delayedCall(0.58, () => syncFromScrollRef.current?.());
+    },
+    [animateRowStrokes],
+  );
+
+  const findNearestIndex = useCallback((rows: HTMLElement[]) => {
+    const focusY = window.innerHeight * FOCUS_RATIO;
+    let closestIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    rows.forEach((row, index) => {
+      const node = nodesRef.current[index];
+      const anchor = node ?? row;
+      const rect = anchor.getBoundingClientRect();
+      const anchorY = rect.top + rect.height / 2;
+      const distance = Math.abs(anchorY - focusY);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    return closestIndex;
+  }, []);
+
+  const resolveExpandedIndex = useCallback(
+    (rows: HTMLElement[], currentExpanded: number) => {
+      const focusY = window.innerHeight * FOCUS_RATIO;
+
+      if (currentExpanded >= 0 && currentExpanded < rows.length) {
+        const currentRow = rows[currentExpanded];
+        const rect = currentRow.getBoundingClientRect();
+
+        if (focusY >= rect.top && focusY <= rect.bottom) {
+          const progress = (focusY - rect.top) / rect.height;
+          if (progress >= EXPAND_EXIT_PROGRESS) return currentExpanded;
+        }
+      }
+
+      for (let index = 0; index < rows.length; index += 1) {
+        const rect = rows[index].getBoundingClientRect();
+
+        if (focusY < rect.top || focusY > rect.bottom) continue;
+
+        const progress = (focusY - rect.top) / rect.height;
+        if (progress >= EXPAND_ENTER_PROGRESS) return index;
+      }
+
+      return -1;
+    },
+    [],
+  );
+
+  const updateSpineGraphics = useCallback(
+    (
+      track: HTMLElement,
+      trackLine: SVGLineElement,
+      thumb: SVGRectElement,
+      branch: SVGPolylineElement,
+      rows: HTMLElement[],
+      highlightIndex: number,
+      scrollProgress: number,
+    ) => {
+      const nodes = nodesRef.current.filter(Boolean) as HTMLElement[];
+      if (nodes.length === 0) return 0;
+
+      const trackRect = track.getBoundingClientRect();
+      const spineHeight = track.offsetHeight;
+      const anchorNode = nodes[0];
+      const anchorRect = anchorNode.getBoundingClientRect();
+      const spineX = anchorRect.left + anchorRect.width / 2 - trackRect.left;
+
+      const nodeYs = nodes.map(
+        (node) => node.getBoundingClientRect().top + node.offsetHeight / 2 - trackRect.top,
+      );
+
+      const cursorY = getCursorYFromProgress(scrollProgress, nodeYs);
+      const visible = trackRect.bottom > 0 && trackRect.top < window.innerHeight;
+      const thumbOffset = SPINE_THUMB_SIZE / 2;
+
+      trackLine.setAttribute("x1", String(spineX));
+      trackLine.setAttribute("x2", String(spineX));
+      trackLine.setAttribute("y1", "0");
+      trackLine.setAttribute("y2", String(spineHeight));
+      trackLine.style.opacity = visible ? "1" : "0";
+
+      thumb.setAttribute("x", String(spineX - thumbOffset));
+      thumb.setAttribute("y", String(cursorY - thumbOffset));
+      thumb.setAttribute("width", String(SPINE_THUMB_SIZE));
+      thumb.setAttribute("height", String(SPINE_THUMB_SIZE));
+      thumb.style.opacity = visible ? "1" : "0";
+
+      if (highlightIndex < 0 || highlightIndex >= rows.length) {
+        branch.style.opacity = "0";
+        branch.setAttribute("points", "");
+        return cursorY;
+      }
+
+      const row = rows[highlightIndex];
+      const header = row.querySelector<HTMLElement>(".process-step-card-header");
+      const shell = row.querySelector<HTMLElement>(".process-step-card-shell");
+      if (!header || !shell) {
+        branch.style.opacity = "0";
+        branch.setAttribute("points", "");
+        return cursorY;
+      }
+
+      const headerRect = header.getBoundingClientRect();
+      const shellRect = shell.getBoundingClientRect();
+      const isLeft = row.classList.contains("process-step-row--left");
+      const joinX = isLeft
+        ? shellRect.right - trackRect.left
+        : shellRect.left - trackRect.left;
+      const cornerY = headerRect.top - trackRect.top;
+
+      branch.setAttribute(
+        "points",
+        `${spineX},${cursorY} ${joinX},${cursorY} ${joinX},${cornerY}`,
+      );
+      branch.style.opacity = visible ? "1" : "0";
+
+      return cursorY;
+    },
+    [],
+  );
+
+  const updateRowHighlights = useCallback((rows: HTMLElement[], highlightIndex: number) => {
+    const focusY = window.innerHeight * FOCUS_RATIO;
+
+    rows.forEach((row, index) => {
+      const card = row.querySelector<HTMLElement>("[data-process-card]");
+      if (!card) return;
+
+      const rect = row.getBoundingClientRect();
+      const distance = Math.abs(rect.top + rect.height / 2 - focusY);
+      const maxDistance = window.innerHeight * 0.55;
+      const proximity = gsap.utils.clamp(0, 1, 1 - distance / maxDistance);
+      const isHighlight = index === highlightIndex;
+
+      gsap.set(card, {
+        opacity: isHighlight ? 1 : 0.34 + proximity * 0.38,
+        y: isHighlight ? 0 : (1 - proximity) * 14,
+      });
+    });
+  }, []);
 
   useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const section = sectionRef.current;
-    const pinWrapper = pinWrapperRef.current;
-    const stage = stageRef.current;
-    const parallax = parallaxRef.current;
+    const track = trackRef.current;
+    const trackLine = spineTrackRef.current;
+    const thumb = spineThumbRef.current;
+    const branch = spineBranchRef.current;
 
-    if (!section || !pinWrapper || !stage) return;
+    if (!section || !track || !trackLine || !thumb || !branch) return;
 
-    const steps = gsap.utils.toArray<HTMLElement>("[data-process-step]", stage);
-    const stepCount = steps.length;
-    if (stepCount === 0) return;
+    const rows = rowsRef.current.filter(Boolean) as HTMLElement[];
+    const triggers: ScrollTrigger[] = [];
 
-    let pinTrigger: ScrollTrigger | null = null;
-    const retryTimers: number[] = [];
-
-    const getNavHeight = () =>
-      document.querySelector("header")?.getBoundingClientRect().height ?? 80;
-
-    const updateScene = (progress: number) => {
-      const maxIndex = stepCount - 1;
-      const scaled = progress * maxIndex;
-      const currentIndex = Math.min(Math.floor(scaled), maxIndex);
-      const local = scaled - currentIndex;
-      const isLastStep = currentIndex >= maxIndex;
-
-      const HOLD = 0.32;
-      const CROSSFADE = 0.36;
-      const fadeOutStart = HOLD;
-      const crossfadeEnd = HOLD + CROSSFADE;
-
-      steps.forEach((step, index) => {
-        const content = step.querySelector("[data-process-content]");
-        if (!content) return;
-
-        const side = step.getAttribute("data-process-side");
-        const drift = side === "left" ? -36 : 36;
-
-        if (index === currentIndex) {
-          let opacity = 1;
-          let y = 0;
-          let x = 0;
-
-          if (local <= fadeOutStart) {
-            opacity = 1;
-          } else if (!isLastStep && local <= crossfadeEnd) {
-            const t = (local - fadeOutStart) / CROSSFADE;
-            opacity = 1 - t;
-            y = -28 * t;
-            x = drift * t;
-          } else if (!isLastStep) {
-            opacity = 0;
-            y = -28;
-            x = drift;
-          }
-
-          gsap.set(content, { opacity, x, y });
-          gsap.set(step, {
-            visibility: opacity > 0 ? "visible" : "hidden",
-            pointerEvents: opacity > 0.05 ? "auto" : "none",
-          });
-        } else if (index === currentIndex + 1) {
-          let opacity = 0;
-          let y = 28;
-          let x = drift;
-
-          if (local < fadeOutStart) {
-            opacity = 0;
-          } else if (local <= crossfadeEnd) {
-            const t = (local - fadeOutStart) / CROSSFADE;
-            opacity = t;
-            y = 28 * (1 - t);
-            x = drift * (1 - t);
-          } else {
-            opacity = 1;
-            y = 0;
-            x = 0;
-          }
-
-          gsap.set(content, { opacity, x, y });
-          gsap.set(step, {
-            visibility: opacity > 0 ? "visible" : "hidden",
-            pointerEvents: opacity > 0.05 ? "auto" : "none",
-          });
-        } else {
-          gsap.set(content, { opacity: 0, x: 0, y: index < currentIndex ? -28 : 28 });
-          gsap.set(step, { visibility: "hidden", pointerEvents: "none" });
-        }
+    const prepareAllStrokes = () => {
+      rows.forEach((row) => {
+        row.querySelectorAll<SVGElement>("[data-process-stroke]").forEach((stroke) => {
+          const length = getStrokeLength(stroke);
+          stroke.style.strokeDasharray = `${length}`;
+          stroke.style.strokeDashoffset = `${length}`;
+        });
       });
+    };
 
-      if (parallax) {
-        gsap.set(parallax, { y: progress * -36, scale: 1.06 });
+    const syncFromScroll = (self?: ScrollTrigger) => {
+      const nearest = findNearestIndex(rows);
+      const scrollProgress = self?.progress ?? 0;
+
+      if (nearest !== nearIndexRef.current) {
+        nearIndexRef.current = nearest;
+        setNearIndex(nearest);
       }
+
+      const expanded = resolveExpandedIndex(rows, activeIndexRef.current);
+      setExpandedStep(expanded, rows);
+
+      const highlightIndex = expanded >= 0 ? expanded : nearest;
+      updateSpineGraphics(track, trackLine, thumb, branch, rows, highlightIndex, scrollProgress);
+      updateRowHighlights(rows, highlightIndex);
     };
 
-    const syncScene = () => {
-      if (!pinTrigger) return;
-      pinTrigger.refresh();
-      updateScene(pinTrigger.progress);
-    };
-
-    const scheduleSync = () => {
-      syncScene();
-      requestAnimationFrame(syncScene);
-      retryTimers.push(
-        window.setTimeout(syncScene, 120),
-        window.setTimeout(syncScene, 400),
-        window.setTimeout(syncScene, 900),
-      );
-    };
-
-    const setupPinnedStory = () => {
-      pinTrigger?.kill();
-
-      const scrollDistance = () =>
-        (window.innerHeight - getNavHeight()) * (stepCount - 1) * 1.5;
-
-      pinTrigger = ScrollTrigger.create({
-        trigger: pinWrapper,
-        start: () => `top ${getNavHeight()}px`,
-        end: () => `+=${scrollDistance()}`,
-        pin: stage,
-        scrub: 1.2,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => updateScene(self.progress),
-        onRefresh: (self) => updateScene(self.progress),
-      });
-
-      updateScene(0);
-      scheduleSync();
-      bgSyncRef.current = scheduleSync;
-    };
+    syncFromScrollRef.current = syncFromScroll;
 
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
-      steps.forEach((step, index) => {
-        const content = step.querySelector("[data-process-content]");
-        gsap.set(step, {
-          visibility: index === 0 ? "visible" : "hidden",
-          position: "relative",
-          inset: "auto",
+      prepareAllStrokes();
+      rows.forEach((row, index) => {
+        row.querySelectorAll<SVGElement>("[data-process-stroke]").forEach((stroke) => {
+          stroke.style.strokeDashoffset = index === 0 ? "0" : getStrokeLength(stroke).toString();
         });
-        gsap.set(content, { opacity: index === 0 ? 1 : 0, x: 0, y: 0 });
+        const card = row.querySelector<HTMLElement>("[data-process-card]");
+        if (card) gsap.set(card, { opacity: index === 0 ? 1 : 0.55, y: 0 });
       });
+      activeIndexRef.current = 0;
+      setActiveIndex(0);
+      setNearIndex(0);
+      updateSpineGraphics(track, trackLine, thumb, branch, rows, 0, 0);
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.set(steps, { visibility: "hidden" });
-      gsap.set(steps[0], { visibility: "visible" });
-      gsap.set(steps[0].querySelector("[data-process-content]"), {
-        opacity: 1,
-        x: 0,
-        y: 0,
+      prepareAllStrokes();
+      trackLine.style.opacity = "0";
+      thumb.style.opacity = "0";
+      branch.style.opacity = "0";
+      activeIndexRef.current = -1;
+      nearIndexRef.current = 0;
+      setActiveIndex(-1);
+      setNearIndex(0);
+
+      rows.forEach((row) => {
+        const card = row.querySelector<HTMLElement>("[data-process-card]");
+        if (card) gsap.set(card, { opacity: 0.55, y: 0 });
       });
 
-      requestAnimationFrame(setupPinnedStory);
+      const scrollTrigger = ScrollTrigger.create({
+        trigger: track,
+        start: "top center",
+        end: "bottom center",
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: syncFromScroll,
+      });
 
-      const onResize = () => syncScene();
-      const onLoad = () => scheduleSync();
+      triggers.push(scrollTrigger);
 
-      window.addEventListener("resize", onResize);
-      window.addEventListener("load", onLoad);
+      const onRefresh = () => syncFromScroll(scrollTrigger);
+      ScrollTrigger.addEventListener("refresh", onRefresh);
+
+      syncFromScroll(scrollTrigger);
 
       return () => {
-        window.removeEventListener("resize", onResize);
-        window.removeEventListener("load", onLoad);
+        ScrollTrigger.removeEventListener("refresh", onRefresh);
       };
     });
 
     return () => {
-      bgSyncRef.current = null;
-      retryTimers.forEach((timer) => window.clearTimeout(timer));
-      pinTrigger?.kill();
-      pinTrigger = null;
+      syncFromScrollRef.current = null;
+      triggers.forEach((trigger) => trigger.kill());
       mm.revert();
-      steps.forEach((step) => {
-        gsap.set(step, { clearProps: "visibility,pointerEvents" });
-        const content = step.querySelector("[data-process-content]");
-        if (content) gsap.set(content, { clearProps: "opacity,transform" });
-      });
-      if (parallax) gsap.set(parallax, { clearProps: "transform" });
       ScrollTrigger.getAll().forEach((trigger) => {
         if (trigger.trigger && section.contains(trigger.trigger as Node)) {
           trigger.kill();
         }
       });
     };
-  }, []);
+  }, [
+    findNearestIndex,
+    getStrokeLength,
+    resolveExpandedIndex,
+    setExpandedStep,
+    updateSpineGraphics,
+    updateRowHighlights,
+  ]);
 
   return (
     <section
-      id="process"
       ref={sectionRef}
-      className="border-t border-white/10 bg-surface"
+      id="process"
+      className={`process-timeline ${inter.variable} ${spaceMono.variable} scroll-mt-24 border-t border-white/10`}
     >
       <SectionHeader
-        title="Our Process"
-        description="A systematic, transparent approach designed to reduce anxiety and build confidence throughout your financial planning journey."
-        className="py-16 md:py-20 lg:pb-10"
+        title={PROCESS_HERO.title}
+        description={PROCESS_HERO.subtitle}
+        className="py-20 md:py-28 lg:pb-16"
       />
 
-      <div ref={pinWrapperRef} className="relative w-full">
-        <div
-          ref={stageRef}
-          data-process-stage
-          className="relative h-[calc(100svh-5rem)] min-h-[32rem] w-full overflow-hidden"
-        >
-          <div
-            ref={parallaxRef}
-            className="pointer-events-none absolute inset-0 overflow-hidden will-change-transform"
-            aria-hidden
-          >
-            <Image
-              src={PROCESS_BG_IMAGE}
-              alt=""
-              fill
-              className="object-cover object-center"
-              sizes="100vw"
-              onLoad={() => bgSyncRef.current?.()}
-            />
-            <div className="absolute inset-0 bg-charcoal/55" />
-            <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/40 to-charcoal/70" />
+      <div className="process-timeline-scroll mx-auto w-full max-w-[1100px] px-6 pb-20 md:pb-28 lg:px-8">
+        <div ref={trackRef} className="process-timeline-track">
+          <div className="process-timeline-spine" aria-hidden="true">
+            <svg className="process-timeline-spine-svg">
+              <line ref={spineTrackRef} className="process-timeline-spine-track" />
+              <polyline ref={spineBranchRef} className="process-timeline-spine-branch" />
+              <rect ref={spineThumbRef} className="process-timeline-spine-thumb" />
+            </svg>
           </div>
 
-          <div className="viewport-frame relative z-10 mx-auto h-full max-w-7xl px-6 lg:px-8">
-            {processSteps.map((step, index) => (
-              <ProcessTextStep
+          {processSteps.map((step, index) => {
+            const side = index % 2 === 0 ? "left" : "right";
+
+            return (
+              <div
                 key={step.id}
-                step={step}
-                index={index}
-                side={index % 2 === 0 ? "left" : "right"}
-              />
-            ))}
-          </div>
+                ref={(element) => {
+                  rowsRef.current[index] = element;
+                }}
+                data-process-row
+                className={`process-step-row process-step-row--${side}`}
+              >
+                <div className="process-step-rail" aria-hidden="true">
+                  <span
+                    ref={(element) => {
+                      nodesRef.current[index] = element;
+                    }}
+                    data-process-node
+                    className="process-step-node"
+                  />
+                </div>
+
+                <ProcessStepCard
+                  step={step}
+                  index={index}
+                  side={side}
+                  isActive={activeIndex === index}
+                  isNear={nearIndex === index}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

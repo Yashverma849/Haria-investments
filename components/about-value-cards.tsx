@@ -71,7 +71,7 @@ export default function AboutValueCards() {
         <article
           key={card.title}
           data-value-card
-          className="group relative overflow-hidden rounded-2xl border border-white/10 bg-surface/60 p-8 opacity-0 backdrop-blur-sm transition-colors duration-500 hover:border-white/20"
+          className="group relative overflow-hidden rounded-2xl border border-charcoal/10 bg-surface/60 p-8 opacity-0 backdrop-blur-sm transition-colors duration-500 hover:border-charcoal/20"
         >
           <div
             className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -88,10 +88,10 @@ export default function AboutValueCards() {
           </div>
 
           <div className="relative z-10">
-            <h2 className="font-serif text-2xl font-semibold text-white">
+            <h2 className="font-serif text-2xl font-semibold text-charcoal transition-colors duration-500 group-hover:text-white">
               {card.title}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-white/75">
+            <p className="mt-4 text-base leading-relaxed text-charcoal/75 transition-colors duration-500 group-hover:text-white/80">
               {card.description}
             </p>
           </div>

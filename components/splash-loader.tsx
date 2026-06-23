@@ -38,7 +38,7 @@ export default function SplashLoader({ fullScreen = true }: SplashLoaderProps) {
     >
       <div ref={logoRef} className="opacity-0">
         <Image
-          src="/haria-logo.png"
+          src="/logo/haria-logo.png"
           alt="Haria Investments"
           width={128}
           height={128}
