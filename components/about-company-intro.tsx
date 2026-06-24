@@ -7,8 +7,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import { aboutCompanyParagraphs } from "@/lib/team-data";
 
-const ABOUT_HERO_IMAGE = "/images/Gemini_Generated_Image_9c0mdr9c0mdr9c0m.png";
-const ABOUT_DETAIL_IMAGE = "/images/Gemini_Generated_Image_nh2i56nh2i56nh2i.png";
+const ABOUT_HERO_IMAGE = "/images/about/about-hero.jpg";
+const ABOUT_DETAIL_IMAGE = "/images/about/about-philosophy.jpg";
 
 const [introParagraph, , legacyParagraph] = aboutCompanyParagraphs;
 
@@ -188,7 +188,7 @@ export default function AboutCompanyIntro() {
             >
               <Image
                 src={ABOUT_HERO_IMAGE}
-                alt="Modern workspace representing Haria Investments"
+                alt="Haria Investments advisors consulting with a client family"
                 fill
                 className="object-cover object-center"
                 sizes="(max-width: 1024px) 90vw, 34vw"
@@ -204,7 +204,7 @@ export default function AboutCompanyIntro() {
             >
               <Image
                 src={ABOUT_DETAIL_IMAGE}
-                alt="Detail of a refined financial planning environment"
+                alt="Financial planning review with insurance and investment documents"
                 fill
                 className="object-cover object-center"
                 sizes="(max-width: 1024px) 90vw, 26vw"

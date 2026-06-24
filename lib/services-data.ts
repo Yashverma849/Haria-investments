@@ -7,15 +7,21 @@ export type ServiceOffering = {
   textTone: "light" | "dark";
 };
 
+const homeServiceImages = {
+  insurance: "/images/home-services/band-insurance.jpg",
+  mutualFundsEquity: "/images/home-services/band-mutual-funds-equity.jpg",
+  fixedIncome: "/images/home-services/band-fixed-income.jpg",
+  commodities: "/images/home-services/band-commodities.jpg",
+} as const;
+
 export const serviceOfferings: ServiceOffering[] = [
   {
     id: "insurance",
     title: "Life & General Insurance",
     description:
       "Comprehensive coverage for you and your family's financial security",
-    href: "/insurance",
-    image:
-      "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1600&q=80",
+    href: "/insurance/life",
+    image: homeServiceImages.insurance,
     textTone: "light",
   },
   {
@@ -24,8 +30,7 @@ export const serviceOfferings: ServiceOffering[] = [
     description:
       "Strategic investment solutions for long-term wealth creation",
     href: "/investment/mutual-funds",
-    image:
-      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80",
+    image: homeServiceImages.mutualFundsEquity,
     textTone: "light",
   },
   {
@@ -34,8 +39,7 @@ export const serviceOfferings: ServiceOffering[] = [
     description:
       "Stable returns through diversified fixed income instruments",
     href: "/investment/fixed-income",
-    image:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1600&q=80",
+    image: homeServiceImages.fixedIncome,
     textTone: "light",
   },
   {
@@ -44,7 +48,7 @@ export const serviceOfferings: ServiceOffering[] = [
     description:
       "Expert guidance in commodity markets and derivatives",
     href: "/commodities/derivation",
-    image: "/images/Gemini_Generated_Image_hfmgzahfmgzahfmg.png",
+    image: homeServiceImages.commodities,
     textTone: "light",
   },
 ];

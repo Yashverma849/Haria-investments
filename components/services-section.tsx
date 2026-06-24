@@ -113,7 +113,7 @@ export default function ServicesSection() {
                 >
                   <Image
                     src={service.image}
-                    alt=""
+                    alt={service.title}
                     fill
                     priority={index === 0}
                     className="object-cover"

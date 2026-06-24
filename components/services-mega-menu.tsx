@@ -96,14 +96,15 @@ function ServiceCards({ category }: ServiceCardsProps) {
         >
           <div
             data-card-image
-            className="absolute inset-[-12%] opacity-45 will-change-transform transition-opacity duration-300 group-hover/card:opacity-55"
+            className="absolute inset-[-12%] bg-brand/20 opacity-55 will-change-transform transition-opacity duration-300 group-hover/card:opacity-70"
           >
             <Image
               src={card.image ?? category.image}
-              alt={card.label}
+              alt=""
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 280px"
+              priority={false}
             />
           </div>
 
