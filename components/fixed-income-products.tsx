@@ -57,7 +57,7 @@ export default function FixedIncomeProducts() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-background pb-20 md:pb-28">
+    <section ref={sectionRef} className="border-t border-charcoal/10 bg-surface pb-20 text-charcoal md:pb-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div
           data-fi-products-grid

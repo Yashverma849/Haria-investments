@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import AboutStackScroll from "@/components/about-stack-scroll";
 import JourneyCtaSection from "@/components/journey-cta-section";
-import LifeInsuranceHero from "@/components/life-insurance-hero";
 import LifeInsuranceProcess from "@/components/life-insurance-process";
-import LifeInsuranceTestimonials from "@/components/life-insurance-testimonials";
-import Navbar from "@/components/navbar";
 import ProtectionPlansSection from "@/components/protection-plans-section";
+import ServiceStackIntro from "@/components/service-stack-intro";
+import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
   title: "Life Insurance | Haria Investments",
@@ -14,15 +14,17 @@ export const metadata: Metadata = {
 
 export default function LifeInsurancePage() {
   return (
-    <>
-      <Navbar />
-      <main className="bg-background">
-        <LifeInsuranceHero />
-        <ProtectionPlansSection />
-        <LifeInsuranceTestimonials />
-        <LifeInsuranceProcess />
-        <JourneyCtaSection />
-      </main>
-    </>
+    <main className="bg-surface">
+      <AboutStackScroll
+        intro={<ServiceStackIntro content={serviceIntros.lifeInsurance} />}
+        legacy={
+          <>
+            <ProtectionPlansSection />
+            <LifeInsuranceProcess />
+            <JourneyCtaSection tone="light" />
+          </>
+        }
+      />
+    </main>
   );
 }

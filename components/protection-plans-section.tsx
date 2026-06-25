@@ -61,15 +61,16 @@ export default function ProtectionPlansSection() {
     <section
       ref={sectionRef}
       id="protection-plans"
-      className="scroll-mt-24 border-t border-white/10 bg-background pt-20 md:pt-28"
+      className="scroll-mt-24 border-t border-charcoal/10 bg-surface pt-20 text-charcoal md:pt-28"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
           Our Protection Plans
         </p>
       </div>
 
       <SectionHeader
+        onSurface
         title="Choose Your Protection Plan"
         description="Tailored solutions for every life stage and financial goal"
         className="pt-4"

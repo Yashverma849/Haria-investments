@@ -2,8 +2,10 @@
 
 import { useRef } from "react";
 import gsap from "gsap";
+import PageHeroBackground from "@/components/page-hero-background";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import { equityInvestmentHero } from "@/lib/equity-investment-data";
+import { heroBackgrounds } from "@/lib/hero-backgrounds";
 
 export default function EquityInvestmentHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -32,7 +34,7 @@ export default function EquityInvestmentHero() {
       ref={sectionRef}
       className="relative overflow-hidden border-b border-white/10 bg-background pt-28 pb-20 md:pt-36 md:pb-28"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,color-mix(in_srgb,var(--blue)_18%,transparent),transparent_55%)]" />
+      <PageHeroBackground src={heroBackgrounds.equityInvestment} />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <p
           data-equity-hero

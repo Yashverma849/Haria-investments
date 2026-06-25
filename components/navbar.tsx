@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import ScrollSmoother from "gsap/ScrollSmoother";
 import LogoAnimatedText from "@/components/logo-animated-text";
 import ServicesMegaMenu from "@/components/services-mega-menu";
 import {
@@ -16,6 +17,11 @@ const navLinkClass =
   "rounded-lg px-4 py-2 text-sm font-medium text-white/85 transition-colors hover:bg-white/5 hover:text-white";
 
 const NAV_OFFSET_PX = 80;
+
+function getHomeSectionId(href: string) {
+  const match = href.match(/^\/#(.+)$/);
+  return match?.[1] ?? null;
+}
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -40,19 +46,28 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToHero = () => {
-    const hero = document.getElementById("home");
-    if (!hero) return;
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
 
-    const top =
-      hero.getBoundingClientRect().top + window.scrollY - NAV_OFFSET_PX;
+    const smoother = ScrollSmoother.get();
 
-    window.scrollTo({
-      top: Math.max(0, top),
-      behavior: "smooth",
-    });
-    window.history.replaceState(null, "", "/#home");
+    if (smoother) {
+      smoother.scrollTo(section, true, `top ${NAV_OFFSET_PX}px`);
+    } else {
+      const top =
+        section.getBoundingClientRect().top + window.scrollY - NAV_OFFSET_PX;
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: "smooth",
+      });
+    }
+
+    window.history.replaceState(null, "", `/#${sectionId}`);
   };
+
+  const scrollToHero = () => scrollToSection("home");
 
   const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname !== "/") return;
@@ -60,6 +75,17 @@ export default function Navbar() {
     event.preventDefault();
     setMobileOpen(false);
     scrollToHero();
+  };
+
+  const handleHomeHashLinkClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    sectionId: string,
+  ) => {
+    if (pathname !== "/") return;
+
+    event.preventDefault();
+    setMobileOpen(false);
+    scrollToSection(sectionId);
   };
 
   return (
@@ -99,13 +125,26 @@ export default function Navbar() {
 
           <ServicesMegaMenu />
 
-          {mainNavLinks.slice(2).map((link) => (
-            <li key={link.label}>
-              <Link href={link.href} className={navLinkClass}>
-                {link.label}
-              </Link>
-            </li>
-          ))}
+          {mainNavLinks.slice(2).map((link) => {
+            const sectionId = getHomeSectionId(link.href);
+
+            return (
+              <li key={link.label}>
+                <Link
+                  href={link.href}
+                  scroll={sectionId ? false : undefined}
+                  className={navLinkClass}
+                  onClick={
+                    sectionId
+                      ? (event) => handleHomeHashLinkClick(event, sectionId)
+                      : undefined
+                  }
+                >
+                  {link.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex items-center gap-3 justify-self-end">
@@ -236,16 +275,25 @@ export default function Navbar() {
             )}
           </div>
 
-          {mainNavLinks.slice(2).map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="block border-b border-white/10 py-4 text-base font-medium text-white"
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {mainNavLinks.slice(2).map((link) => {
+            const sectionId = getHomeSectionId(link.href);
+
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                scroll={sectionId ? false : undefined}
+                className="block border-b border-white/10 py-4 text-base font-medium text-white"
+                onClick={
+                  sectionId
+                    ? (event) => handleHomeHashLinkClick(event, sectionId)
+                    : () => setMobileOpen(false)
+                }
+              >
+                {link.label}
+              </Link>
+            );
+          })}
 
           <Link
             href={scheduleConsultation.href}

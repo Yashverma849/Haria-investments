@@ -28,6 +28,9 @@ export type AmcPartner = {
   id: string;
   name: string;
   shortName: string;
+  logo: string;
+  /** Bump logos that read small at the default marquee size */
+  logoSize?: "lg";
 };
 
 export const mutualFundsHero = {
@@ -184,13 +187,50 @@ export const fundCategories: FundCategory[] = [
 ];
 
 export const amcPartners: AmcPartner[] = [
-  { id: "hdfc", name: "HDFC Asset Management", shortName: "HDFC" },
-  { id: "icici", name: "ICICI Prudential AMC", shortName: "ICICI" },
-  { id: "axis", name: "Axis Mutual Fund", shortName: "AXIS" },
-  { id: "kotak", name: "Kotak Mahindra AMC", shortName: "KOTAK" },
-  { id: "hsbc", name: "HSBC Mutual Fund", shortName: "HSBC" },
-  { id: "tata", name: "Tata Mutual Fund", shortName: "TATA" },
-  { id: "nippon", name: "Nippon India Mutual Fund", shortName: "NIPPON" },
+  {
+    id: "hdfc",
+    name: "HDFC Asset Management",
+    shortName: "HDFC",
+    logo: "/images/hdfc-removebg-preview.png",
+  },
+  {
+    id: "icici",
+    name: "ICICI Prudential AMC",
+    shortName: "ICICI",
+    logo: "/images/icici-removebg-preview.png",
+  },
+  {
+    id: "axis",
+    name: "Axis Mutual Fund",
+    shortName: "AXIS",
+    logo: "/images/axis-removebg-preview.png",
+    logoSize: "lg",
+  },
+  {
+    id: "kotak",
+    name: "Kotak Mahindra AMC",
+    shortName: "KOTAK",
+    logo: "/images/kotak-removebg-preview.png",
+  },
+  {
+    id: "hsbc",
+    name: "HSBC Mutual Fund",
+    shortName: "HSBC",
+    logo: "/images/hsbc-removebg-preview.png",
+  },
+  {
+    id: "tata",
+    name: "Tata Mutual Fund",
+    shortName: "TATA",
+    logo: "/images/tata-removebg-preview.png",
+    logoSize: "lg",
+  },
+  {
+    id: "nippon",
+    name: "Nippon India Mutual Fund",
+    shortName: "NIPPON",
+    logo: "/images/nippon-removebg-preview.png",
+  },
 ];
 
 export const partnersSection = {

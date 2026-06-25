@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import AboutStackScroll from "@/components/about-stack-scroll";
 import CommodityHighlightsSection from "@/components/commodity-highlights-section";
 import JourneyCtaSection from "@/components/journey-cta-section";
-import Navbar from "@/components/navbar";
-import ServicePageHero from "@/components/service-page-hero";
+import ServiceStackIntro from "@/components/service-stack-intro";
 import { commoditySilverGold } from "@/lib/commodities-data";
+import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
   title: "Silver & Gold | Haria Investments",
@@ -13,17 +14,16 @@ export const metadata: Metadata = {
 
 export default function SilverGoldPage() {
   return (
-    <>
-      <Navbar />
-      <main className="bg-background">
-        <ServicePageHero
-          eyebrow={commoditySilverGold.eyebrow}
-          title={commoditySilverGold.title}
-          description={commoditySilverGold.description}
-        />
-        <CommodityHighlightsSection content={commoditySilverGold} />
-        <JourneyCtaSection />
-      </main>
-    </>
+    <main className="bg-surface">
+      <AboutStackScroll
+        intro={<ServiceStackIntro content={serviceIntros.commoditySilverGold} />}
+        legacy={
+          <>
+            <CommodityHighlightsSection content={commoditySilverGold} />
+            <JourneyCtaSection />
+          </>
+        }
+      />
+    </main>
   );
 }

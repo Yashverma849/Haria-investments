@@ -1,0 +1,15 @@
+export const heroBackgrounds = {
+  lifeInsurance: "/images/heroes/hero-life-insurance.jpg",
+  generalInsurance: "/images/heroes/hero-general-insurance.jpg",
+  equityInvestment: "/images/heroes/hero-equity-investment.jpg",
+  fixedIncome: "/images/heroes/hero-fixed-income.jpg",
+  mutualFunds: "/images/heroes/hero-mutual-funds.jpg",
+  commodityDerivation: "/images/heroes/hero-commodity-derivation.jpg",
+  commoditySilverGold: "/images/heroes/hero-commodity-silver-gold.jpg",
+  commodityTraining: "/images/heroes/hero-commodity-training.jpg",
+  calculatorSip: "/images/heroes/hero-calculator-sip.jpg",
+  calculatorLumpSum: "/images/heroes/hero-calculator-lump-sum.jpg",
+  calculatorSwp: "/images/heroes/hero-calculator-swp.jpg",
+  calculatorCagr: "/images/heroes/hero-calculator-cagr.jpg",
+  financialHealth: "/images/heroes/hero-financial-health.jpg",
+} as const;

@@ -1,6 +1,7 @@
 "use client";
 
 import { Inter, Space_Mono } from "next/font/google";
+import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,6 +12,7 @@ import {
   processSteps,
   type ProcessStep,
 } from "@/lib/process-data";
+import { scheduleConsultation } from "@/lib/nav-links";
 
 const FOCUS_RATIO = 0.42;
 const EXPAND_ENTER_PROGRESS = 0.44;
@@ -99,7 +101,7 @@ function ProcessStepCard({
           </div>
           <div className="relative flex min-w-0 flex-1 items-center gap-3 px-4 py-3.5 sm:px-5">
             <div className="min-w-0 flex-1">
-              <p className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.14em] text-[#a0a0a0] sm:text-xs">
+              <p className="process-timeline-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#a0a0a0] sm:text-xs">
                 {step.label}
               </p>
               <h3 className="mt-1 text-base font-semibold tracking-tight text-white sm:text-lg">
@@ -117,7 +119,7 @@ function ProcessStepCard({
                 {step.summary}
               </p>
 
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-stretch sm:gap-x-5">
                 <div>
                   <h4 className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
                     What to Expect
@@ -130,6 +132,8 @@ function ProcessStepCard({
                     ))}
                   </ul>
                 </div>
+
+                <div aria-hidden="true" className="process-step-card-column-divider" />
 
                 <div>
                   <h4 className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
@@ -541,6 +545,15 @@ export default function ProcessSection() {
               </div>
             );
           })}
+        </div>
+
+        <div className="mt-16 flex justify-center md:mt-20">
+          <Link
+            href={scheduleConsultation.href}
+            className="btn-primary inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold"
+          >
+            Book a Wealth Support
+          </Link>
         </div>
       </div>
     </section>

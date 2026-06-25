@@ -12,6 +12,7 @@ type LegacyShowcaseProps = {
   members: TeamMember[];
   showReadMore?: boolean;
   scrollReplay?: boolean;
+  onSurface?: boolean;
 };
 
 function LegacyPortrait({ member }: { member: TeamMember }) {
@@ -24,7 +25,7 @@ function LegacyPortrait({ member }: { member: TeamMember }) {
         className="object-cover object-top transition-transform duration-500 group-hover/image:scale-105"
         sizes="224px"
       />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/85 to-transparent p-4 pt-12">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent p-4 pt-12">
         {member.badge ? (
           <span className="mb-1.5 inline-block rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-accent">
             {member.badge}
@@ -38,13 +39,21 @@ function LegacyPortrait({ member }: { member: TeamMember }) {
   );
 }
 
-function LegacyBio({ member }: { member: TeamMember }) {
+function LegacyBio({
+  member,
+  onSurface = false,
+}: {
+  member: TeamMember;
+  onSurface?: boolean;
+}) {
   return (
     <div className="space-y-3">
       {member.bio.map((paragraph) => (
         <p
           key={paragraph.slice(0, 48)}
-          className="text-base leading-relaxed text-white/85 sm:text-lg lg:text-xl"
+          className={`text-base leading-relaxed sm:text-lg lg:text-xl ${
+            onSurface ? "text-charcoal/85" : "text-white/85"
+          }`}
         >
           {paragraph}
         </p>
@@ -57,6 +66,7 @@ export default function LegacyShowcase({
   members,
   showReadMore = false,
   scrollReplay = false,
+  onSurface = false,
 }: LegacyShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -301,7 +311,7 @@ export default function LegacyShowcase({
               data-legacy-text
               className="min-w-0 flex-1 opacity-0"
             >
-              <LegacyBio member={member} />
+              <LegacyBio member={member} onSurface={onSurface} />
             </div>
           </article>
         );
@@ -312,7 +322,11 @@ export default function LegacyShowcase({
           <Link
             href="/about#legacy-leaders"
             scroll={false}
-            className="group inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/45 hover:bg-white/10"
+            className={
+              onSurface
+                ? "group inline-flex items-center gap-2 rounded-full border border-charcoal/20 bg-charcoal/5 px-7 py-3 text-sm font-semibold text-charcoal backdrop-blur-sm transition-all hover:border-charcoal/35 hover:bg-charcoal/10"
+                : "group inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/45 hover:bg-white/10"
+            }
           >
             Read more
             <span

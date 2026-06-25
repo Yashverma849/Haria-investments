@@ -7,11 +7,12 @@ export function AboutPurpose() {
   return (
     <section
       id="about"
-      className="overflow-x-clip border-t border-white/10 bg-background pt-20 md:pt-28"
+      className="overflow-x-clip border-t border-charcoal/10 bg-surface pt-20 text-charcoal md:pt-28"
     >
       <AboutSectionHeading
         title="Our Purpose"
         description="The principles that guide how we protect, grow, and diversify client wealth—across generations of trusted service."
+        onSurface
       />
 
       <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
@@ -23,17 +24,19 @@ export function AboutPurpose() {
 
 export function AboutLeaders() {
   return (
-    <section className="overflow-x-clip border-t border-white/10 bg-background pt-20 md:pt-28">
+    <section className="overflow-x-clip border-t border-charcoal/10 bg-surface pt-20 text-charcoal md:pt-28">
       <AboutSectionHeading
         title="Legacy Leaders"
         description={aboutPeopleIntro}
-        descriptionClassName="text-fluid-lead max-w-xl text-cream/80 xl:max-w-2xl"
+        descriptionClassName="text-fluid-lead max-w-xl xl:max-w-2xl"
+        onSurface
       />
 
       <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
         <LegacyShowcase
           members={teamMembers.slice(0, 2)}
           showReadMore
+          onSurface
         />
       </div>
     </section>

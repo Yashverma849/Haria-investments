@@ -58,14 +58,15 @@ export default function FixedIncomeLadder() {
     <section
       ref={sectionRef}
       id="laddering"
-      className="scroll-mt-24 border-t border-white/10 bg-background py-20 md:py-28"
+      className="scroll-mt-24 border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
           Investment Strategy
         </p>
       </div>
       <SectionHeader
+        onSurface
         title="Laddering Strategy"
         description="Optimize your returns with systematic investment laddering"
         className="!pb-12 md:!pb-16"

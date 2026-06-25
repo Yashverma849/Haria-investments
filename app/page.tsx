@@ -1,7 +1,6 @@
 import { AboutLeaders, AboutPurpose } from "@/components/about";
 import JourneyCtaSection from "@/components/journey-cta-section";
 import HeroSection from "@/components/hero-section";
-import Navbar from "@/components/navbar";
 import ProcessSection from "@/components/process-section";
 import ServicesSection from "@/components/services-section";
 import TestimonialsSection from "@/components/testimonials-section";
@@ -10,7 +9,6 @@ import ValuesSection from "@/components/values-section";
 export default function Home() {
   return (
     <main className="w-full max-w-full overflow-x-clip">
-      <Navbar />
       <HeroSection />
       <AboutPurpose />
       <ValuesSection />
@@ -18,7 +16,7 @@ export default function Home() {
       <ProcessSection />
       <AboutLeaders />
       <TestimonialsSection />
-      <JourneyCtaSection />
+      <JourneyCtaSection tone="light" />
     </main>
   );
 }

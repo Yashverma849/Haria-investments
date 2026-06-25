@@ -7,12 +7,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import { aboutCompanyParagraphs } from "@/lib/team-data";
 
-const ABOUT_HERO_IMAGE = "/images/about/about-hero.jpg";
+const ABOUT_HERO_IMAGE = "/images/about/about-company-desk.jpg";
 const ABOUT_DETAIL_IMAGE = "/images/about/about-philosophy.jpg";
 
 const [introParagraph, , legacyParagraph] = aboutCompanyParagraphs;
 
-export default function AboutCompanyIntro() {
+type AboutCompanyIntroProps = {
+  /** Keep content visible when pinned under a stack-scroll cover panel */
+  keepVisibleOnScroll?: boolean;
+};
+
+export default function AboutCompanyIntro({
+  keepVisibleOnScroll = false,
+}: AboutCompanyIntroProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useGsapAfterLoader(() => {
@@ -124,6 +131,29 @@ export default function AboutCompanyIntro() {
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      if (keepVisibleOnScroll) {
+        scrollTrigger = ScrollTrigger.create({
+          trigger: section,
+          start: "top 85%",
+          onEnter: animateIn,
+          onEnterBack: animateIn,
+          once: false,
+        });
+
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+
+          const { top, bottom } = section.getBoundingClientRect();
+          const inView = top < window.innerHeight * 0.85 && bottom > 0;
+
+          if (inView) {
+            animateIn();
+          }
+        });
+
+        return;
+      }
+
       scrollTrigger = ScrollTrigger.create({
         trigger: section,
         start: "top 85%",
@@ -156,7 +186,7 @@ export default function AboutCompanyIntro() {
         }
       });
     };
-  }, []);
+  }, [keepVisibleOnScroll]);
 
   return (
     <section
@@ -188,7 +218,7 @@ export default function AboutCompanyIntro() {
             >
               <Image
                 src={ABOUT_HERO_IMAGE}
-                alt="Haria Investments advisors consulting with a client family"
+                alt="Financial planning desk with insurance and wealth strategy documents overlooking a city skyline"
                 fill
                 className="object-cover object-center"
                 sizes="(max-width: 1024px) 90vw, 34vw"

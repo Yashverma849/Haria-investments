@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
-import Footer from "@/components/footer";
-import SiteLoader from "@/components/site-loader";
 import SiteLoaderShell from "@/components/site-loader-shell";
 import "./globals.css";
 
@@ -31,14 +29,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${dmSans.variable} h-full scroll-smooth antialiased`}
+      className={`${playfair.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full w-full max-w-full overflow-x-clip bg-background font-sans text-foreground">
-        <SiteLoaderShell>
-          <SiteLoader />
-          {children}
-          <Footer />
-        </SiteLoaderShell>
+        <SiteLoaderShell>{children}</SiteLoaderShell>
       </body>
     </html>
   );

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import AboutStackScroll from "@/components/about-stack-scroll";
 import FixedIncomeBenefits from "@/components/fixed-income-benefits";
 import FixedIncomeCalculator from "@/components/fixed-income-calculator";
-import FixedIncomeHero from "@/components/fixed-income-hero";
 import FixedIncomeLadder from "@/components/fixed-income-ladder";
 import FixedIncomeProducts from "@/components/fixed-income-products";
 import JourneyCtaSection from "@/components/journey-cta-section";
-import Navbar from "@/components/navbar";
+import ServiceStackIntro from "@/components/service-stack-intro";
+import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
   title: "Fixed Income | Haria Investments",
@@ -15,16 +16,19 @@ export const metadata: Metadata = {
 
 export default function FixedIncomePage() {
   return (
-    <>
-      <Navbar />
-      <main className="bg-background">
-        <FixedIncomeHero />
-        <FixedIncomeProducts />
-        <FixedIncomeCalculator />
-        <FixedIncomeLadder />
-        <FixedIncomeBenefits />
-        <JourneyCtaSection />
-      </main>
-    </>
+    <main className="bg-surface">
+      <AboutStackScroll
+        intro={<ServiceStackIntro content={serviceIntros.fixedIncome} />}
+        legacy={
+          <>
+            <FixedIncomeProducts />
+            <FixedIncomeCalculator />
+            <FixedIncomeLadder />
+            <FixedIncomeBenefits />
+            <JourneyCtaSection tone="light" />
+          </>
+        }
+      />
+    </main>
   );
 }

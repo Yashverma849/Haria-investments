@@ -2,7 +2,9 @@
 
 import { useRef } from "react";
 import gsap from "gsap";
+import PageHeroBackground from "@/components/page-hero-background";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import { heroBackgrounds } from "@/lib/hero-backgrounds";
 
 export default function LifeInsuranceHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -31,7 +33,7 @@ export default function LifeInsuranceHero() {
       ref={sectionRef}
       className="relative overflow-hidden border-b border-white/10 bg-background pt-28 pb-16 md:pt-36 md:pb-20"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,color-mix(in_srgb,var(--blue)_18%,transparent),transparent_55%)]" />
+      <PageHeroBackground src={heroBackgrounds.lifeInsurance} />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <p
           data-li-hero

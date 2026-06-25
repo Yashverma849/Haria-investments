@@ -64,17 +64,17 @@ export default function InsurancePlansSection() {
   return (
     <section
       ref={sectionRef}
-      className="border-t border-white/10 bg-background py-20 md:py-28"
+      className="border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-6xl space-y-16 md:space-y-20">
           {insuranceCategories.map((category) => (
             <div key={category.id}>
               <div className="mb-8 md:mb-10">
-                <h2 className="text-fluid-process-title font-serif font-semibold tracking-tight text-white">
+                <h2 className="text-fluid-process-title font-serif font-semibold tracking-tight text-charcoal">
                   {category.title}
                 </h2>
-                <p className="mt-2 max-w-2xl text-base leading-relaxed text-white/70">
+                <p className="mt-2 max-w-2xl text-base leading-relaxed text-charcoal/70">
                   {category.description}
                 </p>
               </div>

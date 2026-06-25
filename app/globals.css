@@ -111,6 +111,30 @@ body {
   color: var(--charcoal);
 }
 
+@keyframes amc-logo-marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.amc-logo-marquee-track {
+  animation: amc-logo-marquee-ltr 42s linear infinite;
+  will-change: transform;
+}
+
+.group\/marquee:hover .amc-logo-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amc-logo-marquee-track {
+    animation: none;
+  }
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -482,6 +506,39 @@ body {
   overflow: hidden;
 }
 
+.process-step-card-column-divider {
+  height: 1px;
+  width: 100%;
+  flex-shrink: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--process-border) 0,
+    var(--process-border) 2px,
+    transparent 2px,
+    transparent 8px
+  );
+  background-repeat: repeat-x;
+  background-position: center;
+  background-size: 100% 1px;
+}
+
+@media (min-width: 640px) {
+  .process-step-card-column-divider {
+    width: 1px;
+    height: auto;
+    align-self: stretch;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--process-border) 0,
+      var(--process-border) 2px,
+      transparent 2px,
+      transparent 8px
+    );
+    background-repeat: repeat-y;
+    background-size: 1px 100%;
+  }
+}
+
 .process-step-graphic {
   height: 2.25rem;
   width: 2.25rem;
@@ -567,5 +624,52 @@ body {
   .process-step-card.is-expanded .process-step-card-body,
   .process-step-card:focus-within .process-step-card-body {
     grid-template-rows: 1fr;
+  }
+}
+
+.scroll-smoother-wrapper {
+  width: 100%;
+  overflow: clip;
+}
+
+/* About page — swipe-up card stack (intro pinned, legacy covers on scroll) */
+.about-stack-scroll {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--surface);
+  background-image: var(--surface-gradient);
+}
+
+.about-stack-scroll__base {
+  position: relative;
+  z-index: 1;
+  overflow-x: clip;
+  will-change: transform, filter;
+}
+
+.about-stack-scroll__cover {
+  position: relative;
+  z-index: 2;
+  margin-top: calc(-1 * min(92vh, 760px));
+  background-color: var(--surface);
+  background-image: var(--surface-gradient);
+}
+
+.about-stack-scroll__cover-panel {
+  will-change: transform;
+}
+
+.about-stack-scroll .pin-spacer {
+  background-color: var(--surface);
+  background-image: var(--surface-gradient);
+}
+
+/* Service intro — hollow outlined title when overlaid on the image card */
+@layer utilities {
+  .text-display-stroke {
+    color: transparent;
+    -webkit-text-stroke-width: clamp(1.5px, 0.08em, 3px);
+    -webkit-text-stroke-color: rgba(255, 255, 255, 0.96);
+    paint-order: stroke fill;
   }
 }

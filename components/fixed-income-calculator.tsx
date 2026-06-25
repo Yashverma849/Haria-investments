@@ -1,16 +1,11 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AnimatedCalculatorValue from "@/components/animated-calculator-value";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import SectionHeader from "@/components/section-header";
-
-const currencyFormatter = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  maximumFractionDigits: 0,
-});
 
 function calculateMaturity(
   principal: number,
@@ -33,11 +28,15 @@ export default function FixedIncomeCalculator() {
   const [amount, setAmount] = useState(100_000);
   const [tenure, setTenure] = useState(5);
   const [rate, setRate] = useState(7.5);
+  const [hasCalculated, setHasCalculated] = useState(false);
+  const [animationKey, setAnimationKey] = useState(0);
+  const [results, setResults] = useState({ maturity: 0, interest: 0 });
 
-  const { maturity, interest } = useMemo(
-    () => calculateMaturity(amount, rate, tenure),
-    [amount, rate, tenure],
-  );
+  const handleCalculate = useCallback(() => {
+    setResults(calculateMaturity(amount, rate, tenure));
+    setHasCalculated(true);
+    setAnimationKey((key) => key + 1);
+  }, [amount, rate, tenure]);
 
   useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -86,15 +85,14 @@ export default function FixedIncomeCalculator() {
     <section
       ref={sectionRef}
       id="calculator"
-      className="scroll-mt-24 border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
+      className="scroll-mt-24 border-t border-white/10 bg-background py-20 text-cream md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
           Calculate Returns
         </p>
       </div>
       <SectionHeader
-        onSurface
         title="Fixed Income Calculator"
         description="Calculate your fixed income maturity amount"
         className="!pb-12 md:!pb-16"
@@ -103,11 +101,11 @@ export default function FixedIncomeCalculator() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div
           data-fi-calc-panel
-          className="mx-auto max-w-5xl rounded-2xl border border-charcoal/10 bg-white/70 p-6 backdrop-blur-sm md:p-10"
+          className="mx-auto max-w-5xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm md:p-10"
         >
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
-              <h3 className="font-serif text-xl font-semibold text-charcoal">
+              <h3 className="font-serif text-xl font-semibold text-white">
                 Investment Details
               </h3>
 
@@ -115,7 +113,7 @@ export default function FixedIncomeCalculator() {
                 <div>
                   <label
                     htmlFor="fi-amount"
-                    className="block text-sm font-medium text-charcoal/80"
+                    className="block text-sm font-medium text-white/80"
                   >
                     Investment Amount (₹)
                   </label>
@@ -126,14 +124,14 @@ export default function FixedIncomeCalculator() {
                     step={1000}
                     value={amount}
                     onChange={(e) => setAmount(Number(e.target.value) || 0)}
-                    className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-4 py-3 text-charcoal outline-none transition-colors focus:border-charcoal/35"
+                    className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition-colors placeholder:text-white/40 focus:border-white/35"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="fi-tenure"
-                    className="block text-sm font-medium text-charcoal/80"
+                    className="block text-sm font-medium text-white/80"
                   >
                     Tenure (Years)
                   </label>
@@ -145,14 +143,14 @@ export default function FixedIncomeCalculator() {
                     step={1}
                     value={tenure}
                     onChange={(e) => setTenure(Number(e.target.value) || 1)}
-                    className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-4 py-3 text-charcoal outline-none transition-colors focus:border-charcoal/35"
+                    className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition-colors placeholder:text-white/40 focus:border-white/35"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="fi-rate"
-                    className="block text-sm font-medium text-charcoal/80"
+                    className="block text-sm font-medium text-white/80"
                   >
                     Interest Rate (%)
                   </label>
@@ -164,31 +162,54 @@ export default function FixedIncomeCalculator() {
                     step={0.1}
                     value={rate}
                     onChange={(e) => setRate(Number(e.target.value) || 0)}
-                    className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-4 py-3 text-charcoal outline-none transition-colors focus:border-charcoal/35"
+                    className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition-colors placeholder:text-white/40 focus:border-white/35"
                   />
                 </div>
               </div>
+
+              <button
+                type="button"
+                onClick={handleCalculate}
+                className="btn-primary mt-8 inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold"
+              >
+                Calculate
+              </button>
             </div>
 
-            <div className="flex flex-col justify-center rounded-2xl border border-charcoal/10 bg-surface p-6 md:p-8">
-              <p className="text-fluid-stat-large font-serif font-semibold text-charcoal">
-                {currencyFormatter.format(maturity)}
+            <div className="flex flex-col justify-center rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <p className="text-fluid-stat-large font-serif font-semibold text-white">
+                <AnimatedCalculatorValue
+                  value={results.maturity}
+                  format="currency"
+                  active={hasCalculated}
+                  animationKey={animationKey}
+                />
               </p>
-              <p className="mt-1 text-sm font-medium uppercase tracking-wider text-charcoal/60">
+              <p className="mt-1 text-sm font-medium uppercase tracking-wider text-white/60">
                 Maturity Amount
               </p>
 
-              <dl className="mt-8 space-y-4 border-t border-charcoal/10 pt-6">
+              <dl className="mt-8 space-y-4 border-t border-white/10 pt-6">
                 <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-sm text-charcoal/70">Principal Amount</dt>
-                  <dd className="text-fluid-stat font-semibold text-charcoal">
-                    {currencyFormatter.format(amount)}
+                  <dt className="text-sm text-white/70">Principal Amount</dt>
+                  <dd className="text-fluid-stat font-semibold text-white">
+                    <AnimatedCalculatorValue
+                      value={hasCalculated ? amount : 0}
+                      format="currency"
+                      active={hasCalculated}
+                      animationKey={animationKey}
+                    />
                   </dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-sm text-charcoal/70">Total Interest</dt>
-                  <dd className="text-fluid-stat font-semibold text-charcoal">
-                    {currencyFormatter.format(interest)}
+                  <dt className="text-sm text-white/70">Total Interest</dt>
+                  <dd className="text-fluid-stat font-semibold text-white">
+                    <AnimatedCalculatorValue
+                      value={results.interest}
+                      format="currency"
+                      active={hasCalculated}
+                      animationKey={animationKey}
+                    />
                   </dd>
                 </div>
               </dl>

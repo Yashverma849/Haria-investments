@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AmcLogoMarquee from "@/components/amc-logo-marquee";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import { amcPartners, partnersSection } from "@/lib/mutual-funds-data";
 
@@ -16,12 +17,12 @@ export default function MutualFundsPartners() {
     if (!section) return;
 
     const header = section.querySelector("[data-mf-partners-header]");
-    const logos = section.querySelectorAll("[data-mf-partner-logo]");
+    const marquee = section.querySelector("[data-mf-partners-marquee]");
 
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set([header, ...logos], { opacity: 1, y: 0 });
+      gsap.set([header, marquee], { opacity: 1, y: 0 });
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
@@ -44,23 +45,23 @@ export default function MutualFundsPartners() {
         );
       }
 
-      gsap.fromTo(
-        logos,
-        { opacity: 0, y: 20, scale: 0.96 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.7,
-          stagger: 0.08,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section.querySelector("[data-mf-partners-grid]"),
-            start: "top 88%",
-            once: true,
+      if (marquee) {
+        gsap.fromTo(
+          marquee,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: marquee,
+              start: "top 90%",
+              once: true,
+            },
           },
-        },
-      );
+        );
+      }
     });
 
     return () => {
@@ -76,57 +77,41 @@ export default function MutualFundsPartners() {
   return (
     <section
       ref={sectionRef}
-      className="border-t border-white/10 bg-background pt-20 md:pt-28"
+      className="flex flex-col border-t border-charcoal/10 bg-surface pt-14 text-charcoal md:pt-16"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-6 pb-4 lg:px-8 md:pb-5">
         <div
           data-mf-partners-header
-          className="mx-auto max-w-3xl text-center"
+          className="mx-auto max-w-2xl text-center"
         >
           <p
             data-fade-item
-            className="text-fluid-stat-large font-serif font-semibold text-white opacity-0"
+            className="text-fluid-stat font-serif font-semibold text-charcoal opacity-0"
           >
             {partnersSection.stat}
           </p>
           <p
             data-fade-item
-            className="mt-2 text-xs font-semibold uppercase tracking-[0.35em] text-brand-light opacity-0"
+            className="mt-1.5 text-xs font-semibold uppercase tracking-[0.35em] text-brand-light opacity-0"
           >
             {partnersSection.eyebrow}
           </p>
           <h2
             data-fade-item
-            className="text-fluid-page mt-4 text-balance font-serif font-semibold tracking-tight text-white opacity-0"
+            className="text-fluid-process-title mt-3 text-balance font-serif font-semibold tracking-tight text-charcoal opacity-0"
           >
             {partnersSection.title}
           </h2>
           <p
             data-fade-item
-            className="mt-4 text-base leading-relaxed text-white/70 opacity-0"
+            className="mt-3 text-sm leading-relaxed text-charcoal/70 opacity-0 sm:text-base"
           >
             {partnersSection.description}
           </p>
         </div>
-
-        <div
-          data-mf-partners-grid
-          className="mx-auto mt-14 grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5 lg:mt-16 lg:grid-cols-4"
-        >
-          {amcPartners.map((partner) => (
-            <div
-              key={partner.id}
-              data-mf-partner-logo
-              className="surface-panel flex min-h-[5.5rem] items-center justify-center rounded-2xl px-4 py-6 opacity-0"
-              title={partner.name}
-            >
-              <span className="text-center font-serif text-lg font-semibold tracking-wide text-charcoal sm:text-xl">
-                {partner.shortName}
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
+
+      <AmcLogoMarquee partners={amcPartners} onSurface />
     </section>
   );
 }

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import AboutStackScroll from "@/components/about-stack-scroll";
 import InvestmentCalculator from "@/components/investment-calculator";
 import JourneyCtaSection from "@/components/journey-cta-section";
-import Navbar from "@/components/navbar";
-import ServicePageHero from "@/components/service-page-hero";
+import ServiceStackIntro from "@/components/service-stack-intro";
+import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
   title: "SWP Calculator | Haria Investments",
@@ -12,17 +13,16 @@ export const metadata: Metadata = {
 
 export default function SwpCalculatorPage() {
   return (
-    <>
-      <Navbar />
-      <main className="bg-background">
-        <ServicePageHero
-          eyebrow="Calculator"
-          title="SWP Calculator"
-          description="Model regular withdrawals from your corpus while tracking remaining balance and returns."
-        />
-        <InvestmentCalculator type="swp" />
-        <JourneyCtaSection />
-      </main>
-    </>
+    <main className="bg-surface">
+      <AboutStackScroll
+        intro={<ServiceStackIntro content={serviceIntros.calculatorSwp} />}
+        legacy={
+          <>
+            <InvestmentCalculator type="swp" />
+            <JourneyCtaSection />
+          </>
+        }
+      />
+    </main>
   );
 }

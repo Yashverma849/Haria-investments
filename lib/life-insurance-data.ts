@@ -16,15 +16,6 @@ export type LifeInsuranceProcessStep = {
   summary: string;
 };
 
-export type LifeInsuranceTestimonial = {
-  id: string;
-  name: string;
-  role: string;
-  initials: string;
-  excerpt: string;
-  fullQuote: string;
-};
-
 export const protectionPlans: ProtectionPlan[] = [
   {
     id: "term",
@@ -136,28 +127,5 @@ export const lifeInsuranceProcessSteps: LifeInsuranceProcessStep[] = [
     title: "Activation",
     summary:
       "Once approved, your policy is issued and we help you understand coverage details, nominees, and renewal dates.",
-  },
-];
-
-export const lifeInsuranceTestimonials: LifeInsuranceTestimonial[] = [
-  {
-    id: "heta-gogri",
-    name: "Heta Gogri",
-    role: "Practicing Chartered Accountant",
-    initials: "HG",
-    excerpt:
-      "I've been doing SIPs with Haria Investments for about 3–4 years now, and the experience has been really positive throughout. The team is approachable, patient, and always ready to ...",
-    fullQuote:
-      "I've been doing SIPs with Haria Investments for about 3–4 years now, and the experience has been really positive throughout. The team is approachable, patient, and always ready to walk through options without pressure. When we reviewed life cover for my family, they helped us choose term insurance that fit our budget and gave us real peace of mind.",
-  },
-  {
-    id: "ashley",
-    name: "Ashley",
-    role: "Musician from Bangalore",
-    initials: "A",
-    excerpt:
-      "I heard about Haria investments through a common friend and I said to myself I definitely need to go pay them a visit. Being a small time business owner based in bangalore I took t...",
-    fullQuote:
-      "I heard about Haria investments through a common friend and I said to myself I definitely need to go pay them a visit. Being a small time business owner based in Bangalore, I took their advice on life cover alongside my investments. They explained everything in plain language and made the whole process feel straightforward — no jargon, no rush.",
   },
 ];

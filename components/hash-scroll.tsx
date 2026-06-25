@@ -2,10 +2,28 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import ScrollSmoother from "gsap/ScrollSmoother";
 import { useSiteLoaderReady } from "@/components/site-loader-provider";
 
 const NAV_OFFSET_PX = 80;
 const RETRY_MS = [0, 120, 400, 900];
+
+function scrollToTarget(target: Element, smooth: boolean) {
+  const smoother = ScrollSmoother.get();
+
+  if (smoother) {
+    smoother.scrollTo(target, smooth, `top ${NAV_OFFSET_PX}px`);
+    return;
+  }
+
+  const top =
+    target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET_PX;
+
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior: smooth ? "smooth" : "auto",
+  });
+}
 
 export default function HashScroll() {
   const isSiteLoaderReady = useSiteLoaderReady();
@@ -21,13 +39,7 @@ export default function HashScroll() {
       const target = document.querySelector(hash);
       if (!target) return;
 
-      const top =
-        target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET_PX;
-
-      window.scrollTo({
-        top: Math.max(0, top),
-        behavior,
-      });
+      scrollToTarget(target, behavior === "smooth");
     };
 
     const scheduleScroll = (behavior: ScrollBehavior = "smooth") => {

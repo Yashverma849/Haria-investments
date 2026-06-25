@@ -221,18 +221,17 @@ export default function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="border-t border-charcoal/10 bg-surface py-20 md:py-28"
+      className="scroll-mt-24 border-t border-white/10 bg-background py-20 md:py-28"
     >
       <SectionHeader
-        onSurface
         title="Client Stories"
         description="For over six decades, families and professionals have relied on us for insurance, investments, and honest guidance. Their stories reflect the trust we work to earn every day."
       />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div ref={marqueeAreaRef} className="relative overscroll-contain">
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-surface to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-surface to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-background to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-background to-transparent" />
 
           <div className="grid grid-cols-2 gap-4">
             <TestimonialMarqueeColumn

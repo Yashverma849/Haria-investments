@@ -30,12 +30,13 @@ const serviceImages = {
   swp: "/images/services/calculator-swp.jpg",
   lumpSum: "/images/services/calculator-lump-sum.jpg",
   cagr: "/images/services/calculator-cagr.jpg",
-  financialHealth: "/images/services/financial-health.jpg",
+  financialHealth: "/images/services/financial-health-assessment.jpg",
 } as const;
 
 export const mainNavLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Testimonials", href: "/#testimonials" },
   { label: "FAQ", href: "/faq" },
 ] as const;
 

@@ -59,15 +59,14 @@ export default function FixedIncomeBenefits() {
   return (
     <section
       ref={sectionRef}
-      className="border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
+      className="border-t border-white/10 bg-background py-20 text-cream md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
           Benefits of Laddering
         </p>
       </div>
       <SectionHeader
-        onSurface
         title="Strategic Advantages"
         description="Strategic advantages of a well-planned laddering approach"
         className="!pb-12 md:!pb-16"

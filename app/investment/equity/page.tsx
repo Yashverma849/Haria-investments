@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import EquityInvestmentHero from "@/components/equity-investment-hero";
+import AboutStackScroll from "@/components/about-stack-scroll";
 import InvestmentOptionsSection from "@/components/investment-options-section";
 import JourneyCtaSection from "@/components/journey-cta-section";
-import Navbar from "@/components/navbar";
+import ServiceStackIntro from "@/components/service-stack-intro";
+import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
   title: "Equity Investments | Haria Investments",
@@ -12,13 +13,16 @@ export const metadata: Metadata = {
 
 export default function EquityInvestmentPage() {
   return (
-    <>
-      <Navbar />
-      <main className="bg-background">
-        <EquityInvestmentHero />
-        <InvestmentOptionsSection />
-        <JourneyCtaSection />
-      </main>
-    </>
+    <main className="bg-surface">
+      <AboutStackScroll
+        intro={<ServiceStackIntro content={serviceIntros.equityInvestment} />}
+        legacy={
+          <>
+            <InvestmentOptionsSection />
+            <JourneyCtaSection />
+          </>
+        }
+      />
+    </main>
   );
 }

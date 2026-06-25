@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AnimatedCalculatorValue from "@/components/animated-calculator-value";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 import SectionHeader from "@/components/section-header";
 import {
@@ -14,15 +15,75 @@ import {
   type CalculatorType,
 } from "@/lib/calculator-data";
 
-const currencyFormatter = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  maximumFractionDigits: 0,
-});
+type CalculatorResultValues = {
+  primary: number;
+  secondary: number;
+  tertiary: number;
+  primaryFormat: "currency" | "percent";
+};
 
-const percentFormatter = new Intl.NumberFormat("en-IN", {
-  maximumFractionDigits: 2,
-});
+function computeResults(
+  type: CalculatorType,
+  values: Record<string, number>,
+): CalculatorResultValues {
+  switch (type) {
+    case "sip": {
+      const { corpus, invested, returns } = calculateSip(
+        values.monthly ?? 0,
+        values.rate ?? 0,
+        values.years ?? 0,
+      );
+      return {
+        primary: corpus,
+        secondary: invested,
+        tertiary: returns,
+        primaryFormat: "currency",
+      };
+    }
+    case "swp": {
+      const { remaining, withdrawn, returnsEarned } = calculateSwp(
+        values.corpus ?? 0,
+        values.monthly ?? 0,
+        values.rate ?? 0,
+        values.years ?? 0,
+      );
+      return {
+        primary: remaining,
+        secondary: withdrawn,
+        tertiary: returnsEarned,
+        primaryFormat: "currency",
+      };
+    }
+    case "lump-sum": {
+      const { value, returns } = calculateLumpSum(
+        values.principal ?? 0,
+        values.rate ?? 0,
+        values.years ?? 0,
+      );
+      return {
+        primary: value,
+        secondary: values.principal ?? 0,
+        tertiary: returns,
+        primaryFormat: "currency",
+      };
+    }
+    case "cagr": {
+      const cagr = calculateCagr(
+        values.initial ?? 0,
+        values.final ?? 0,
+        values.years ?? 0,
+      );
+      return {
+        primary: cagr,
+        secondary: values.initial ?? 0,
+        tertiary: values.final ?? 0,
+        primaryFormat: "percent",
+      };
+    }
+    default:
+      return { primary: 0, secondary: 0, tertiary: 0, primaryFormat: "currency" };
+  }
+}
 
 type InvestmentCalculatorProps = {
   type: CalculatorType;
@@ -35,61 +96,19 @@ export default function InvestmentCalculator({ type }: InvestmentCalculatorProps
   const [values, setValues] = useState<Record<string, number>>(() =>
     Object.fromEntries(config.fields.map((field) => [field.id, field.defaultValue])),
   );
+  const [hasCalculated, setHasCalculated] = useState(false);
+  const [animationKey, setAnimationKey] = useState(0);
+  const [results, setResults] = useState<CalculatorResultValues>({
+    primary: 0,
+    secondary: 0,
+    tertiary: 0,
+    primaryFormat: "currency",
+  });
 
-  const results = useMemo(() => {
-    switch (type) {
-      case "sip": {
-        const { corpus, invested, returns } = calculateSip(
-          values.monthly ?? 0,
-          values.rate ?? 0,
-          values.years ?? 0,
-        );
-        return {
-          primary: currencyFormatter.format(corpus),
-          secondary: currencyFormatter.format(invested),
-          tertiary: currencyFormatter.format(returns),
-        };
-      }
-      case "swp": {
-        const { remaining, withdrawn, returnsEarned } = calculateSwp(
-          values.corpus ?? 0,
-          values.monthly ?? 0,
-          values.rate ?? 0,
-          values.years ?? 0,
-        );
-        return {
-          primary: currencyFormatter.format(remaining),
-          secondary: currencyFormatter.format(withdrawn),
-          tertiary: currencyFormatter.format(returnsEarned),
-        };
-      }
-      case "lump-sum": {
-        const { value, returns } = calculateLumpSum(
-          values.principal ?? 0,
-          values.rate ?? 0,
-          values.years ?? 0,
-        );
-        return {
-          primary: currencyFormatter.format(value),
-          secondary: currencyFormatter.format(values.principal ?? 0),
-          tertiary: currencyFormatter.format(returns),
-        };
-      }
-      case "cagr": {
-        const cagr = calculateCagr(
-          values.initial ?? 0,
-          values.final ?? 0,
-          values.years ?? 0,
-        );
-        return {
-          primary: `${percentFormatter.format(cagr)}%`,
-          secondary: currencyFormatter.format(values.initial ?? 0),
-          tertiary: currencyFormatter.format(values.final ?? 0),
-        };
-      }
-      default:
-        return { primary: "—", secondary: "—", tertiary: "—" };
-    }
+  const handleCalculate = useCallback(() => {
+    setResults(computeResults(type, values));
+    setHasCalculated(true);
+    setAnimationKey((key) => key + 1);
   }, [type, values]);
 
   useGsapAfterLoader(() => {
@@ -185,11 +204,24 @@ export default function InvestmentCalculator({ type }: InvestmentCalculatorProps
                   </div>
                 ))}
               </div>
+
+              <button
+                type="button"
+                onClick={handleCalculate}
+                className="btn-primary mt-8 inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold"
+              >
+                Calculate
+              </button>
             </div>
 
             <div className="flex flex-col justify-center rounded-2xl border border-charcoal/10 bg-surface p-6 md:p-8">
               <p className="text-fluid-stat-large font-serif font-semibold text-charcoal">
-                {results.primary}
+                <AnimatedCalculatorValue
+                  value={results.primary}
+                  format={results.primaryFormat}
+                  active={hasCalculated}
+                  animationKey={animationKey}
+                />
               </p>
               <p className="mt-1 text-sm font-medium uppercase tracking-wider text-charcoal/60">
                 {config.primaryLabel}
@@ -199,14 +231,24 @@ export default function InvestmentCalculator({ type }: InvestmentCalculatorProps
                 <div className="flex items-baseline justify-between gap-4">
                   <dt className="text-sm text-charcoal/70">{config.secondaryLabel}</dt>
                   <dd className="text-fluid-stat font-semibold text-charcoal">
-                    {results.secondary}
+                    <AnimatedCalculatorValue
+                      value={results.secondary}
+                      format="currency"
+                      active={hasCalculated}
+                      animationKey={animationKey}
+                    />
                   </dd>
                 </div>
                 {config.tertiaryLabel ? (
                   <div className="flex items-baseline justify-between gap-4">
                     <dt className="text-sm text-charcoal/70">{config.tertiaryLabel}</dt>
                     <dd className="text-fluid-stat font-semibold text-charcoal">
-                      {results.tertiary}
+                      <AnimatedCalculatorValue
+                        value={results.tertiary}
+                        format="currency"
+                        active={hasCalculated}
+                        animationKey={animationKey}
+                      />
                     </dd>
                   </div>
                 ) : null}

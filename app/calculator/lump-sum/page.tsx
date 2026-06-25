@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import AboutStackScroll from "@/components/about-stack-scroll";
 import InvestmentCalculator from "@/components/investment-calculator";
 import JourneyCtaSection from "@/components/journey-cta-section";
-import Navbar from "@/components/navbar";
-import ServicePageHero from "@/components/service-page-hero";
+import ServiceStackIntro from "@/components/service-stack-intro";
+import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
   title: "Lump Sum Calculator | Haria Investments",
@@ -12,17 +13,16 @@ export const metadata: Metadata = {
 
 export default function LumpSumCalculatorPage() {
   return (
-    <>
-      <Navbar />
-      <main className="bg-background">
-        <ServicePageHero
-          eyebrow="Calculator"
-          title="Lump Sum Calculator"
-          description="See how a single investment can compound over your chosen time horizon and expected return."
-        />
-        <InvestmentCalculator type="lump-sum" />
-        <JourneyCtaSection />
-      </main>
-    </>
+    <main className="bg-surface">
+      <AboutStackScroll
+        intro={<ServiceStackIntro content={serviceIntros.calculatorLumpSum} />}
+        legacy={
+          <>
+            <InvestmentCalculator type="lump-sum" />
+            <JourneyCtaSection />
+          </>
+        }
+      />
+    </main>
   );
 }

@@ -71,9 +71,10 @@ export default function CommodityHighlightsSection({
   return (
     <section
       ref={sectionRef}
-      className="border-t border-white/10 bg-background py-20 md:py-28"
+      className="border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
     >
       <SectionHeader
+        onSurface
         title={content.sectionTitle}
         description={content.sectionDescription}
       />

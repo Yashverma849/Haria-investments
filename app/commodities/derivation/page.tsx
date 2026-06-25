@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import AboutStackScroll from "@/components/about-stack-scroll";
 import CommodityHighlightsSection from "@/components/commodity-highlights-section";
 import JourneyCtaSection from "@/components/journey-cta-section";
-import Navbar from "@/components/navbar";
-import ServicePageHero from "@/components/service-page-hero";
+import ServiceStackIntro from "@/components/service-stack-intro";
 import { commodityDerivation } from "@/lib/commodities-data";
+import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
   title: "Commodity Derivatives | Haria Investments",
@@ -13,17 +14,16 @@ export const metadata: Metadata = {
 
 export default function CommodityDerivationPage() {
   return (
-    <>
-      <Navbar />
-      <main className="bg-background">
-        <ServicePageHero
-          eyebrow={commodityDerivation.eyebrow}
-          title={commodityDerivation.title}
-          description={commodityDerivation.description}
-        />
-        <CommodityHighlightsSection content={commodityDerivation} />
-        <JourneyCtaSection />
-      </main>
-    </>
+    <main className="bg-surface">
+      <AboutStackScroll
+        intro={<ServiceStackIntro content={serviceIntros.commodityDerivation} />}
+        legacy={
+          <>
+            <CommodityHighlightsSection content={commodityDerivation} />
+            <JourneyCtaSection />
+          </>
+        }
+      />
+    </main>
   );
 }

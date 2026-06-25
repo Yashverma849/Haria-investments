@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Faq from "@/components/faq";
-import Navbar from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "FAQ | Haria Investments",
@@ -9,10 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function FaqPage() {
-  return (
-    <>
-      <Navbar />
-      <Faq />
-    </>
-  );
+  return <Faq />;
 }
