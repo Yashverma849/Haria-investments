@@ -22,7 +22,7 @@ const serviceImages = {
   equity: "/images/services/investment-equity.jpg",
   fixedIncome: "/images/services/investment-fixed-income.jpg",
   commodities: "/images/services/commodities.jpg",
-  commodityTraining: "/images/services/commodities-training.jpg",
+  commodityTrading: "/images/services/commodities-trading.jpg",
   silverGold: "/images/services/commodities-silver-gold.jpg",
   derivation: "/images/services/commodities-derivation.jpg",
   calculator: "/images/services/calculator.jpg",
@@ -37,8 +37,39 @@ export const mainNavLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Testimonials", href: "/#testimonials" },
-  { label: "FAQ", href: "/faq" },
 ] as const;
+
+export const calculatorNav = {
+  label: "Calculator",
+  href: "/calculator/sip",
+} as const;
+
+export const calculatorNavItems: NavItem[] = [
+  {
+    label: "SIP Calculator",
+    href: "/calculator/sip",
+    description: "Estimate systematic investment returns.",
+    image: serviceImages.sip,
+  },
+  {
+    label: "SWP Calculator",
+    href: "/calculator/swp",
+    description: "Plan systematic withdrawal payouts.",
+    image: serviceImages.swp,
+  },
+  {
+    label: "CAGR Calculator",
+    href: "/calculator/cagr",
+    description: "Measure compound annual growth.",
+    image: serviceImages.cagr,
+  },
+  {
+    label: "Lump Sum Calculator",
+    href: "/calculator/lump-sum",
+    description: "Project one-time investment growth.",
+    image: serviceImages.lumpSum,
+  },
+];
 
 export const serviceCategories: ServiceCategory[] = [
   {
@@ -94,10 +125,10 @@ export const serviceCategories: ServiceCategory[] = [
     image: serviceImages.commodities,
     items: [
       {
-        label: "Commodity Training",
-        href: "/commodities/training",
-        description: "Learn commodity market fundamentals.",
-        image: serviceImages.commodityTraining,
+        label: "Commodity Trading",
+        href: "/commodities/trading",
+        description: "Trade commodity futures, options, and spot markets.",
+        image: serviceImages.commodityTrading,
       },
       {
         label: "Silver and Gold",
@@ -110,38 +141,6 @@ export const serviceCategories: ServiceCategory[] = [
         href: "/commodities/derivation",
         description: "Derivatives and advanced instruments.",
         image: serviceImages.derivation,
-      },
-    ],
-  },
-  {
-    label: "Calculator",
-    href: "/calculator",
-    description: "Plan smarter with financial calculators.",
-    image: serviceImages.calculator,
-    items: [
-      {
-        label: "SIP",
-        href: "/calculator/sip",
-        description: "Estimate systematic investment returns.",
-        image: serviceImages.sip,
-      },
-      {
-        label: "SWP",
-        href: "/calculator/swp",
-        description: "Plan systematic withdrawal payouts.",
-        image: serviceImages.swp,
-      },
-      {
-        label: "Lump Sum",
-        href: "/calculator/lump-sum",
-        description: "Project one-time investment growth.",
-        image: serviceImages.lumpSum,
-      },
-      {
-        label: "CAGR",
-        href: "/calculator/cagr",
-        description: "Measure compound annual growth.",
-        image: serviceImages.cagr,
       },
     ],
   },

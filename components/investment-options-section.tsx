@@ -3,161 +3,139 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import {
+  HorizontalParallaxCarousel,
+  ParallaxCard,
+  ParallaxCardImage,
+} from "@/components/horizontal-parallax-carousel";
+import { useScrollDrivenParallaxCarousel } from "@/hooks/use-scroll-driven-parallax-carousel";
 import {
   investmentOptions,
+  type InvestmentOption,
   type RiskLevel,
 } from "@/lib/equity-investment-data";
 import { scheduleConsultation } from "@/lib/nav-links";
 
 const riskBadgeStyles: Record<RiskLevel, string> = {
-  "Moderate Risk":
-    "border-charcoal/15 bg-charcoal/5 text-charcoal/80",
-  "High Risk":
-    "border-charcoal/20 bg-charcoal/10 text-charcoal",
-  "Very High Risk":
-    "border-charcoal/25 bg-charcoal/15 text-charcoal",
+  "Moderate Risk": "border-white/25 bg-white/10 text-white/95",
+  "High Risk": "border-white/30 bg-white/12 text-white",
+  "Very High Risk": "border-white/35 bg-white/15 text-white",
 };
+
+function InvestmentParallaxCard({ option }: { option: InvestmentOption }) {
+  return (
+    <ParallaxCard
+      data-investment-card
+      className="flex h-[min(78vh,520px)] w-[min(78vw,300px)] flex-col sm:h-[480px] sm:w-[320px] lg:h-[520px] lg:w-[340px]"
+    >
+      <ParallaxCardImage>
+        <Image
+          src={option.image}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 78vw, 340px"
+          draggable={false}
+        />
+      </ParallaxCardImage>
+
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/75 to-charcoal/20"
+        aria-hidden
+      />
+
+      <div className="relative z-10 flex h-full min-h-0 flex-col p-5 text-white sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h2 className="text-fluid-service-title font-serif font-semibold tracking-tight text-white">
+            {option.title}
+          </h2>
+          <span
+            className={`shrink-0 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${riskBadgeStyles[option.risk]}`}
+          >
+            {option.risk}
+          </span>
+        </div>
+
+        <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-white/80 sm:text-base">
+          {option.description}
+        </p>
+
+        <dl className="mt-5 grid grid-cols-2 gap-4 border-y border-white/12 py-4">
+          <div>
+            <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
+              Tenure
+            </dt>
+            <dd className="mt-1 text-sm font-medium text-white">
+              {option.tenure}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
+              Min Amount
+            </dt>
+            <dd className="mt-1 text-sm font-medium text-white">
+              {option.minAmount}
+            </dd>
+          </div>
+        </dl>
+
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {option.features.map((feature) => (
+            <li
+              key={feature}
+              className="rounded-full border border-white/12 bg-white/8 px-3 py-1 text-xs font-medium text-white/75"
+            >
+              {feature}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto grid shrink-0 grid-cols-2 gap-2 pt-5 sm:gap-3">
+          <div className="min-w-0">
+            <Link
+              href={scheduleConsultation.href}
+              className="btn-primary flex h-11 w-full items-center justify-center rounded-full px-3 text-center text-xs font-semibold sm:h-12 sm:px-4 sm:text-sm"
+            >
+              Invest Now
+            </Link>
+          </div>
+          <div className="min-w-0">
+            <Link
+              href={scheduleConsultation.href}
+              className="flex h-11 w-full items-center justify-center rounded-full border border-white/30 bg-white/15 px-3 text-center text-xs font-semibold text-white transition-colors hover:border-white/50 hover:bg-white/20 sm:h-12 sm:px-4 sm:text-sm"
+            >
+              Schedule Consultant
+            </Link>
+          </div>
+        </div>
+      </div>
+    </ParallaxCard>
+  );
+}
 
 export default function InvestmentOptionsSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useGsapAfterLoader(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const grid = section.querySelector("[data-investment-grid]");
-    const cards = section.querySelectorAll("[data-investment-card]");
-    if (!grid || cards.length === 0) return;
-
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(cards, { opacity: 1, y: 0 });
-    });
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.set(cards, { opacity: 0, y: 28 });
-
-      const tween = gsap.to(cards, {
-        opacity: 1,
-        y: 0,
-        duration: 0.75,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: grid,
-          start: "top 88%",
-          once: true,
-        },
-      });
-
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-        if (ScrollTrigger.isInViewport(grid, 0.12)) {
-          tween.progress(1);
-        }
-      });
-    });
-
-    return () => {
-      mm.revert();
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.trigger && section.contains(trigger.trigger as Node)) {
-          trigger.kill();
-        }
-      });
-    };
-  }, []);
+  useScrollDrivenParallaxCarousel(sectionRef);
 
   return (
     <section
       ref={sectionRef}
-      className="border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
+      className="horizontal-parallax-carousel-section border-t border-charcoal/10 bg-surface text-charcoal"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div
-          data-investment-grid
-          className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:gap-8"
-        >
-          {investmentOptions.map((option) => (
-            <article
-              key={option.id}
-              data-investment-card
-              className="surface-panel group flex flex-col overflow-hidden rounded-2xl opacity-0 transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02] hover:border-charcoal/20 hover:shadow-[0_16px_48px_-20px_color-mix(in_srgb,var(--charcoal)_14%,transparent)]"
-            >
-              <div className="relative aspect-[16/9] w-full overflow-hidden">
-                <Image
-                  src={option.image}
-                  alt={option.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent" />
-              </div>
-
-              <div className="flex flex-1 flex-col p-6 sm:p-7">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <h2 className="text-fluid-service-title font-serif font-semibold tracking-tight text-charcoal">
-                    {option.title}
-                  </h2>
-                  <span
-                    className={`shrink-0 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${riskBadgeStyles[option.risk]}`}
-                  >
-                    {option.risk}
-                  </span>
-                </div>
-
-                <p className="mt-4 text-sm leading-relaxed text-charcoal/75 sm:text-base">
-                  {option.description}
-                </p>
-
-                <dl className="mt-5 grid grid-cols-2 gap-4 border-y border-charcoal/10 py-4">
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-charcoal/50">
-                      Tenure
-                    </dt>
-                    <dd className="mt-1 text-sm font-medium text-charcoal">
-                      {option.tenure}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-charcoal/50">
-                      Min Amount
-                    </dt>
-                    <dd className="mt-1 text-sm font-medium text-charcoal">
-                      {option.minAmount}
-                    </dd>
-                  </div>
-                </dl>
-
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {option.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="rounded-full border border-charcoal/10 bg-charcoal/5 px-3 py-1 text-xs font-medium text-charcoal/75"
-                    >
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-auto pt-6">
-                  <Link
-                    href={scheduleConsultation.href}
-                    className="btn-primary inline-flex w-full items-center justify-center rounded-full px-6 py-3 text-sm font-semibold sm:w-auto"
-                  >
-                    Invest Now
-                  </Link>
-                </div>
-              </div>
-            </article>
-          ))}
+      <div
+        data-carousel-sticky
+        className="sticky top-0 z-[1] flex min-h-svh items-center bg-surface pt-20 md:pt-28"
+      >
+        <div data-investment-carousel className="w-full">
+          <HorizontalParallaxCarousel
+            scrollDriven
+            aria-label="Equity investment options"
+          >
+            {investmentOptions.map((option) => (
+              <InvestmentParallaxCard key={option.id} option={option} />
+            ))}
+          </HorizontalParallaxCarousel>
         </div>
       </div>
     </section>

@@ -6,7 +6,7 @@ export const heroBackgrounds = {
   mutualFunds: "/images/heroes/hero-mutual-funds.jpg",
   commodityDerivation: "/images/heroes/hero-commodity-derivation.jpg",
   commoditySilverGold: "/images/heroes/hero-commodity-silver-gold.jpg",
-  commodityTraining: "/images/heroes/hero-commodity-training.jpg",
+  commodityTrading: "/images/heroes/hero-commodity-trading.jpg",
   calculatorSip: "/images/heroes/hero-calculator-sip.jpg",
   calculatorLumpSum: "/images/heroes/hero-calculator-lump-sum.jpg",
   calculatorSwp: "/images/heroes/hero-calculator-swp.jpg",

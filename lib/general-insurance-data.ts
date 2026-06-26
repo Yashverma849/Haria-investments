@@ -78,6 +78,23 @@ export const insuranceCategories: InsuranceCategory[] = [
         image:
           "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80",
       },
+      {
+        id: "own-damage-plus",
+        title: "Own Damage Plus",
+        startingPrice: "Starting ₹1,500/year",
+        description:
+          "Enhanced own damage cover with engine protection and consumables",
+        tenure: "1–3 years",
+        minAmount: "₹6,000",
+        features: [
+          "Engine protection",
+          "Consumables cover",
+          "Key replacement",
+          "Personal accident",
+        ],
+        image:
+          "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=80",
+      },
     ],
   },
   {
@@ -168,11 +185,26 @@ export const insuranceCategories: InsuranceCategory[] = [
   },
 ];
 
+export type InsurancePlanWithCategory = InsurancePlan & {
+  categoryId: string;
+  categoryTitle: string;
+};
+
+export const allInsurancePlans: InsurancePlanWithCategory[] =
+  insuranceCategories.flatMap((category) =>
+    category.plans.map((plan) => ({
+      ...plan,
+      categoryId: category.id,
+      categoryTitle: category.title,
+    })),
+  );
+
 export type WhyChooseItem = {
   id: string;
   number: string;
   title: string;
   description: string;
+  image: string;
 };
 
 export const whyChooseInsurance = {
@@ -187,6 +219,7 @@ export const whyChooseInsurance = {
       title: "99% Claims Settled",
       description:
         "Fast and hassle-free claims processing with one of the highest settlement rates in the industry.",
+      image: "/images/general-insurance/why-choose-claims.jpg",
     },
     {
       id: "support",
@@ -194,6 +227,7 @@ export const whyChooseInsurance = {
       title: "24/7 Support",
       description:
         "Round-the-clock assistance for all your insurance needs with our dedicated support team.",
+      image: "/images/general-insurance/why-choose-support.jpg",
     },
     {
       id: "prices",
@@ -201,6 +235,7 @@ export const whyChooseInsurance = {
       title: "Best Prices",
       description:
         "Competitive premiums with maximum coverage, ensuring you get the best value for your money.",
+      image: "/images/general-insurance/why-choose-prices.jpg",
     },
     {
       id: "guidance",
@@ -208,6 +243,7 @@ export const whyChooseInsurance = {
       title: "Expert Guidance",
       description:
         "Get personalized advice from our insurance experts to choose the right coverage for your needs.",
+      image: "/images/general-insurance/why-choose-guidance.jpg",
     },
   ] satisfies WhyChooseItem[],
 };

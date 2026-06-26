@@ -74,7 +74,7 @@ export const serviceIntros = {
     titleLine1: "Mutual",
     titleLine2: "Funds",
     introParagraph:
-      "Select the right fund type based on your goals and risk appetite — equity, debt, hybrid, and international options from 45+ AMCs.",
+      "Select the right fund type based on your goals and risk appetite — equity, debt, hybrid, and international options from leading AMCs.",
     sidebarTitle: "Pooled Strength",
     sidebarParagraph:
       "Diversified portfolios managed by professional fund houses, with ongoing monitoring and rebalancing guidance from our team.",
@@ -112,19 +112,19 @@ export const serviceIntros = {
     primaryImageAlt: "Gold and silver investment options",
     secondaryImageAlt: "Precious metals allocation for diversified portfolios",
   },
-  commodityTraining: {
+  commodityTrading: {
     titleLine1: "Commodity",
-    titleLine2: "Training",
+    titleLine2: "Trading",
     introParagraph:
-      "Build a strong foundation in commodity markets with structured learning — from exchange basics to risk management.",
-    sidebarTitle: "Learn Before You Trade",
+      "Participate in commodity markets with structured guidance — from exchange basics to futures, options, and risk management.",
+    sidebarTitle: "Trade With Clarity",
     sidebarParagraph:
-      "Practical modules on futures, options, margin, and hedging — designed for investors who want clarity before participating.",
-    backgroundImage: heroBackgrounds.commodityTraining,
-    primaryImage: "/images/services/commodities-training.jpg",
+      "Practical support on futures, options, margin, and hedging — designed for investors who want a clear process before trading.",
+    backgroundImage: heroBackgrounds.commodityTrading,
+    primaryImage: "/images/services/commodities-trading.jpg",
     secondaryImage: "/images/services/commodities-derivation.jpg",
-    primaryImageAlt: "Commodity market training and education",
-    secondaryImageAlt: "Futures and options learning for commodity markets",
+    primaryImageAlt: "Commodity market trading",
+    secondaryImageAlt: "Futures and options trading for commodity markets",
   },
   calculatorSip: {
     titleLine1: "SIP",

@@ -4,6 +4,12 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import {
+  isInScrollFadeViewport,
+  SCROLL_FADE_DURATION,
+  SCROLL_FADE_START,
+  scheduleScrollFadeReveal,
+} from "@/lib/gsap-scroll-fade";
 
 type SectionHeaderProps = {
   title: string;
@@ -42,8 +48,8 @@ export default function SectionHeader({
         gsap.to(titleEl, {
           opacity: 1,
           x: 0,
-          duration: 1,
-          ease: "power4.out",
+          duration: SCROLL_FADE_DURATION,
+          ease: "power2.out",
           overwrite: true,
         });
       }
@@ -52,8 +58,8 @@ export default function SectionHeader({
         gsap.to(descriptionEl, {
           opacity: 1,
           x: 0,
-          duration: 1,
-          ease: "power4.out",
+          duration: SCROLL_FADE_DURATION,
+          ease: "power2.out",
           overwrite: true,
         });
       }
@@ -92,7 +98,7 @@ export default function SectionHeader({
 
         scrollTrigger = ScrollTrigger.create({
           trigger: header,
-          start: "top 88%",
+          start: SCROLL_FADE_START,
           end: "bottom 12%",
           onEnter: animateIn,
           onLeave: animateOut,
@@ -103,10 +109,7 @@ export default function SectionHeader({
         requestAnimationFrame(() => {
           ScrollTrigger.refresh();
 
-          const { top, bottom } = header.getBoundingClientRect();
-          const inView = top < window.innerHeight * 0.88 && bottom > 0;
-
-          if (inView) {
+          if (isInScrollFadeViewport(header)) {
             animateIn();
           }
         });
@@ -121,11 +124,11 @@ export default function SectionHeader({
           {
             opacity: 1,
             x: 0,
-            duration: 1,
-            ease: "power4.out",
+            duration: SCROLL_FADE_DURATION,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: header,
-              start: "top 88%",
+              start: SCROLL_FADE_START,
               once: true,
             },
           },
@@ -139,16 +142,18 @@ export default function SectionHeader({
           {
             opacity: 1,
             x: 0,
-            duration: 1,
-            ease: "power4.out",
+            duration: SCROLL_FADE_DURATION,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: header,
-              start: "top 88%",
+              start: SCROLL_FADE_START,
               once: true,
             },
           },
         );
       }
+
+      scheduleScrollFadeReveal(header);
     });
 
     return () => {

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
@@ -13,12 +13,45 @@ import { scheduleConsultation } from "@/lib/nav-links";
 const PROCESS_IMAGE =
   "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80";
 
+const SLIDE_IN_DURATION_MS = 750;
+const STEP_HOLD_MS = 4500;
+const AUTO_ADVANCE_MS = SLIDE_IN_DURATION_MS + STEP_HOLD_MS;
+
 export default function LifeInsuranceProcess() {
   const sectionRef = useRef<HTMLElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const activeStep = lifeInsuranceProcessSteps[activeIndex];
   const stepNumber = String(activeIndex + 1).padStart(2, "0");
+
+  const animateStepContent = useCallback(() => {
+    const image = imageRef.current;
+    const text = textRef.current;
+    if (!image || !text) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    gsap.killTweensOf([image, text]);
+
+    if (reduced) {
+      gsap.set([image, text], { opacity: 1, x: 0 });
+      return;
+    }
+
+    gsap.fromTo(
+      image,
+      { opacity: 0, x: -56 },
+      { opacity: 1, x: 0, duration: 0.75, ease: "power3.out" },
+    );
+    gsap.fromTo(
+      text,
+      { opacity: 0, x: 56 },
+      { opacity: 1, x: 0, duration: 0.75, ease: "power3.out" },
+    );
+  }, []);
 
   useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -29,38 +62,45 @@ export default function LifeInsuranceProcess() {
     const panel = section.querySelector("[data-li-process-panel]");
     if (!panel) return;
 
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(panel, { opacity: 1, y: 0 });
-    });
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.fromTo(
-        panel,
-        { opacity: 0, y: 28 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: panel,
-            start: "top 88%",
-            once: true,
-          },
-        },
-      );
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: panel,
+      start: "top 88%",
+      end: "bottom 15%",
+      onEnter: () => setIsInView(true),
+      onLeave: () => setIsInView(false),
+      onEnterBack: () => setIsInView(true),
+      onLeaveBack: () => setIsInView(false),
     });
 
     return () => {
-      mm.revert();
+      scrollTrigger.kill();
       ScrollTrigger.getAll().forEach((trigger) => {
         if (trigger.trigger && section.contains(trigger.trigger as Node)) {
           trigger.kill();
         }
       });
     };
+  }, []);
+
+  useEffect(() => {
+    if (!isInView) return;
+    animateStepContent();
+  }, [activeIndex, isInView, animateStepContent]);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const timer = window.setTimeout(() => {
+      setActiveIndex(
+        (current) => (current + 1) % lifeInsuranceProcessSteps.length,
+      );
+    }, AUTO_ADVANCE_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, isInView]);
+
+  const goToStep = useCallback((index: number) => {
+    setActiveIndex(index);
   }, []);
 
   return (
@@ -102,7 +142,7 @@ export default function LifeInsuranceProcess() {
                   id={`li-process-tab-${step.id}`}
                   aria-selected={isActive}
                   aria-controls={`li-process-panel-${step.id}`}
-                  onClick={() => setActiveIndex(index)}
+                  onClick={() => goToStep(index)}
                   className={`border-white/10 px-4 py-4 text-sm font-semibold transition-colors sm:py-5 sm:text-base ${
                     index > 0 ? "border-l" : ""
                   } ${
@@ -121,9 +161,14 @@ export default function LifeInsuranceProcess() {
             role="tabpanel"
             id={`li-process-panel-${activeStep.id}`}
             aria-labelledby={`li-process-tab-${activeStep.id}`}
+            aria-live="polite"
             className="grid gap-0 lg:grid-cols-2"
           >
-            <div className="flex flex-col justify-center p-6 md:p-10">
+            <div
+              ref={textRef}
+              data-li-process-text
+              className="flex flex-col justify-center p-6 md:p-10"
+            >
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-light">
                 {stepNumber}
               </p>
@@ -141,7 +186,11 @@ export default function LifeInsuranceProcess() {
               </Link>
             </div>
 
-            <div className="relative min-h-[240px] lg:min-h-[320px]">
+            <div
+              ref={imageRef}
+              data-li-process-image
+              className="relative min-h-[240px] lg:min-h-[320px]"
+            >
               <Image
                 src={PROCESS_IMAGE}
                 alt=""

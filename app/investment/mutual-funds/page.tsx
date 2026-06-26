@@ -10,7 +10,7 @@ import { serviceIntros } from "@/lib/service-intro-data";
 export const metadata: Metadata = {
   title: "Mutual Funds | Haria Investments",
   description:
-    "Explore equity, debt, hybrid, and international mutual funds from 45+ trusted AMCs. Choose the right fund type based on your goals and risk appetite.",
+    "Explore equity, debt, hybrid, and international mutual funds from trusted AMCs. Choose the right fund type based on your goals and risk appetite.",
 };
 
 export default function MutualFundsPage() {

@@ -7,7 +7,9 @@ import { useEffect, useState } from "react";
 import ScrollSmoother from "gsap/ScrollSmoother";
 import LogoAnimatedText from "@/components/logo-animated-text";
 import ServicesMegaMenu from "@/components/services-mega-menu";
+import CalculatorDropdown from "@/components/calculator-dropdown";
 import {
+  calculatorNavItems,
   mainNavLinks,
   scheduleConsultation,
   serviceCategories,
@@ -148,6 +150,8 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-3 justify-self-end">
+          <CalculatorDropdown />
+
           <Link
             href={scheduleConsultation.href}
             className="btn-primary hidden rounded-full px-5 py-2 text-sm font-semibold lg:inline-flex"
@@ -295,9 +299,53 @@ export default function Navbar() {
             );
           })}
 
+          <div className="border-b border-white/10 py-4">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between text-left text-base font-medium text-white"
+              onClick={() =>
+                setOpenGroup((prev) =>
+                  prev === "Calculator" ? null : "Calculator",
+                )
+              }
+            >
+              Calculator
+              <svg
+                className={`h-4 w-4 transition-transform ${
+                  openGroup === "Calculator" ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            {openGroup === "Calculator" && (
+              <ul className="mt-3 space-y-1 pl-2">
+                {calculatorNavItems.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="block py-1.5 text-sm text-white/70 hover:text-white"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <Link
             href={scheduleConsultation.href}
-            className="btn-primary mt-6 block rounded-full px-4 py-3 text-center text-sm font-semibold"
+            className="btn-primary mt-3 block rounded-full px-4 py-3 text-center text-sm font-semibold"
             onClick={() => setMobileOpen(false)}
           >
             {scheduleConsultation.label}

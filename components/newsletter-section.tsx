@@ -38,6 +38,10 @@ export default function FooterNewsletter() {
           type="email"
           name="email"
           autoComplete="email"
+          data-lpignore="true"
+          data-1p-ignore
+          data-bwignore
+          suppressHydrationWarning
           value={email}
           onChange={(event) => {
             setEmail(event.target.value);
@@ -48,6 +52,7 @@ export default function FooterNewsletter() {
         />
         <button
           type="submit"
+          suppressHydrationWarning
           className="btn-primary inline-flex min-h-11 w-full items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold sm:w-fit"
         >
           Subscribe

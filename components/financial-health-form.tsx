@@ -50,6 +50,7 @@ function splitTitleChars(text: string) {
 export default function FinancialHealthForm() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const formScrollRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const isAnimatingRef = useRef(false);
@@ -267,6 +268,10 @@ export default function FinancialHealthForm() {
   );
 
   useEffect(() => {
+    if (formScrollRef.current) {
+      formScrollRef.current.scrollTop = 0;
+    }
+
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
       animateStepIn(1);
@@ -345,11 +350,92 @@ export default function FinancialHealthForm() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div
           data-fh-panel
-          className="surface-panel mx-auto max-w-3xl overflow-hidden rounded-2xl"
+          className="surface-panel mx-auto max-w-6xl overflow-hidden rounded-2xl"
         >
-          <form onSubmit={handleSubmit} className="flex flex-col">
-            <div className="border-b border-charcoal/10 bg-charcoal/[0.03] px-4 py-5 md:px-8 md:py-6">
-              <div className="flex items-center gap-3 md:gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex min-h-[min(72dvh,44rem)] flex-col lg:flex-row"
+          >
+            <aside
+              aria-label="Assessment sections"
+              className="flex shrink-0 flex-col border-b border-charcoal/10 bg-charcoal/[0.03] lg:w-[min(100%,22rem)] lg:border-b-0 lg:border-r"
+            >
+              <div className="px-4 py-5 md:px-6 md:py-6 lg:px-7">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-charcoal/50">
+                  {String(activeStep + 1).padStart(2, "0")} /{" "}
+                  {String(financialHealthSections.length).padStart(2, "0")}
+                </p>
+                <h2
+                  ref={titleRef}
+                  className="text-fluid-service-title mt-2 font-serif font-semibold text-charcoal"
+                  aria-live="polite"
+                >
+                  {splitTitleChars(activeSection.title)}
+                </h2>
+                <p
+                  ref={subtitleRef}
+                  className="mt-1.5 text-sm leading-relaxed text-charcoal/65"
+                >
+                  {activeSection.subtitle}
+                </p>
+              </div>
+
+              <nav
+                aria-label="Section progress"
+                className="hidden flex-1 overflow-y-auto px-4 pb-4 md:px-6 lg:block lg:px-7 lg:pb-6"
+              >
+                <ol className="space-y-1">
+                  {financialHealthSections.map((section, index) => {
+                    const isActive = index === activeStep;
+                    const isComplete = Boolean(submittedSteps[index]);
+
+                    return (
+                      <li key={section.id}>
+                        <div
+                          aria-current={isActive ? "step" : undefined}
+                          className={`rounded-xl border px-3 py-2.5 transition-colors ${
+                            isActive
+                              ? "border-charcoal/20 bg-white shadow-sm"
+                              : "border-transparent bg-transparent"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <span
+                              className={`mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold tabular-nums ${
+                                isActive
+                                  ? "bg-charcoal text-white"
+                                  : isComplete
+                                    ? "bg-charcoal/10 text-charcoal/70"
+                                    : "bg-charcoal/5 text-charcoal/45"
+                              }`}
+                            >
+                              {String(index + 1).padStart(2, "0")}
+                            </span>
+                            <div className="min-w-0">
+                              <p
+                                className={`text-sm font-medium leading-snug ${
+                                  isActive
+                                    ? "text-charcoal"
+                                    : "text-charcoal/55"
+                                }`}
+                              >
+                                {section.title}
+                              </p>
+                              {isActive ? (
+                                <p className="mt-0.5 text-xs leading-relaxed text-charcoal/55">
+                                  {section.subtitle}
+                                </p>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </nav>
+
+              <div className="mt-auto flex items-center justify-between gap-3 border-t border-charcoal/10 px-4 py-4 md:px-6 lg:px-7">
                 <button
                   type="button"
                   onClick={() => navigate(-1)}
@@ -360,25 +446,9 @@ export default function FinancialHealthForm() {
                   <ChevronIcon direction="left" />
                 </button>
 
-                <div className="min-w-0 flex-1 text-center">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-charcoal/50">
-                    {String(activeStep + 1).padStart(2, "0")} /{" "}
-                    {String(financialHealthSections.length).padStart(2, "0")}
-                  </p>
-                  <h2
-                    ref={titleRef}
-                    className="text-fluid-service-title mt-1 font-serif font-semibold text-charcoal"
-                    aria-live="polite"
-                  >
-                    {splitTitleChars(activeSection.title)}
-                  </h2>
-                  <p
-                    ref={subtitleRef}
-                    className="mt-1 text-sm text-charcoal/65"
-                  >
-                    {activeSection.subtitle}
-                  </p>
-                </div>
+                <p className="text-center text-xs font-medium text-charcoal/50 lg:hidden">
+                  {activeSection.title}
+                </p>
 
                 <button
                   type="button"
@@ -390,41 +460,52 @@ export default function FinancialHealthForm() {
                   <ChevronIcon direction="right" />
                 </button>
               </div>
-            </div>
+            </aside>
 
-            <div className="overflow-hidden px-4 py-6 md:px-8 md:py-8">
-              <div ref={cardRef} data-fh-step-card>
-                <FinancialHealthFormStep
-                  stepIndex={activeStep}
-                  form={form}
-                  onChange={updateField}
-                  onToggleArray={toggleArrayField}
-                  inputClass={inputClass}
-                  labelClass={labelClass}
-                  legendClass={legendClass}
-                />
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+              <div
+                ref={formScrollRef}
+                data-fh-form-scroll
+                className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6 md:px-8 md:py-8"
+              >
+                <div className="overflow-hidden">
+                  <div ref={cardRef} data-fh-step-card>
+                    <FinancialHealthFormStep
+                      stepIndex={activeStep}
+                      form={form}
+                      onChange={updateField}
+                      onToggleArray={toggleArrayField}
+                      inputClass={inputClass}
+                      labelClass={labelClass}
+                      legendClass={legendClass}
+                    />
+                  </div>
+                </div>
+
+                {submitError ? (
+                  <p className="mt-6 text-sm text-red-700" role="alert">
+                    {submitError}
+                  </p>
+                ) : null}
+
+                {sectionSubmitted ? (
+                  <p className="mt-6 text-sm text-charcoal/75" role="status">
+                    This section was submitted. Your email client should open
+                    with these details. Use the arrows on the left to complete
+                    other sections.
+                  </p>
+                ) : null}
               </div>
 
-              {submitError ? (
-                <p className="mt-6 text-sm text-red-700" role="alert">
-                  {submitError}
-                </p>
-              ) : null}
-
-              {sectionSubmitted ? (
-                <p className="mt-6 text-sm text-charcoal/75" role="status">
-                  This section was submitted. Your email client should open with
-                  these details. Use the arrows above to complete other sections.
-                </p>
-              ) : null}
-
-              <div className="mt-8 flex justify-end">
-                <button
-                  type="submit"
-                  className="btn-primary inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold sm:w-auto"
-                >
-                  Submit Assessment
-                </button>
+              <div className="shrink-0 border-t border-charcoal/10 bg-surface px-4 py-4 md:px-8">
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="btn-primary inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold sm:w-auto"
+                  >
+                    Submit Assessment
+                  </button>
+                </div>
               </div>
             </div>
           </form>

@@ -20,7 +20,41 @@ export default function FaqGrid({ items }: FaqGridProps) {
     const grid = gridRef.current;
     if (!grid) return;
 
-    const cards = grid.querySelectorAll("[data-faq-card]");
+    const cards = grid.querySelectorAll(
+      "[data-faq-card]:not([data-faq-animated])",
+    );
+
+    if (cards.length === 0) return;
+
+    const hasAnimatedCards = grid.querySelector("[data-faq-animated]") !== null;
+
+    const animation = {
+      opacity: 1,
+      rotateY: 0,
+      x: 0,
+      duration: 0.85,
+      stagger: 0.1,
+      ease: "power3.out",
+      onComplete: () => {
+        cards.forEach((card) => {
+          card.setAttribute("data-faq-animated", "");
+        });
+      },
+    };
+
+    if (hasAnimatedCards) {
+      gsap.fromTo(
+        cards,
+        {
+          opacity: 0,
+          rotateY: -28,
+          x: -40,
+          transformPerspective: 1000,
+        },
+        animation,
+      );
+      return;
+    }
 
     gsap.fromTo(
       cards,
@@ -31,12 +65,7 @@ export default function FaqGrid({ items }: FaqGridProps) {
         transformPerspective: 1000,
       },
       {
-        opacity: 1,
-        rotateY: 0,
-        x: 0,
-        duration: 0.85,
-        stagger: 0.1,
-        ease: "power3.out",
+        ...animation,
         scrollTrigger: {
           trigger: grid,
           start: "top 88%",

@@ -20,6 +20,7 @@ export type LadderBenefit = {
   number: string;
   title: string;
   description: string;
+  image: string;
 };
 
 export const fixedIncomeProducts: FixedIncomeProduct[] = [
@@ -119,17 +120,20 @@ export const ladderBenefits: LadderBenefit[] = [
     title: "Higher Returns",
     description:
       "Lock in better rates by investing across different time periods. Longer-term deposits typically offer higher interest rates, allowing you to maximize overall portfolio returns.",
+    image: "/images/home-services/band-fixed-income.jpg",
   },
   {
     number: "02",
     title: "Risk Management",
     description:
       "Spread maturity dates to reduce interest rate risk. As deposits mature regularly, you can reinvest at current market rates, protecting against rate fluctuations.",
+    image: "/images/commodities/risk-management.jpg",
   },
   {
     number: "03",
     title: "Regular Income",
     description:
       "Quarterly interest payouts provide consistent cash flow. Staggered maturities ensure regular access to funds without compromising on returns or breaking deposits prematurely.",
+    image: "/images/services/investment-fixed-income.jpg",
   },
 ];

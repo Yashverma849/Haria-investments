@@ -1,4 +1,5 @@
 import { AboutLeaders, AboutPurpose } from "@/components/about";
+import FaqSection from "@/components/faq-section";
 import JourneyCtaSection from "@/components/journey-cta-section";
 import HeroSection from "@/components/hero-section";
 import ProcessSection from "@/components/process-section";
@@ -16,6 +17,7 @@ export default function Home() {
       <ProcessSection />
       <AboutLeaders />
       <TestimonialsSection />
+      <FaqSection />
       <JourneyCtaSection tone="light" />
     </main>
   );

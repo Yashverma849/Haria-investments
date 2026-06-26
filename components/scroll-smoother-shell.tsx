@@ -11,7 +11,11 @@ type ScrollSmootherShellProps = {
   children: ReactNode;
 };
 
-const SMOOTHER_DISABLED_ROUTES = ["/about"];
+const SMOOTHER_DISABLED_ROUTES = [
+  "/about",
+  "/investment/equity",
+  "/investment/fixed-income",
+];
 
 export default function ScrollSmootherShell({ children }: ScrollSmootherShellProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);

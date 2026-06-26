@@ -120,9 +120,22 @@ body {
   }
 }
 
+@keyframes amc-logo-marquee-ttb {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .amc-logo-marquee-track {
   animation: amc-logo-marquee-ltr 42s linear infinite;
   will-change: transform;
+}
+
+.amc-logo-marquee-track--vertical {
+  animation: amc-logo-marquee-ttb 36s linear infinite;
 }
 
 .group\/marquee:hover .amc-logo-marquee-track {
@@ -130,7 +143,97 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .amc-logo-marquee-track {
+  .amc-logo-marquee-track,
+  .amc-logo-marquee-track--vertical {
+    animation: none;
+  }
+}
+
+@keyframes approach-cloud-drift-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(10%, -6%) scale(1.1);
+  }
+  66% {
+    transform: translate(-8%, 5%) scale(0.94);
+  }
+}
+
+@keyframes approach-cloud-drift-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40% {
+    transform: translate(-12%, 8%) scale(1.08);
+  }
+  70% {
+    transform: translate(9%, -4%) scale(0.96);
+  }
+}
+
+@keyframes approach-cloud-drift-3 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(6%, 10%) scale(1.06);
+  }
+}
+
+.approach-cloud-hover {
+  opacity: 0;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  transition: opacity 0.5s ease;
+}
+
+[data-approach-step]:hover > .approach-cloud-hover,
+[data-approach-step]:focus-within > .approach-cloud-hover {
+  opacity: 1;
+}
+
+.approach-cloud-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--black);
+  filter: blur(40px);
+  opacity: 0.22;
+  will-change: transform;
+}
+
+.approach-cloud-blob--1 {
+  top: -30%;
+  left: -5%;
+  width: 70%;
+  height: 100%;
+  animation: approach-cloud-drift-1 10s ease-in-out infinite;
+}
+
+.approach-cloud-blob--2 {
+  top: -10%;
+  right: -10%;
+  width: 60%;
+  height: 90%;
+  opacity: 0.18;
+  animation: approach-cloud-drift-2 12s ease-in-out infinite;
+}
+
+.approach-cloud-blob--3 {
+  bottom: -35%;
+  left: 15%;
+  width: 72%;
+  height: 95%;
+  opacity: 0.16;
+  animation: approach-cloud-drift-3 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .approach-cloud-blob {
     animation: none;
   }
 }
@@ -655,13 +758,253 @@ body {
   background-image: var(--surface-gradient);
 }
 
-.about-stack-scroll__cover-panel {
-  will-change: transform;
+/* Sticky horizontal carousel — tall section + sticky viewport (no nested GSAP pin) */
+.horizontal-parallax-carousel-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.horizontal-parallax-carousel-section [data-carousel-sticky] {
+  backface-visibility: hidden;
 }
 
 .about-stack-scroll .pin-spacer {
   background-color: var(--surface);
   background-image: var(--surface-gradient);
+}
+
+/* Life insurance — horizontal protection plan accordion */
+.protection-plans-accordion {
+  overflow-anchor: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.protection-plans-accordion-card {
+  position: relative;
+  min-height: 0;
+  cursor: pointer;
+  flex: 1 0 4.5rem;
+  min-width: 4.5rem;
+  contain: layout style;
+  transition:
+    flex 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.35s ease;
+}
+
+.protection-plans-accordion-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--white) 85%, transparent);
+  outline-offset: 3px;
+}
+
+.protection-plans-accordion:hover .protection-plans-accordion-card:not(.is-expanded) {
+  flex: 1 0 3.75rem;
+}
+
+.protection-plans-accordion-card.is-expanded {
+  flex: 7 0 16rem;
+  min-width: 0;
+  box-shadow: 0 24px 56px -28px rgba(0, 0, 0, 0.55);
+}
+
+@media (min-width: 1024px) {
+  .protection-plans-accordion-card.is-expanded {
+    flex: 7 1 0%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .protection-plans-accordion-card,
+  .protection-plans-accordion-collapsed,
+  .protection-plans-accordion-expanded {
+    transition: none;
+  }
+}
+
+/* General insurance — hover expand cards (plans + why choose) */
+.insurance-plan-card,
+.insurance-why-choose-card {
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.35s ease;
+}
+
+.insurance-plan-card__expand,
+.insurance-why-choose-card__expand {
+  transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insurance-plan-card__expand > *,
+.insurance-why-choose-card__expand > * {
+  min-height: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .insurance-plan-card:hover,
+  .insurance-why-choose-card:hover {
+    z-index: 20;
+    border-color: color-mix(in srgb, var(--charcoal) 20%, transparent);
+    box-shadow: 0 20px 52px -24px color-mix(in srgb, var(--charcoal) 18%, transparent);
+  }
+
+  .insurance-plan-card:hover .insurance-plan-card__expand,
+  .insurance-why-choose-card:hover .insurance-why-choose-card__expand {
+    grid-template-rows: 1fr;
+  }
+}
+
+.insurance-plan-card:focus-visible,
+.insurance-why-choose-card:focus-visible {
+  z-index: 20;
+  border-color: color-mix(in srgb, var(--charcoal) 20%, transparent);
+  box-shadow: 0 20px 52px -24px color-mix(in srgb, var(--charcoal) 18%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--charcoal) 35%, transparent);
+  outline-offset: 3px;
+}
+
+.insurance-plan-card:focus-within .insurance-plan-card__expand,
+.insurance-why-choose-card:focus-within .insurance-why-choose-card__expand {
+  grid-template-rows: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .insurance-plan-card,
+  .insurance-plan-card__expand,
+  .insurance-why-choose-card,
+  .insurance-why-choose-card__expand {
+    transition: none;
+  }
+
+  .insurance-plan-card .insurance-plan-card__expand,
+  .insurance-why-choose-card .insurance-why-choose-card__expand {
+    grid-template-rows: 1fr;
+  }
+}
+
+/* Fixed income — laddering benefit cards */
+.fi-ladder-benefit-card {
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fi-ladder-benefit-card:hover {
+    z-index: 20;
+    border-color: color-mix(in srgb, var(--charcoal) 20%, transparent);
+    box-shadow: 0 20px 52px -24px color-mix(in srgb, var(--charcoal) 18%, transparent);
+  }
+}
+
+.fi-ladder-benefit-card:focus-visible {
+  z-index: 20;
+  border-color: color-mix(in srgb, var(--charcoal) 20%, transparent);
+  box-shadow: 0 20px 52px -24px color-mix(in srgb, var(--charcoal) 18%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--charcoal) 35%, transparent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fi-ladder-benefit-card {
+    transition: none;
+  }
+}
+
+/* Mutual funds — hover expand category cards */
+.mf-fund-category-card {
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.35s ease;
+}
+
+.mf-fund-category-card__expand {
+  transition: grid-template-rows 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mf-fund-category-card__expand > * {
+  min-height: 0;
+}
+
+.mf-fund-category-card.is-expanded {
+  z-index: 20;
+  border-color: color-mix(in srgb, white 22%, transparent);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
+.mf-fund-category-card.is-expanded .mf-fund-category-card__expand {
+  grid-template-rows: 1fr;
+}
+
+.mf-fund-category-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, white 35%, transparent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-fund-category-card,
+  .mf-fund-category-card__expand {
+    transition: none;
+  }
+
+  .mf-fund-category-card.is-expanded .mf-fund-category-card__expand {
+    grid-template-rows: 1fr;
+  }
+}
+
+/* Fixed income — laddering step flow connectors */
+.fi-ladder-flow {
+  position: relative;
+}
+
+.fi-ladder-connectors {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  color: color-mix(in srgb, var(--charcoal) 35%, transparent);
+}
+
+.fi-ladder-path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--charcoal) 22%, transparent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+[data-fi-ladder-card]::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 2px solid color-mix(in srgb, var(--charcoal) 42%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--charcoal) 10%, transparent),
+    0 0 24px 6px color-mix(in srgb, var(--charcoal) 12%, transparent);
+  transition:
+    opacity 0.24s ease,
+    box-shadow 0.24s ease,
+    border-color 0.24s ease;
+}
+
+[data-fi-ladder-card].fi-ladder-card--glow::after {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--charcoal) 55%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--charcoal) 18%, transparent),
+    0 0 32px 10px color-mix(in srgb, var(--charcoal) 16%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-fi-ladder-card]::after {
+    display: none;
+  }
 }
 
 /* Service intro — hollow outlined title when overlaid on the image card */

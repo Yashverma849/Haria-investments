@@ -5,6 +5,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AnimatedCalculatorValue from "@/components/animated-calculator-value";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import {
+  fadeInOnScroll,
+  scheduleScrollFadeReveal,
+  SCROLL_FADE_DURATION,
+  SCROLL_FADE_START,
+} from "@/lib/gsap-scroll-fade";
 import SectionHeader from "@/components/section-header";
 
 function calculateMaturity(
@@ -54,21 +60,14 @@ export default function FixedIncomeCalculator() {
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.fromTo(
-        panel,
-        { opacity: 0, y: 28 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: panel,
-            start: "top 88%",
-            once: true,
-          },
-        },
-      );
+      fadeInOnScroll(panel, {
+        trigger: panel,
+        start: SCROLL_FADE_START,
+        duration: SCROLL_FADE_DURATION,
+        y: 24,
+      });
+
+      scheduleScrollFadeReveal(section);
     });
 
     return () => {

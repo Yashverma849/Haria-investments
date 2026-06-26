@@ -3,129 +3,130 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
-import { fixedIncomeProducts } from "@/lib/fixed-income-data";
+import {
+  HorizontalParallaxCarousel,
+  ParallaxCard,
+  ParallaxCardImage,
+} from "@/components/horizontal-parallax-carousel";
+import { useScrollDrivenParallaxCarousel } from "@/hooks/use-scroll-driven-parallax-carousel";
+import {
+  fixedIncomeProducts,
+  type FixedIncomeProduct,
+} from "@/lib/fixed-income-data";
 import { scheduleConsultation } from "@/lib/nav-links";
+
+function FixedIncomeParallaxCard({ product }: { product: FixedIncomeProduct }) {
+  return (
+    <ParallaxCard
+      data-fi-product-card
+      className="flex h-[min(78vh,520px)] w-[min(78vw,300px)] flex-col sm:h-[480px] sm:w-[320px] lg:h-[520px] lg:w-[340px]"
+    >
+      <ParallaxCardImage>
+        <Image
+          src={product.image}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 78vw, 340px"
+          draggable={false}
+        />
+      </ParallaxCardImage>
+
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/75 to-charcoal/20"
+        aria-hidden
+      />
+
+      <div className="relative z-10 flex h-full min-h-0 flex-col p-5 text-white sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h2 className="text-fluid-service-title font-serif font-semibold tracking-tight text-white">
+            {product.title}
+          </h2>
+          <span className="shrink-0 rounded-full border border-white/25 bg-white/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-charcoal">
+            {product.rateRange}
+          </span>
+        </div>
+
+        <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-white/80 sm:text-base">
+          {product.description}
+        </p>
+
+        <dl className="mt-5 grid grid-cols-2 gap-4 border-y border-white/12 py-4">
+          <div>
+            <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
+              Tenure
+            </dt>
+            <dd className="mt-1 text-sm font-medium text-white">
+              {product.tenure}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45">
+              Min Amount
+            </dt>
+            <dd className="mt-1 text-sm font-medium text-white">
+              {product.minAmount}
+            </dd>
+          </div>
+        </dl>
+
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {product.features.map((feature) => (
+            <li
+              key={feature}
+              className="rounded-full border border-white/12 bg-white/8 px-3 py-1 text-xs font-medium text-white/75"
+            >
+              {feature}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto grid shrink-0 grid-cols-2 gap-2 pt-5 sm:gap-3">
+          <div className="min-w-0">
+            <Link
+              href={scheduleConsultation.href}
+              className="btn-primary flex h-11 w-full items-center justify-center rounded-full px-3 text-center text-xs font-semibold sm:h-12 sm:px-4 sm:text-sm"
+            >
+              Invest Now
+            </Link>
+          </div>
+          <div className="min-w-0">
+            <Link
+              href={scheduleConsultation.href}
+              className="flex h-11 w-full items-center justify-center rounded-full border border-white/30 bg-white/15 px-3 text-center text-xs font-semibold text-white transition-colors hover:border-white/50 hover:bg-white/20 sm:h-12 sm:px-4 sm:text-sm"
+            >
+              Schedule Consultant
+            </Link>
+          </div>
+        </div>
+      </div>
+    </ParallaxCard>
+  );
+}
 
 export default function FixedIncomeProducts() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  useGsapAfterLoader(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const cards = section.querySelectorAll("[data-fi-product-card]");
-    if (cards.length === 0) return;
-
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(cards, { opacity: 1, y: 0 });
-    });
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 28 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section.querySelector("[data-fi-products-grid]"),
-            start: "top 88%",
-            once: true,
-          },
-        },
-      );
-    });
-
-    return () => {
-      mm.revert();
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.trigger && section.contains(trigger.trigger as Node)) {
-          trigger.kill();
-        }
-      });
-    };
-  }, []);
+  useScrollDrivenParallaxCarousel(sectionRef);
 
   return (
-    <section ref={sectionRef} className="border-t border-charcoal/10 bg-surface pb-20 text-charcoal md:pb-28">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div
-          data-fi-products-grid
-          className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6"
-        >
-          {fixedIncomeProducts.map((product) => (
-            <article
-              key={product.id}
-              data-fi-product-card
-              className="surface-panel group flex flex-col overflow-hidden rounded-2xl"
-            >
-              <div className="relative h-40 overflow-hidden sm:h-44">
-                <Image
-                  src={product.image}
-                  alt=""
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
-                <span className="absolute right-4 top-4 rounded-full bg-white px-3 py-1 text-sm font-semibold text-charcoal">
-                  {product.rateRange}
-                </span>
-              </div>
-
-              <div className="flex flex-1 flex-col p-6">
-                <h2 className="font-serif text-xl font-semibold text-charcoal">
-                  {product.title}
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-charcoal/75">
-                  {product.description}
-                </p>
-
-                <dl className="mt-4 space-y-1.5 text-sm text-charcoal/70">
-                  <div className="flex gap-2">
-                    <dt className="shrink-0 font-medium text-charcoal/90">
-                      Tenure:
-                    </dt>
-                    <dd>{product.tenure}</dd>
-                  </div>
-                  <div className="flex gap-2">
-                    <dt className="shrink-0 font-medium text-charcoal/90">
-                      Min Amount:
-                    </dt>
-                    <dd>{product.minAmount}</dd>
-                  </div>
-                </dl>
-
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {product.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="rounded-full border border-charcoal/12 bg-white/60 px-2.5 py-1 text-xs text-charcoal/80"
-                    >
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={scheduleConsultation.href}
-                  className="btn-primary mt-auto inline-flex items-center justify-center self-start rounded-full px-6 py-2.5 text-sm font-semibold transition-transform duration-300 group-hover:scale-[1.02] sm:mt-6"
-                >
-                  Invest Now
-                </Link>
-              </div>
-            </article>
-          ))}
+    <section
+      ref={sectionRef}
+      className="horizontal-parallax-carousel-section border-t border-charcoal/10 bg-surface text-charcoal"
+    >
+      <div
+        data-carousel-sticky
+        className="sticky top-0 z-[1] flex min-h-svh items-center bg-surface pt-20 md:pt-28"
+      >
+        <div data-fi-products-carousel className="w-full">
+          <HorizontalParallaxCarousel
+            scrollDriven
+            aria-label="Fixed income products"
+          >
+            {fixedIncomeProducts.map((product) => (
+              <FixedIncomeParallaxCard key={product.id} product={product} />
+            ))}
+          </HorizontalParallaxCarousel>
         </div>
       </div>
     </section>

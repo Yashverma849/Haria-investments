@@ -303,6 +303,7 @@ export default function ServicesMegaMenu() {
     >
       <button
         type="button"
+        suppressHydrationWarning
         className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
           isOpen
             ? "bg-white/5 text-white"
@@ -348,6 +349,7 @@ export default function ServicesMegaMenu() {
                   <button
                     type="button"
                     data-nav-item
+                    suppressHydrationWarning
                     onMouseEnter={() => handleCategoryChange(category)}
                     onFocus={() => handleCategoryChange(category)}
                     className={`w-full rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${

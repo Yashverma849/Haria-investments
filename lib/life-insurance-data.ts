@@ -25,8 +25,7 @@ export const protectionPlans: ProtectionPlan[] = [
     tenure: "5 years to lifetime",
     minAmount: "₹5 Lakhs",
     features: ["High coverage", "Low premium", "Flexible terms", "Easy claims"],
-    image:
-      "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&q=80",
+    image: "/images/services/insurance-life.jpg",
   },
   {
     id: "whole-life",
@@ -36,8 +35,7 @@ export const protectionPlans: ProtectionPlan[] = [
     tenure: "Lifelong",
     minAmount: "₹2.5 Lakhs",
     features: ["Lifelong coverage", "Cash value", "Premium flexibility"],
-    image:
-      "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80",
+    image: "/images/heroes/hero-life-insurance.jpg",
   },
   {
     id: "endowment",
@@ -52,8 +50,7 @@ export const protectionPlans: ProtectionPlan[] = [
       "Death benefit",
       "Tax savings",
     ],
-    image:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80",
+    image: "/images/services/financial-health-planning.jpg",
   },
   {
     id: "ulip",
@@ -63,8 +60,7 @@ export const protectionPlans: ProtectionPlan[] = [
     tenure: "5–25 years",
     minAmount: "₹2.5 Lakhs",
     features: ["Market returns", "Life cover", "Fund switching", "Tax benefits"],
-    image:
-      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+    image: "/images/services/investment.jpg",
   },
   {
     id: "money-back",
@@ -79,8 +75,7 @@ export const protectionPlans: ProtectionPlan[] = [
       "Life cover",
       "Bonus payout",
     ],
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    image: "/images/services/financial-health-assessment.jpg",
   },
   {
     id: "pension",
@@ -94,8 +89,7 @@ export const protectionPlans: ProtectionPlan[] = [
       "Deferred/Immediate annuity",
       "Optional life cover",
     ],
-    image:
-      "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&q=80",
+    image: "/images/services/insurance.jpg",
   },
 ];
 

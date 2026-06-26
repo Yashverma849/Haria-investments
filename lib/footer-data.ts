@@ -43,7 +43,7 @@ export const serviceLinks: FooterLink[] = [
   { label: "Mutual Funds", href: "/investment/mutual-funds" },
   { label: "Equity Trading", href: "/investment/equity" },
   { label: "Fixed Income", href: "/investment/fixed-income" },
-  { label: "Commodity Trading", href: "/commodities/training" },
+  { label: "Commodity Trading", href: "/commodities/trading" },
   { label: "Gold & Silver", href: "/commodities/silver-gold" },
   { label: "Other Derivatives", href: "/commodities/derivation" },
   { label: "Financial Health Form", href: "/financial-health" },

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import AboutStackScroll from "@/components/about-stack-scroll";
-import CommodityHighlightsSection from "@/components/commodity-highlights-section";
+import DerivativesApproachSection from "@/components/derivatives-approach-section";
+import DerivativesOfferingsSection from "@/components/derivatives-offerings-section";
 import JourneyCtaSection from "@/components/journey-cta-section";
 import ServiceStackIntro from "@/components/service-stack-intro";
-import { commodityDerivation } from "@/lib/commodities-data";
 import { serviceIntros } from "@/lib/service-intro-data";
 
 export const metadata: Metadata = {
@@ -19,7 +19,8 @@ export default function CommodityDerivationPage() {
         intro={<ServiceStackIntro content={serviceIntros.commodityDerivation} />}
         legacy={
           <>
-            <CommodityHighlightsSection content={commodityDerivation} />
+            <DerivativesOfferingsSection />
+            <DerivativesApproachSection />
             <JourneyCtaSection />
           </>
         }

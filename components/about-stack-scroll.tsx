@@ -4,6 +4,7 @@ import { useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import { scheduleScrollFadeReveal } from "@/lib/gsap-scroll-fade";
 
 type AboutStackScrollProps = {
   intro: ReactNode;
@@ -14,27 +15,16 @@ function getSwipeDistance() {
   return Math.round(Math.min(window.innerHeight * 0.92, 760));
 }
 
+function releaseStackTransforms(
+  base: HTMLElement,
+  coverPanel: HTMLElement,
+) {
+  gsap.set(coverPanel, { clearProps: "transform" });
+  gsap.set(base, { clearProps: "transform,filter" });
+}
+
 function revealStackedSection(root: HTMLElement) {
-  requestAnimationFrame(() => {
-    ScrollTrigger.refresh();
-
-    root
-      .querySelectorAll("[data-section-title], [data-section-description]")
-      .forEach((element) => {
-        const rect = element.getBoundingClientRect();
-        const visible = rect.top < window.innerHeight * 0.9 && rect.bottom > 0;
-
-        if (visible) {
-          gsap.to(element, {
-            opacity: 1,
-            x: 0,
-            duration: 0.85,
-            ease: "power4.out",
-            overwrite: true,
-          });
-        }
-      });
-  });
+  scheduleScrollFadeReveal(root);
 }
 
 export default function AboutStackScroll({ intro, legacy }: AboutStackScrollProps) {
@@ -83,10 +73,14 @@ export default function AboutStackScroll({ intro, legacy }: AboutStackScrollProp
             },
             onUpdate: (self) => {
               if (self.progress >= 0.97) {
+                releaseStackTransforms(base, coverPanel);
                 revealStackedSection(root);
               }
             },
-            onLeave: () => revealStackedSection(root),
+            onLeave: () => {
+              releaseStackTransforms(base, coverPanel);
+              revealStackedSection(root);
+            },
           },
         });
 
@@ -126,7 +120,7 @@ export default function AboutStackScroll({ intro, legacy }: AboutStackScrollProp
       <div className="about-stack-scroll__cover">
         <div
           ref={coverPanelRef}
-          className="about-stack-scroll__cover-panel overflow-clip rounded-t-[1.75rem] border-t border-charcoal/10 bg-surface shadow-[0_-28px_90px_rgba(0,0,0,0.12)] md:rounded-t-[2.25rem]"
+          className="about-stack-scroll__cover-panel rounded-t-[1.75rem] border-t border-charcoal/10 bg-surface shadow-[0_-28px_90px_rgba(0,0,0,0.12)] md:rounded-t-[2.25rem]"
         >
           {legacy}
         </div>

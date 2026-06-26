@@ -3,6 +3,7 @@ export type CommodityHighlight = {
   number: string;
   title: string;
   description: string;
+  image?: string;
 };
 
 export type CommodityPageContent = {
@@ -11,15 +12,16 @@ export type CommodityPageContent = {
   description: string;
   sectionTitle: string;
   sectionDescription: string;
+  cardLayout?: "grid" | "expandable";
   highlights: CommodityHighlight[];
 };
 
-export const commodityTraining: CommodityPageContent = {
+export const commodityTrading: CommodityPageContent = {
   eyebrow: "Commodities",
-  title: "Commodity Training",
+  title: "Commodity Trading",
   description:
-    "Build a strong foundation in commodity markets with structured learning—from exchange basics to risk management and live market context.",
-  sectionTitle: "What You Will Learn",
+    "Trade commodity markets with structured guidance—from exchange basics to futures, options, and risk management.",
+  sectionTitle: "Trading Essentials",
   sectionDescription:
     "Practical modules designed for investors and traders who want clarity before participating in commodity markets.",
   highlights: [
@@ -29,6 +31,7 @@ export const commodityTraining: CommodityPageContent = {
       title: "Market Fundamentals",
       description:
         "Understand how commodity exchanges work, contract specifications, lot sizes, and the role of MCX and international benchmarks.",
+      image: "/images/commodities/market-fundamentals.jpg",
     },
     {
       id: "instruments",
@@ -36,6 +39,7 @@ export const commodityTraining: CommodityPageContent = {
       title: "Futures & Options",
       description:
         "Learn how futures and options on gold, silver, crude, and agri commodities are priced, traded, and settled.",
+      image: "/images/commodities/futures-options.jpg",
     },
     {
       id: "risk",
@@ -43,6 +47,7 @@ export const commodityTraining: CommodityPageContent = {
       title: "Risk Management",
       description:
         "Position sizing, margin requirements, stop-loss discipline, and hedging strategies to protect capital.",
+      image: "/images/commodities/risk-management.jpg",
     },
     {
       id: "strategy",
@@ -50,6 +55,7 @@ export const commodityTraining: CommodityPageContent = {
       title: "Trading Frameworks",
       description:
         "Trend, range, and event-driven approaches—with emphasis on process over speculation.",
+      image: "/images/commodities/trading-frameworks.jpg",
     },
   ],
 };
@@ -62,6 +68,7 @@ export const commoditySilverGold: CommodityPageContent = {
   sectionTitle: "Investment Avenues",
   sectionDescription:
     "Diversify with gold and silver through instruments suited to your horizon, liquidity needs, and risk profile.",
+  cardLayout: "expandable",
   highlights: [
     {
       id: "physical",
@@ -69,6 +76,7 @@ export const commoditySilverGold: CommodityPageContent = {
       title: "Physical Gold & Silver",
       description:
         "Coins, bars, and jewellery-grade bullion with purity verification and secure storage considerations.",
+      image: "/images/commodities/silver-gold/physical-bullion.jpg",
     },
     {
       id: "etf",
@@ -76,6 +84,7 @@ export const commoditySilverGold: CommodityPageContent = {
       title: "Gold & Silver ETFs",
       description:
         "Exchange-listed funds that track domestic bullion prices—efficient for long-term allocation without storage hassle.",
+      image: "/images/commodities/silver-gold/gold-silver-etfs.jpg",
     },
     {
       id: "sovereign",
@@ -83,6 +92,7 @@ export const commoditySilverGold: CommodityPageContent = {
       title: "Sovereign Gold Bonds",
       description:
         "Government-backed paper gold with periodic interest and tax advantages for qualifying holding periods.",
+      image: "/images/commodities/silver-gold/sovereign-gold-bonds.jpg",
     },
     {
       id: "mcx",
@@ -90,6 +100,7 @@ export const commoditySilverGold: CommodityPageContent = {
       title: "MCX Futures & Options",
       description:
         "Leveraged exposure for hedging or tactical trades—with margin, rollover, and volatility managed professionally.",
+      image: "/images/commodities/silver-gold/mcx-futures.jpg",
     },
   ],
 };

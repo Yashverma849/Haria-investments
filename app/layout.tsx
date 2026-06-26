@@ -31,7 +31,10 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${dmSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full w-full max-w-full overflow-x-clip bg-background font-sans text-foreground">
+      <body
+        suppressHydrationWarning
+        className="min-h-full w-full max-w-full overflow-x-clip bg-background font-sans text-foreground"
+      >
         <SiteLoaderShell>{children}</SiteLoaderShell>
       </body>
     </html>

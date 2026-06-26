@@ -30,7 +30,7 @@ export type AmcPartner = {
   shortName: string;
   logo: string;
   /** Bump logos that read small at the default marquee size */
-  logoSize?: "lg";
+  logoSize?: "lg" | "xl";
 };
 
 export const mutualFundsHero = {
@@ -48,8 +48,7 @@ export const fundCategories: FundCategory[] = [
     description: "High growth potential with market-linked returns",
     tenure: "5+ years",
     minAmount: "₹500",
-    image:
-      "https://images.unsplash.com/photo-1642790106117-e829e14a08fe?w=1200&q=80",
+    image: "/images/services/investment-mutual-funds.jpg",
     classifications: [
       {
         title: "Market Cap Based Active Funds",
@@ -94,8 +93,7 @@ export const fundCategories: FundCategory[] = [
     description: "Stable returns with lower risk profile",
     tenure: "1–3 years",
     minAmount: "₹500",
-    image:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80",
+    image: "/images/services/investment-fixed-income.jpg",
     classifications: [
       {
         title: "Short Term Debt Funds",
@@ -136,8 +134,7 @@ export const fundCategories: FundCategory[] = [
     description: "Balanced approach with equity and debt mix",
     tenure: "3–5 years",
     minAmount: "₹500",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80",
+    image: "/images/services/investment.jpg",
     classifications: [
       {
         title: "Equity Oriented Hybrid Funds",
@@ -167,8 +164,7 @@ export const fundCategories: FundCategory[] = [
       "Get exposure to global securities by investing in international funds",
     tenure: "5+ years",
     minAmount: "₹500",
-    image:
-      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&q=80",
+    image: "/images/heroes/hero-equity-investment.jpg",
     classifications: [
       {
         title: "International Funds",
@@ -204,7 +200,6 @@ export const amcPartners: AmcPartner[] = [
     name: "Axis Mutual Fund",
     shortName: "AXIS",
     logo: "/images/axis-removebg-preview.png",
-    logoSize: "lg",
   },
   {
     id: "kotak",
@@ -223,18 +218,17 @@ export const amcPartners: AmcPartner[] = [
     name: "Tata Mutual Fund",
     shortName: "TATA",
     logo: "/images/tata-removebg-preview.png",
-    logoSize: "lg",
   },
   {
     id: "nippon",
     name: "Nippon India Mutual Fund",
     shortName: "NIPPON",
     logo: "/images/nippon-removebg-preview.png",
+    logoSize: "xl",
   },
 ];
 
 export const partnersSection = {
-  stat: "45+",
   eyebrow: "Trusted Partners",
   title: "Invest with 45+ Trusted AMCs",
   description:

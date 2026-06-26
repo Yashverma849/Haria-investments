@@ -1,57 +1,77 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplashLoader from "@/components/splash-loader";
 import { useSiteLoaderComplete } from "@/components/site-loader-provider";
+import { scheduleScrollFadeReveal } from "@/lib/gsap-scroll-fade";
+import {
+  delay,
+  waitForCriticalImages,
+  waitForNextPaint,
+} from "@/lib/page-ready";
 
-const MIN_DISPLAY_MS = 2000;
-const EXIT_DURATION_MS = 900;
+gsap.registerPlugin(ScrollTrigger);
+
+/** Brief first-visit splash only — client navigations use the provider fast path. */
+const MIN_DISPLAY_MS = 350;
+const EXIT_DURATION_MS = 450;
 
 export default function SiteLoader() {
-  const [phase, setPhase] = useState<"loading" | "exiting" | "done">("loading");
   const markReady = useSiteLoaderComplete();
+  const [phase, setPhase] = useState<"loading" | "exiting">("loading");
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const startTime = Date.now();
-    let pageLoaded = document.readyState === "complete";
-    let exitTimer: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
 
-    const scheduleExit = () => {
+    const finishLoading = async () => {
+      const startTime = Date.now();
+
+      await document.fonts.ready;
+      if (cancelled) return;
+
+      const root =
+        document.getElementById("smooth-content") ?? document.body;
+      await waitForCriticalImages(root, { timeoutMs: 500, maxImages: 6 });
+      if (cancelled) return;
+
       const elapsed = Date.now() - startTime;
       const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
+      if (remaining > 0) {
+        await delay(remaining);
+      }
+      if (cancelled) return;
 
-      exitTimer = setTimeout(() => setPhase("exiting"), remaining);
+      markReady();
+
+      await waitForNextPaint();
+      ScrollTrigger.refresh();
+      scheduleScrollFadeReveal(root);
+      if (cancelled) return;
+
+      setPhase("exiting");
     };
 
-    const onLoad = () => {
-      pageLoaded = true;
-      scheduleExit();
-    };
-
-    if (pageLoaded) {
-      scheduleExit();
-    } else {
-      window.addEventListener("load", onLoad);
-    }
+    void finishLoading();
 
     return () => {
-      if (exitTimer) clearTimeout(exitTimer);
-      window.removeEventListener("load", onLoad);
+      cancelled = true;
     };
-  }, []);
+  }, [markReady]);
 
   useEffect(() => {
     if (phase !== "exiting") return;
 
-    const fallbackTimer = setTimeout(() => {
-      markReady();
-      setPhase("done");
-    }, EXIT_DURATION_MS + 100);
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, EXIT_DURATION_MS + 40);
 
-    return () => clearTimeout(fallbackTimer);
-  }, [phase, markReady]);
+    return () => clearTimeout(timer);
+  }, [phase]);
 
-  if (phase === "done") return null;
+  if (!visible) return null;
 
   return (
     <div
@@ -61,12 +81,8 @@ export default function SiteLoader() {
           : "translate-y-0 opacity-100"
       }`}
       style={{ transitionDuration: `${EXIT_DURATION_MS}ms` }}
-      onTransitionEnd={(event) => {
-        if (phase === "exiting" && event.propertyName === "opacity") {
-          markReady();
-          setPhase("done");
-        }
-      }}
+      aria-hidden={phase === "exiting"}
+      aria-busy={phase === "loading"}
     >
       <SplashLoader fullScreen={false} />
     </div>
