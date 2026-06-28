@@ -1,6 +1,16 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+let refreshTimeoutId: number | null = null;
+
+export function batchedScrollTriggerRefresh() {
+  if (refreshTimeoutId !== null) return;
+  refreshTimeoutId = requestAnimationFrame(() => {
+    ScrollTrigger.refresh();
+    refreshTimeoutId = null;
+  });
+}
+
 export const SCROLL_FADE_START = "top 92%";
 export const SCROLL_FADE_DURATION = 0.55;
 
@@ -11,6 +21,7 @@ export const SCROLL_REVEAL_SELECTORS = [
   "[data-mf-nav-table]",
   "[data-mf-nav-notes]",
   "[data-plan-card]",
+  "[data-bullion-card]",
   "[data-market-insight-card]",
   "[data-approach-step]",
   "[data-fi-benefit-card]",
@@ -88,7 +99,7 @@ export function scheduleScrollFadeReveal(
   threshold = 0.92,
 ): void {
   requestAnimationFrame(() => {
-    ScrollTrigger.refresh();
+    batchedScrollTriggerRefresh();
 
     if (!container) return;
 

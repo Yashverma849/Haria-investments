@@ -4,7 +4,7 @@ import { useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
-import { scheduleScrollFadeReveal } from "@/lib/gsap-scroll-fade";
+import { scheduleScrollFadeReveal, batchedScrollTriggerRefresh } from "@/lib/gsap-scroll-fade";
 
 type AboutStackScrollProps = {
   intro: ReactNode;
@@ -51,6 +51,7 @@ export default function AboutStackScroll({ intro, legacy }: AboutStackScrollProp
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       ctx = gsap.context(() => {
         const swipeDistance = getSwipeDistance();
+        let wasAtEnd = false;
 
         gsap.set(coverPanel, { y: () => getSwipeDistance() });
         gsap.set(base, { transformOrigin: "center top" });
@@ -72,14 +73,23 @@ export default function AboutStackScroll({ intro, legacy }: AboutStackScrollProp
               ease: "power2.inOut",
             },
             onUpdate: (self) => {
-              if (self.progress >= 0.97) {
-                releaseStackTransforms(base, coverPanel);
-                revealStackedSection(root);
+              const isAtEnd = self.progress >= 0.97;
+              if (isAtEnd !== wasAtEnd) {
+                wasAtEnd = isAtEnd;
+                if (isAtEnd) {
+                  revealStackedSection(root);
+                }
               }
             },
             onLeave: () => {
               releaseStackTransforms(base, coverPanel);
-              revealStackedSection(root);
+              if (!wasAtEnd) {
+                wasAtEnd = true;
+                revealStackedSection(root);
+              }
+            },
+            onEnterBack: () => {
+              wasAtEnd = false;
             },
           },
         });
@@ -99,7 +109,7 @@ export default function AboutStackScroll({ intro, legacy }: AboutStackScrollProp
         );
       }, root);
 
-      requestAnimationFrame(() => ScrollTrigger.refresh());
+      batchedScrollTriggerRefresh();
     });
 
     return () => {

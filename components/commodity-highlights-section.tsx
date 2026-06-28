@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { memo, startTransition, useCallback, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import { batchedScrollTriggerRefresh } from "@/lib/gsap-scroll-fade";
 import SectionHeader from "@/components/section-header";
 import type {
   CommodityHighlight,
@@ -21,7 +22,7 @@ function CommodityGridCard({ item }: { item: CommodityHighlight }) {
   return (
     <article
       data-commodity-card
-      className="surface-panel group relative overflow-hidden rounded-2xl p-6 opacity-0 backdrop-blur-sm transition-all duration-500 ease-out hover:z-10 hover:scale-[1.03] hover:border-charcoal/20 hover:shadow-[0_16px_48px_-20px_color-mix(in_srgb,var(--charcoal)_14%,transparent)] sm:p-7"
+      className="surface-panel group relative overflow-hidden rounded-2xl p-6 opacity-0 backdrop-blur-sm hover:z-10 hover:scale-[1.03] hover:border-charcoal/20 hover:shadow-[0_16px_48px_-20px_color-mix(in_srgb,var(--charcoal)_14%,transparent)] sm:p-7"
     >
       {item.image ? (
         <div
@@ -54,7 +55,7 @@ function CommodityGridCard({ item }: { item: CommodityHighlight }) {
   );
 }
 
-function CommodityExpandableCard({
+const CommodityExpandableCard = memo(function CommodityExpandableCard({
   item,
   isExpanded,
   onActivate,
@@ -85,16 +86,22 @@ function CommodityExpandableCard({
       }}
     >
       {item.image ? (
-        <div className="pointer-events-none absolute inset-0" aria-hidden>
-          <Image
-            src={item.image}
-            alt=""
-            fill
-            className="object-cover transition-transform duration-700 ease-out group-hover/avenue:scale-105 group-focus-within/avenue:scale-105 [.is-expanded_&]:scale-105 motion-reduce:transition-none"
-            sizes="(max-width: 768px) 100vw, 42rem"
+        <>
+          <div className="interactive-card-media" aria-hidden>
+            <Image
+              src={item.image}
+              alt=""
+              fill
+              className="object-cover motion-reduce:scale-105"
+              sizes="(max-width: 768px) 100vw, 42rem"
+            />
+            <div className="interactive-card-media__shade bg-charcoal/30 motion-reduce:opacity-100" />
+          </div>
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/55 to-charcoal/20 motion-reduce:from-charcoal/98 motion-reduce:via-charcoal/88"
+            aria-hidden
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/55 to-charcoal/20 transition-opacity duration-500 group-hover/avenue:from-charcoal/98 group-hover/avenue:via-charcoal/88 group-focus-within/avenue:from-charcoal/98 group-focus-within/avenue:via-charcoal/88 [.is-expanded_&]:from-charcoal/98 [.is-expanded_&]:via-charcoal/88 motion-reduce:from-charcoal/98 motion-reduce:via-charcoal/88" />
-        </div>
+        </>
       ) : null}
 
       <div className="relative z-10 flex flex-col p-5 sm:p-6 md:p-7">
@@ -117,21 +124,26 @@ function CommodityExpandableCard({
       </div>
     </article>
   );
-}
+});
 
 export default function CommodityHighlightsSection({
   content,
 }: CommodityHighlightsSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const activeIdRef = useRef<string | null>(null);
   const isExpandable = content.cardLayout === "expandable";
 
   const handleActivate = useCallback((id: string) => {
-    setActiveId(id);
+    if (activeIdRef.current === id) return;
+    activeIdRef.current = id;
+    startTransition(() => setActiveId(id));
   }, []);
 
   const handleDeactivate = useCallback(() => {
-    setActiveId(null);
+    if (activeIdRef.current === null) return;
+    activeIdRef.current = null;
+    startTransition(() => setActiveId(null));
   }, []);
 
   useGsapAfterLoader(() => {
@@ -167,7 +179,7 @@ export default function CommodityHighlightsSection({
       });
 
       requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
+        batchedScrollTriggerRefresh();
         if (ScrollTrigger.isInViewport(grid, 0.12)) {
           tween.progress(1);
         }

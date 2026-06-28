@@ -778,6 +778,7 @@ body {
   overflow-anchor: none;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  contain: layout style;
 }
 
 .protection-plans-accordion-card {
@@ -786,7 +787,10 @@ body {
   cursor: pointer;
   flex: 1 0 4.5rem;
   min-width: 4.5rem;
-  contain: layout style;
+  contain: layout style paint;
+  isolation: isolate;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
   transition:
     flex 0.55s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.35s ease;
@@ -910,19 +914,66 @@ body {
   }
 }
 
+/* Shared image layer for hover-expand cards (GPU-composited scale) */
+.interactive-card-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.interactive-card-media img {
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-card-media__shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 /* Mutual funds — hover expand category cards */
 .mf-fund-category-card {
+  contain: layout style;
+  isolation: isolate;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
   transition:
     box-shadow 0.4s ease,
     border-color 0.35s ease;
 }
 
+.bullion-offering-card {
+  overflow-anchor: none;
+}
+
 .mf-fund-category-card__expand {
-  transition: grid-template-rows 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mf-fund-category-card__expand > * {
   min-height: 0;
+}
+
+.mf-fund-category-card:not(:hover):not(:focus-within):not(.is-expanded)
+  .mf-fund-category-card__expand
+  > *
+  > * {
+  content-visibility: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mf-fund-category-card:hover {
+    z-index: 20;
+    border-color: color-mix(in srgb, white 22%, transparent);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+  }
+
+  .mf-fund-category-card:hover .mf-fund-category-card__expand {
+    grid-template-rows: 1fr;
+  }
 }
 
 .mf-fund-category-card.is-expanded {
@@ -935,19 +986,90 @@ body {
   grid-template-rows: 1fr;
 }
 
+.mf-fund-category-card:focus-within .mf-fund-category-card__expand {
+  grid-template-rows: 1fr;
+}
+
+.mf-fund-category-card:focus-within {
+  z-index: 20;
+  border-color: color-mix(in srgb, white 22%, transparent);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
 .mf-fund-category-card:focus-visible {
   outline: 2px solid color-mix(in srgb, white 35%, transparent);
   outline-offset: 3px;
 }
 
+/* Commodity highlights — vertical hover expand cards */
+.commodity-highlight-card {
+  contain: layout style paint;
+  isolation: isolate;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.35s ease;
+}
+
+.commodity-highlight-card__expand {
+  transition: grid-template-rows 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.commodity-highlight-card__expand > * {
+  min-height: 0;
+}
+
+.commodity-highlight-card.is-expanded {
+  z-index: 20;
+  border-color: color-mix(in srgb, white 22%, transparent);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
+.commodity-highlight-card.is-expanded .commodity-highlight-card__expand {
+  grid-template-rows: 1fr;
+}
+
+.commodity-highlight-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, white 35%, transparent);
+  outline-offset: 3px;
+}
+
+/* Commodity grid cards — hover reveal */
+[data-commodity-card].surface-panel {
+  contain: layout style paint;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 0.5s ease-out,
+    box-shadow 0.5s ease-out,
+    border-color 0.5s ease-out;
+}
+
+[data-market-insight-card] {
+  contain: layout style paint;
+  isolation: isolate;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mf-fund-category-card,
-  .mf-fund-category-card__expand {
+  .mf-fund-category-card__expand,
+  .commodity-highlight-card,
+  .commodity-highlight-card__expand {
     transition: none;
   }
 
-  .mf-fund-category-card.is-expanded .mf-fund-category-card__expand {
+  .mf-fund-category-card.is-expanded .mf-fund-category-card__expand,
+  .mf-fund-category-card .mf-fund-category-card__expand,
+  .commodity-highlight-card.is-expanded .commodity-highlight-card__expand {
     grid-template-rows: 1fr;
+  }
+
+  .interactive-card-media img,
+  .interactive-card-media__shade {
+    transition: none;
   }
 }
 
@@ -1014,5 +1136,74 @@ body {
     -webkit-text-stroke-width: clamp(1.5px, 0.08em, 3px);
     -webkit-text-stroke-color: rgba(255, 255, 255, 0.96);
     paint-order: stroke fill;
+  }
+}
+
+/* GPU Hardware Acceleration for Stack Scroll & Service Intro animations */
+@media (prefers-reduced-motion: no-preference) {
+  .about-stack-scroll__cover-panel {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  [data-service-intro-title],
+  [data-service-intro-image],
+  [data-service-intro-paragraph],
+  [data-service-intro-sidebar-title] {
+    will-change: transform, opacity;
+  }
+
+  .protection-plans-accordion-card {
+    will-change: flex;
+  }
+
+  .protection-plans-accordion-collapsed,
+  .protection-plans-accordion-expanded {
+    will-change: opacity;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .mf-fund-category-card,
+  .commodity-highlight-card {
+    will-change: transform;
+  }
+
+  .mf-fund-category-card__expand,
+  .commodity-highlight-card__expand {
+    will-change: auto;
+  }
+
+  .interactive-card-media img {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .mf-fund-category-card:hover .interactive-card-media img,
+  .mf-fund-category-card.is-expanded .interactive-card-media img,
+  .mf-fund-category-card:focus-within .interactive-card-media img,
+  .commodity-highlight-card:hover .interactive-card-media img,
+  .commodity-highlight-card.is-expanded .interactive-card-media img,
+  .commodity-highlight-card:focus-within .interactive-card-media img,
+  .protection-plans-accordion-card:hover .interactive-card-media img,
+  .protection-plans-accordion-card.is-expanded .interactive-card-media img {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+
+  .mf-fund-category-card:hover .interactive-card-media__shade,
+  .mf-fund-category-card.is-expanded .interactive-card-media__shade,
+  .mf-fund-category-card:focus-within .interactive-card-media__shade,
+  .commodity-highlight-card:hover .interactive-card-media__shade,
+  .commodity-highlight-card.is-expanded .interactive-card-media__shade,
+  .commodity-highlight-card:focus-within .interactive-card-media__shade {
+    opacity: 1;
+  }
+
+  [data-commodity-card].surface-panel:hover {
+    will-change: transform;
+  }
+
+  [data-market-insight-card]:hover,
+  [data-market-insight-card]:focus-within {
+    will-change: transform, opacity;
   }
 }

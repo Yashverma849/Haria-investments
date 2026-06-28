@@ -6,6 +6,7 @@ import gsap from "gsap";
 import ScrollSmoother from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import { batchedScrollTriggerRefresh } from "@/lib/gsap-scroll-fade";
 
 type ScrollSmootherShellProps = {
   children: ReactNode;
@@ -15,6 +16,9 @@ const SMOOTHER_DISABLED_ROUTES = [
   "/about",
   "/investment/equity",
   "/investment/fixed-income",
+  "/commodities/silver-gold",
+  "/commodities/trading",
+  "/commodities/derivation",
 ];
 
 export default function ScrollSmootherShell({ children }: ScrollSmootherShellProps) {
@@ -25,7 +29,7 @@ export default function ScrollSmootherShell({ children }: ScrollSmootherShellPro
   useGsapAfterLoader(() => {
     if (smootherDisabled) {
       ScrollSmoother.get()?.kill();
-      requestAnimationFrame(() => ScrollTrigger.refresh());
+      batchedScrollTriggerRefresh();
       return;
     }
 
@@ -51,7 +55,7 @@ export default function ScrollSmootherShell({ children }: ScrollSmootherShellPro
         ignoreMobileResize: true,
       });
 
-      requestAnimationFrame(() => ScrollTrigger.refresh());
+      batchedScrollTriggerRefresh();
     });
 
     return () => {

@@ -109,7 +109,7 @@ export default function CommodityMarketInsightsSection() {
                 </h3>
                 <Link
                   href={scheduleConsultation.href}
-                  className="mt-4 inline-flex w-fit items-center justify-center rounded-full border border-charcoal/20 px-5 py-2 text-sm font-semibold text-charcoal transition-all duration-500 group-hover/card:border-white/35 group-hover/card:bg-white/10 group-hover/card:text-white group-focus-within/card:border-white/35 group-focus-within/card:bg-white/10 group-focus-within/card:text-white motion-reduce:border-white/35 motion-reduce:bg-white/10 motion-reduce:text-white"
+                  className="mt-4 inline-flex w-fit items-center justify-center rounded-full border border-charcoal/20 px-5 py-2 text-sm font-semibold text-charcoal transition-[color,border-color,background-color] duration-500 group-hover/card:border-white/35 group-hover/card:bg-white/10 group-hover/card:text-white group-focus-within/card:border-white/35 group-focus-within/card:bg-white/10 group-focus-within/card:text-white motion-reduce:border-white/35 motion-reduce:bg-white/10 motion-reduce:text-white"
                 >
                   Explore Now
                 </Link>

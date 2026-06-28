@@ -2,10 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import {
+  fadeInOnScroll,
+  scheduleScrollFadeReveal,
+  SCROLL_FADE_DURATION,
+  SCROLL_FADE_START,
+} from "@/lib/gsap-scroll-fade";
 import SectionHeader from "@/components/section-header";
 import {
   bullionOfferings,
@@ -21,46 +27,27 @@ const badgeStyles: Record<BullionBadge, string> = {
   Disciplined: "border-white/20 bg-white/8 text-white/90",
 };
 
-function BullionOfferingCard({
-  offering,
-  isExpanded,
-  onActivate,
-  onDeactivate,
-}: {
-  offering: BullionOffering;
-  isExpanded: boolean;
-  onActivate: () => void;
-  onDeactivate: () => void;
-}) {
+function BullionOfferingCard({ offering }: { offering: BullionOffering }) {
   return (
     <article
       data-bullion-card
-      data-expanded={isExpanded ? "true" : "false"}
       tabIndex={0}
-      className={`mf-fund-category-card group/bullion relative flex w-full flex-col self-start overflow-hidden rounded-2xl border border-charcoal/12 opacity-0 outline-none ${
-        isExpanded ? "is-expanded" : ""
-      }`}
-      onMouseEnter={onActivate}
-      onMouseLeave={onDeactivate}
-      onFocus={onActivate}
-      onBlur={(event) => {
-        if (
-          !event.currentTarget.contains(event.relatedTarget as Node | null)
-        ) {
-          onDeactivate();
-        }
-      }}
+      className="bullion-offering-card mf-fund-category-card group/bullion relative flex w-full flex-col self-start overflow-hidden rounded-2xl border border-charcoal/12 opacity-0 outline-none"
     >
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
+      <div className="interactive-card-media" aria-hidden>
         <Image
           src={offering.image}
           alt=""
           fill
-          className="object-cover opacity-70 transition-transform duration-700 ease-out group-hover/bullion:scale-105 group-focus-within/bullion:scale-105 [.is-expanded_&]:scale-105 motion-reduce:transition-none"
+          className="object-cover opacity-70 motion-reduce:scale-105"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/88 via-charcoal/50 to-charcoal/15 transition-opacity duration-500 group-hover/bullion:from-charcoal/92 group-hover/bullion:via-charcoal/62 group-focus-within/bullion:from-charcoal/92 group-focus-within/bullion:via-charcoal/62 [.is-expanded_&]:from-charcoal/92 [.is-expanded_&]:via-charcoal/62 motion-reduce:from-charcoal/92 motion-reduce:via-charcoal/62" />
+        <div className="interactive-card-media__shade bg-charcoal/35 motion-reduce:opacity-100" />
       </div>
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/88 via-charcoal/50 to-charcoal/15 motion-reduce:from-charcoal/92 motion-reduce:via-charcoal/62"
+        aria-hidden
+      />
 
       <div className="relative z-10 flex flex-col p-5 sm:p-6 md:p-7">
         <div className="flex min-h-[11rem] flex-col justify-end sm:min-h-[12.5rem]">
@@ -115,14 +102,12 @@ function BullionOfferingCard({
                 <Link
                   href={scheduleConsultation.href}
                   className="btn-primary inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold sm:px-6"
-                  onClick={(event) => event.stopPropagation()}
                 >
                   Invest Now
                 </Link>
                 <Link
                   href={scheduleConsultation.href}
-                  className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/15 sm:px-5 sm:py-2.5 sm:text-sm"
-                  onClick={(event) => event.stopPropagation()}
+                  className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs font-semibold text-white transition-[transform,border-color,background-color] duration-300 hover:scale-[1.02] hover:border-white/50 hover:bg-white/20 sm:px-5 sm:py-2.5 sm:text-sm"
                 >
                   {scheduleConsultation.label}
                 </Link>
@@ -137,15 +122,6 @@ function BullionOfferingCard({
 
 export default function BullionOfferingsSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  const handleActivate = useCallback((id: string) => {
-    setActiveId(id);
-  }, []);
-
-  const handleDeactivate = useCallback(() => {
-    setActiveId(null);
-  }, []);
 
   useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -155,35 +131,24 @@ export default function BullionOfferingsSection() {
 
     const cards = section.querySelectorAll("[data-bullion-card]");
     const grid = section.querySelector("[data-bullion-grid]");
+    if (!grid || cards.length === 0) return;
 
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(cards, { opacity: 1, y: 0 });
+      gsap.set(cards, { opacity: 1, y: 0, clearProps: "transform" });
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.set(cards, { opacity: 0, y: 24 });
-
-      const tween = gsap.to(cards, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: grid,
-          start: "top 88%",
-          once: true,
-        },
+      fadeInOnScroll(cards, {
+        trigger: grid,
+        start: SCROLL_FADE_START,
+        duration: SCROLL_FADE_DURATION,
+        stagger: 0.08,
+        y: 24,
       });
 
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-        if (grid && ScrollTrigger.isInViewport(grid, 0.12)) {
-          tween.progress(1);
-        }
-      });
+      scheduleScrollFadeReveal(section);
     });
 
     return () => {
@@ -220,13 +185,7 @@ export default function BullionOfferingsSection() {
           className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6"
         >
           {bullionOfferings.map((offering) => (
-            <BullionOfferingCard
-              key={offering.id}
-              offering={offering}
-              isExpanded={activeId === offering.id}
-              onActivate={() => handleActivate(offering.id)}
-              onDeactivate={handleDeactivate}
-            />
+            <BullionOfferingCard key={offering.id} offering={offering} />
           ))}
         </div>
       </div>

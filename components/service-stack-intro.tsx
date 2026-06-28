@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageHeroBackground from "@/components/page-hero-background";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import { batchedScrollTriggerRefresh } from "@/lib/gsap-scroll-fade";
 import type { ServiceIntroContent } from "@/lib/service-intro-data";
 
 type ServiceStackIntroProps = {
@@ -16,43 +17,44 @@ type ServiceStackIntroProps = {
 const titleDisplayClass =
   "font-sans text-[clamp(2.75rem,11vw,7.5rem)] font-extrabold uppercase leading-[0.82] tracking-tight";
 
-function charCenterOnRect(charRect: DOMRect, targetRect: DOMRect) {
-  const cx = (charRect.left + charRect.right) / 2;
-  const cy = (charRect.top + charRect.bottom) / 2;
-
-  return (
-    cx >= targetRect.left &&
-    cx <= targetRect.right &&
-    cy >= targetRect.top &&
-    cy <= targetRect.bottom
-  );
-}
+type CachedChar = {
+  element: HTMLElement;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
 
 function updateTitleCharStyles(
-  titleEl: HTMLElement | null,
   cardEl: HTMLElement | null,
+  cachedChars: CachedChar[],
 ) {
-  if (!titleEl || !cardEl) return;
+  if (!cardEl || cachedChars.length === 0) return;
 
-  const chars = titleEl.querySelectorAll<HTMLElement>("[data-title-char]");
   const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
 
-  if (!isDesktop || chars.length === 0) {
-    chars.forEach((char) => {
-      char.classList.remove("text-display-stroke");
-      char.classList.add("text-white");
+  if (!isDesktop) {
+    cachedChars.forEach((char) => {
+      char.element.classList.remove("text-display-stroke");
+      char.element.classList.add("text-white");
     });
     return;
   }
 
   const cardRect = cardEl.getBoundingClientRect();
 
-  chars.forEach((char) => {
-    const charRect = char.getBoundingClientRect();
-    const onCard = charCenterOnRect(charRect, cardRect);
+  cachedChars.forEach((char) => {
+    const cx = (char.left + char.right) / 2;
+    const cy = (char.top + char.bottom) / 2;
 
-    char.classList.toggle("text-display-stroke", onCard);
-    char.classList.toggle("text-white", !onCard);
+    const onCard =
+      cx >= cardRect.left &&
+      cx <= cardRect.right &&
+      cy >= cardRect.top &&
+      cy <= cardRect.bottom;
+
+    char.element.classList.toggle("text-display-stroke", onCard);
+    char.element.classList.toggle("text-white", !onCard);
   });
 }
 
@@ -79,9 +81,26 @@ export default function ServiceStackIntro({
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const cachedCharsRef = useRef<CachedChar[]>([]);
+
+  const updateCharCache = () => {
+    const titleEl = titleRef.current;
+    if (!titleEl) return;
+    const chars = titleEl.querySelectorAll<HTMLElement>("[data-title-char]");
+    cachedCharsRef.current = Array.from(chars).map((char) => {
+      const rect = char.getBoundingClientRect();
+      return {
+        element: char,
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        bottom: rect.bottom,
+      };
+    });
+  };
 
   const syncTitleOverlap = () => {
-    updateTitleCharStyles(titleRef.current, cardRef.current);
+    updateTitleCharStyles(cardRef.current, cachedCharsRef.current);
   };
 
   useLayoutEffect(() => {
@@ -90,7 +109,8 @@ export default function ServiceStackIntro({
     if (!titleEl || !cardEl) return;
 
     const runSync = () => {
-      requestAnimationFrame(syncTitleOverlap);
+      updateCharCache();
+      updateTitleCharStyles(cardEl, cachedCharsRef.current);
     };
 
     runSync();
@@ -126,7 +146,8 @@ export default function ServiceStackIntro({
     );
 
     let entranceTimeline: gsap.core.Timeline | null = null;
-    let scrollTrigger: ScrollTrigger | null = null;
+    let entranceScrollTrigger: ScrollTrigger | null = null;
+    let overlapScrollTrigger: ScrollTrigger | null = null;
 
     const animateIn = () => {
       entranceTimeline?.kill();
@@ -222,8 +243,21 @@ export default function ServiceStackIntro({
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const swipeDistance = Math.round(Math.min(window.innerHeight * 0.92, 760));
+
+      // Scroll-driven overlap trigger (updates characters color dynamically on scroll)
+      overlapScrollTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: () => `+=${swipeDistance}`,
+        scrub: true,
+        onUpdate: () => {
+          updateTitleCharStyles(cardRef.current, cachedCharsRef.current);
+        },
+      });
+
       if (keepVisibleOnScroll) {
-        scrollTrigger = ScrollTrigger.create({
+        entranceScrollTrigger = ScrollTrigger.create({
           trigger: section,
           start: "top 85%",
           onEnter: animateIn,
@@ -231,22 +265,20 @@ export default function ServiceStackIntro({
           once: false,
         });
 
-        requestAnimationFrame(() => {
-          ScrollTrigger.refresh();
-          syncTitleOverlap();
+        batchedScrollTriggerRefresh();
+        syncTitleOverlap();
 
-          const { top, bottom } = section.getBoundingClientRect();
-          const inView = top < window.innerHeight * 0.85 && bottom > 0;
+        const { top, bottom } = section.getBoundingClientRect();
+        const inView = top < window.innerHeight * 0.85 && bottom > 0;
 
-          if (inView) {
-            animateIn();
-          }
-        });
+        if (inView) {
+          animateIn();
+        }
 
         return;
       }
 
-      scrollTrigger = ScrollTrigger.create({
+      entranceScrollTrigger = ScrollTrigger.create({
         trigger: section,
         start: "top 85%",
         end: "bottom 15%",
@@ -256,24 +288,23 @@ export default function ServiceStackIntro({
         onLeaveBack: animateOut,
       });
 
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-        syncTitleOverlap();
+      batchedScrollTriggerRefresh();
+      syncTitleOverlap();
 
-        const { top, bottom } = section.getBoundingClientRect();
-        const inView = top < window.innerHeight * 0.85 && bottom > 0;
+      const { top, bottom } = section.getBoundingClientRect();
+      const inView = top < window.innerHeight * 0.85 && bottom > 0;
 
-        if (inView) {
-          animateIn();
-        }
-      });
+      if (inView) {
+        animateIn();
+      }
     });
 
     ScrollTrigger.addEventListener("refresh", syncTitleOverlap);
 
     return () => {
       entranceTimeline?.kill();
-      scrollTrigger?.kill();
+      entranceScrollTrigger?.kill();
+      overlapScrollTrigger?.kill();
       ScrollTrigger.removeEventListener("refresh", syncTitleOverlap);
       mm.revert();
       ScrollTrigger.getAll().forEach((trigger) => {
