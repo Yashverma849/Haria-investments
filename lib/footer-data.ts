@@ -37,6 +37,41 @@ export const quickLinks: FooterLink[] = [
   },
 ];
 
+export type FooterServiceColumn = {
+  title: string;
+  href: string;
+  links: FooterLink[];
+};
+
+export const footerServiceColumns: FooterServiceColumn[] = [
+  {
+    title: "Insurance",
+    href: "/insurance",
+    links: [
+      { label: "Life", href: "/insurance/life" },
+      { label: "General", href: "/insurance/general" },
+    ],
+  },
+  {
+    title: "Investment",
+    href: "/investment",
+    links: [
+      { label: "Mutual Funds", href: "/investment/mutual-funds" },
+      { label: "Equity Investments", href: "/investment/equity" },
+      { label: "Fixed Income", href: "/investment/fixed-income" },
+    ],
+  },
+  {
+    title: "Commodities",
+    href: "/commodities",
+    links: [
+      { label: "Commodities Trading", href: "/commodities/trading" },
+      { label: "Silver and Gold", href: "/commodities/silver-gold" },
+      { label: "Other Derivatives", href: "/commodities/derivation" },
+    ],
+  },
+];
+
 export const serviceLinks: FooterLink[] = [
   { label: "Life Insurance", href: "/insurance/life" },
   { label: "General Insurance", href: "/insurance/general" },
@@ -62,6 +97,8 @@ export const contactInfo = {
   ],
   phone: "+91 77386 86126",
   phoneHref: "tel:+917738686126",
+  whatsappHref:
+    "https://wa.me/917738686126?text=Get%20in%20touch%20for%20more",
   email: "hariainvestments9@gmail.com",
   emailHref: "mailto:hariainvestments9@gmail.com",
 };

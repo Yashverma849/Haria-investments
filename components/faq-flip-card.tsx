@@ -3,40 +3,60 @@
 import { useState } from "react";
 import type { FaqItem } from "@/lib/faq-data";
 
-type FaqFlipCardProps = {
+type FaqCardProps = {
   item: FaqItem;
 };
 
-export default function FaqFlipCard({ item }: FaqFlipCardProps) {
-  const [flipped, setFlipped] = useState(false);
+export default function FaqFlipCard({ item }: FaqCardProps) {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <button
-      type="button"
-      onClick={() => setFlipped((prev) => !prev)}
-      aria-expanded={flipped}
-      aria-label={`${item.question}. ${flipped ? "Hide answer" : "Show answer"}`}
-      className="flip-card group h-full w-full text-left"
+    <div
+      data-faq-card-item
+      className="group overflow-hidden rounded-xl border border-charcoal/15 bg-white text-charcoal shadow-md transition-all duration-300 hover:border-charcoal/35 hover:shadow-xl"
     >
-      <div className={`flip-card-inner min-h-[240px] ${flipped ? "is-flipped" : ""}`}>
-        <div className="flip-card-face flip-card-front flex min-h-[240px] flex-col rounded-2xl border border-charcoal/10 bg-surface p-6 transition-colors group-hover:border-charcoal/20 sm:p-7">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-charcoal/55">
-            Question
-          </span>
-          <h2 className="mt-3 font-serif text-xl font-semibold leading-snug text-charcoal">
-            {item.question}
-          </h2>
-        </div>
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
+        aria-label={`${item.question}. ${isOpen ? "Collapse answer" : "Expand answer"}`}
+        className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6 cursor-pointer"
+      >
+        <span className="font-serif text-base font-semibold leading-snug text-charcoal sm:text-lg">
+          {item.question}
+        </span>
+        <span
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-charcoal/20 bg-charcoal/5 text-charcoal transition-all duration-300 group-hover:border-charcoal/40 group-hover:bg-charcoal/10 ${
+            isOpen ? "rotate-180 bg-charcoal/15 border-charcoal/40" : ""
+          }`}
+          aria-hidden
+        >
+          <svg
+            className="h-4 w-4 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </span>
+      </button>
 
-        <div className="flip-card-face flip-card-back flex min-h-[240px] flex-col rounded-2xl border border-charcoal/15 bg-surface p-6 sm:p-7">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-charcoal/55">
-            Answer
-          </span>
-          <p className="mt-3 text-sm leading-relaxed text-charcoal/80 sm:text-base">
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="border-t border-charcoal/10 p-5 pt-4 text-sm leading-relaxed text-charcoal/80 sm:p-6 sm:pt-4 sm:text-base">
             {item.answer}
-          </p>
+          </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }

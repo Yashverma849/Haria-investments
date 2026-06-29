@@ -108,7 +108,7 @@ export default function ValuesShowcase() {
       />
 
       <div
-        className="relative z-10 mx-auto flex min-h-[280px] max-w-6xl items-center justify-center sm:min-h-[320px] md:min-h-[380px]"
+        className="relative z-10 mx-auto flex min-h-[280px] w-full items-center justify-center sm:min-h-[320px] md:min-h-[380px]"
         aria-live="polite"
         aria-atomic="true"
       >

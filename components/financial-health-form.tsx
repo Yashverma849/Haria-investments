@@ -190,22 +190,23 @@ export default function FinancialHealthForm() {
     }
   }, []);
 
-  const navigate = useCallback(
-    (direction: 1 | -1) => {
-      const nextStep = activeStep + direction;
+  const goToStep = useCallback(
+    (targetStep: number) => {
       if (
         isAnimatingRef.current ||
-        nextStep < 0 ||
-        nextStep >= financialHealthSections.length
+        targetStep === activeStep ||
+        targetStep < 0 ||
+        targetStep >= financialHealthSections.length
       ) {
         return;
       }
 
+      const direction = targetStep > activeStep ? 1 : -1;
       directionRef.current = direction;
       setSubmitError("");
 
       if (prefersReducedMotionRef.current) {
-        setActiveStep(nextStep);
+        setActiveStep(targetStep);
         return;
       }
 
@@ -214,7 +215,7 @@ export default function FinancialHealthForm() {
       const subtitle = subtitleRef.current;
 
       if (!card) {
-        setActiveStep(nextStep);
+        setActiveStep(targetStep);
         return;
       }
 
@@ -223,7 +224,7 @@ export default function FinancialHealthForm() {
 
       const tl = gsap.timeline({
         onComplete: () => {
-          setActiveStep(nextStep);
+          setActiveStep(targetStep);
         },
       });
 
@@ -265,6 +266,13 @@ export default function FinancialHealthForm() {
       }
     },
     [activeStep],
+  );
+
+  const navigate = useCallback(
+    (direction: 1 | -1) => {
+      goToStep(activeStep + direction);
+    },
+    [activeStep, goToStep],
   );
 
   useEffect(() => {
@@ -347,18 +355,18 @@ export default function FinancialHealthForm() {
       ref={sectionRef}
       className="scroll-mt-24 border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div
           data-fh-panel
-          className="surface-panel mx-auto max-w-6xl overflow-hidden rounded-2xl"
+          className="surface-panel overflow-hidden rounded-2xl"
         >
           <form
             onSubmit={handleSubmit}
-            className="flex min-h-[min(72dvh,44rem)] flex-col lg:flex-row"
+            className="flex h-[clamp(36rem,75vh,44rem)] flex-col lg:flex-row"
           >
             <aside
               aria-label="Assessment sections"
-              className="flex shrink-0 flex-col border-b border-charcoal/10 bg-charcoal/[0.03] lg:w-[min(100%,22rem)] lg:border-b-0 lg:border-r"
+              className="flex h-full shrink-0 flex-col border-b border-charcoal/10 bg-charcoal/[0.03] lg:w-[min(100%,22rem)] lg:border-b-0 lg:border-r"
             >
               <div className="px-4 py-5 md:px-6 md:py-6 lg:px-7">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-charcoal/50">
@@ -382,7 +390,7 @@ export default function FinancialHealthForm() {
 
               <nav
                 aria-label="Section progress"
-                className="hidden flex-1 overflow-y-auto px-4 pb-4 md:px-6 lg:block lg:px-7 lg:pb-6"
+                className="flex-1 overflow-y-auto px-4 pb-4 md:px-6 lg:px-7 lg:pb-6"
               >
                 <ol className="space-y-1">
                   {financialHealthSections.map((section, index) => {
@@ -391,12 +399,14 @@ export default function FinancialHealthForm() {
 
                     return (
                       <li key={section.id}>
-                        <div
+                        <button
+                          type="button"
+                          onClick={() => goToStep(index)}
                           aria-current={isActive ? "step" : undefined}
-                          className={`rounded-xl border px-3 py-2.5 transition-colors ${
+                          className={`w-full text-left rounded-xl border px-3 py-2.5 transition-all cursor-pointer ${
                             isActive
                               ? "border-charcoal/20 bg-white shadow-sm"
-                              : "border-transparent bg-transparent"
+                              : "border-transparent bg-transparent hover:bg-white/60 hover:border-charcoal/10"
                           }`}
                         >
                           <div className="flex items-start gap-3">
@@ -413,10 +423,10 @@ export default function FinancialHealthForm() {
                             </span>
                             <div className="min-w-0">
                               <p
-                                className={`text-sm font-medium leading-snug ${
+                                className={`text-sm leading-snug ${
                                   isActive
-                                    ? "text-charcoal"
-                                    : "text-charcoal/55"
+                                    ? "text-charcoal font-semibold"
+                                    : "text-charcoal/70 font-medium"
                                 }`}
                               >
                                 {section.title}
@@ -428,41 +438,15 @@ export default function FinancialHealthForm() {
                               ) : null}
                             </div>
                           </div>
-                        </div>
+                        </button>
                       </li>
                     );
                   })}
                 </ol>
               </nav>
-
-              <div className="mt-auto flex items-center justify-between gap-3 border-t border-charcoal/10 px-4 py-4 md:px-6 lg:px-7">
-                <button
-                  type="button"
-                  onClick={() => navigate(-1)}
-                  disabled={isFirstStep || isAnimating}
-                  aria-label="Previous section"
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-charcoal/15 text-charcoal transition-colors hover:border-charcoal/30 hover:bg-charcoal/5 disabled:cursor-not-allowed disabled:opacity-35"
-                >
-                  <ChevronIcon direction="left" />
-                </button>
-
-                <p className="text-center text-xs font-medium text-charcoal/50 lg:hidden">
-                  {activeSection.title}
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() => navigate(1)}
-                  disabled={isLastStep || isAnimating}
-                  aria-label="Next section"
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-charcoal/15 text-charcoal transition-colors hover:border-charcoal/30 hover:bg-charcoal/5 disabled:cursor-not-allowed disabled:opacity-35"
-                >
-                  <ChevronIcon direction="right" />
-                </button>
-              </div>
             </aside>
 
-            <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+            <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col">
               <div
                 ref={formScrollRef}
                 data-fh-form-scroll

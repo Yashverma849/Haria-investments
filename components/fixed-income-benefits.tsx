@@ -61,7 +61,7 @@ export default function FixedIncomeBenefits() {
       ref={sectionRef}
       className="border-t border-white/10 bg-background py-20 text-cream md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
+      <div className="section-shell pb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
           Benefits of Laddering
         </p>
@@ -72,10 +72,10 @@ export default function FixedIncomeBenefits() {
         className="!pb-12 md:!pb-16"
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div
           data-fi-benefits-grid
-          className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-5"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-5"
         >
           {ladderBenefits.map((benefit) => (
             <article
@@ -118,7 +118,7 @@ export default function FixedIncomeBenefits() {
           ))}
         </div>
 
-        <div className="mx-auto mt-12 max-w-6xl text-center">
+        <div className="mt-12 text-center">
           <Link
             href={scheduleConsultation.href}
             className="btn-primary inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold"

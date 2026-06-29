@@ -36,6 +36,7 @@ const serviceImages = {
 export const mainNavLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Health Form", href: "/financial-health" },
   { label: "Testimonials", href: "/#testimonials" },
 ] as const;
 
@@ -137,18 +138,12 @@ export const serviceCategories: ServiceCategory[] = [
         image: serviceImages.silverGold,
       },
       {
-        label: "Other Derivation",
+        label: "Other Derivatives",
         href: "/commodities/derivation",
         description: "Derivatives and advanced instruments.",
         image: serviceImages.derivation,
       },
     ],
-  },
-  {
-    label: "Financial Health Form",
-    href: "/financial-health",
-    description: "Assess your financial wellness in minutes.",
-    image: serviceImages.financialHealth,
   },
 ];
 

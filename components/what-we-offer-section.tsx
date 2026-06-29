@@ -72,7 +72,7 @@ export default function WhatWeOfferSection() {
       ref={sectionRef}
       className="border-t border-white/10 bg-background py-20 md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div data-offer-header className="mx-auto max-w-3xl text-center">
           <p
             data-fade-item

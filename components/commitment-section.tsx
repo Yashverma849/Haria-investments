@@ -71,7 +71,7 @@ export default function CommitmentSection() {
         description="Clear expectations for responsive, professional service—so you always know what to expect when working with Haria Investments."
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div
           data-commitment-grid
           className="grid gap-4 sm:grid-cols-2 lg:gap-5"

@@ -26,7 +26,7 @@ function FixedIncomeParallaxCard({ product }: { product: FixedIncomeProduct }) {
           src={product.image}
           alt=""
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-700 ease-out group-hover/parallax-card:scale-110"
           sizes="(max-width: 640px) 78vw, 340px"
           draggable={false}
         />
@@ -116,7 +116,7 @@ export default function FixedIncomeProducts() {
     >
       <div
         data-carousel-sticky
-        className="sticky top-0 z-[1] flex min-h-svh items-center bg-surface pt-20 md:pt-28"
+        className="sticky top-20 z-[1] flex h-[calc(100svh-5rem)] items-center bg-surface"
       >
         <div data-fi-products-carousel className="w-full">
           <HorizontalParallaxCarousel

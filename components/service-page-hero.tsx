@@ -52,7 +52,7 @@ export default function ServicePageHero({
           aria-hidden
         />
       )}
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative section-shell">
         <p
           data-service-hero
           className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light opacity-0"

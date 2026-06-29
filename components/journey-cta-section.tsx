@@ -145,7 +145,7 @@ export default function JourneyCtaSection({ tone = "dark" }: JourneyCtaSectionPr
         )}
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative z-10 section-shell">
         <div data-journey-cta className="mx-auto max-w-4xl p-8 text-center md:p-12">
           <h2
             data-journey-title

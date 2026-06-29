@@ -7,6 +7,7 @@ import Navbar from "@/components/navbar";
 import ScrollSmootherShell from "@/components/scroll-smoother-shell";
 import SiteLoader from "@/components/site-loader";
 import { SiteLoaderProvider } from "@/components/site-loader-provider";
+import WhatsAppFloat from "@/components/whatsapp-float";
 
 export default function SiteLoaderShell({ children }: { children: ReactNode }) {
   return (
@@ -18,6 +19,7 @@ export default function SiteLoaderShell({ children }: { children: ReactNode }) {
         {children}
         <Footer />
       </ScrollSmootherShell>
+      <WhatsAppFloat />
     </SiteLoaderProvider>
   );
 }

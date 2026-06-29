@@ -60,7 +60,7 @@ export default function InsurancePlansSection() {
       id="coverage-plans"
       className="scroll-mt-24 border-t border-charcoal/10 bg-surface pt-20 text-charcoal md:pt-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
           Coverage Plans
         </p>
@@ -73,7 +73,7 @@ export default function InsurancePlansSection() {
         className="pt-4"
       />
 
-      <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
+      <div className="section-shell pb-20 md:pb-28">
         <GeneralInsurancePlansAccordion plans={allInsurancePlans} />
       </div>
     </section>

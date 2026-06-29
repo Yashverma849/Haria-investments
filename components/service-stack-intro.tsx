@@ -322,7 +322,7 @@ export default function ServiceStackIntro({
     >
       <PageHeroBackground src={content.backgroundImage} />
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-8">
+      <div className="relative section-shell w-full">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
           <div className="order-1 lg:col-span-8 lg:col-start-1 lg:row-start-1 lg:z-20">
             <h1 className="sr-only">

@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
+import { useNavTableVisibleRows } from "@/hooks/use-nav-table-visible-rows";
 import {
   fadeInOnScroll,
   scheduleScrollFadeReveal,
@@ -15,8 +16,6 @@ import {
   navApplicabilityRows,
   navImportantNotes,
 } from "@/lib/mutual-funds-data";
-
-const INITIAL_VISIBLE_ROWS = 5;
 
 function ReadMoreCapsule({
   isExpanded,
@@ -53,87 +52,68 @@ function ReadMoreCapsule({
   );
 }
 
-const readMoreRowPadding =
-  "pb-11 sm:pb-12 md:pb-14";
-
 function NavTableRows({
   rows,
   startIndex = 0,
-  readMoreOnLastRow = false,
-  isExpanded = false,
-  onToggleReadMore,
 }: {
   rows: typeof navApplicabilityRows;
   startIndex?: number;
-  readMoreOnLastRow?: boolean;
-  isExpanded?: boolean;
-  onToggleReadMore?: () => void;
 }) {
+  const cellPadding = "px-3 py-3.5 sm:px-4 sm:py-4 md:px-6";
+
   return (
     <>
-      {rows.map((row, index) => {
-        const isLastRow = index === rows.length - 1;
-        const showReadMore =
-          readMoreOnLastRow && isLastRow && onToggleReadMore;
-        const cellPadding = "px-3 py-3.5 sm:px-4 sm:py-4 md:px-6";
-
-        return (
-          <tr
-            key={`${row.transactionType}-${row.condition}-${startIndex + index}`}
-            className="border-b border-white/8 transition-colors hover:bg-white/[0.03]"
-          >
-            <td
-              className={`${cellPadding} align-top font-medium text-white ${
-                showReadMore ? readMoreRowPadding : ""
-              }`}
-            >
-              <span className="block min-w-0 leading-relaxed">
-                {row.transactionType}
-              </span>
-            </td>
-            <td
-              className={`${cellPadding} align-top text-white/75 ${
-                showReadMore ? readMoreRowPadding : ""
-              }`}
-            >
-              <span className="block min-w-0 leading-relaxed">
-                {row.condition}
-              </span>
-            </td>
-            <td
-              className={`${cellPadding} align-top text-white/80 ${
-                showReadMore ? `relative ${readMoreRowPadding}` : ""
-              }`}
-            >
-              <span
-                className={`block min-w-0 leading-relaxed ${
-                  showReadMore ? "pr-[5.75rem] sm:pr-24" : ""
-                }`}
-              >
-                {row.applicableNav}
-              </span>
-              {showReadMore ? (
-                <div className="absolute bottom-3 right-3 sm:bottom-3.5 sm:right-4 md:bottom-4 md:right-6">
-                  <ReadMoreCapsule
-                    isExpanded={isExpanded}
-                    onToggle={onToggleReadMore}
-                  />
-                </div>
-              ) : null}
-            </td>
-          </tr>
-        );
-      })}
+      {rows.map((row, index) => (
+        <tr
+          key={`${row.transactionType}-${row.condition}-${startIndex + index}`}
+          className="border-b border-white/20 transition-colors hover:bg-white/[0.03]"
+        >
+          <td className={`${cellPadding} align-top font-medium text-white`}>
+            <span className="block min-w-0 leading-relaxed">
+              {row.transactionType}
+            </span>
+          </td>
+          <td className={`${cellPadding} align-top text-white/75`}>
+            <span className="block min-w-0 leading-relaxed">{row.condition}</span>
+          </td>
+          <td className={`${cellPadding} align-top text-white/80`}>
+            <span className="block min-w-0 leading-relaxed">
+              {row.applicableNav}
+            </span>
+          </td>
+        </tr>
+      ))}
     </>
+  );
+}
+
+function NavReadMoreFooter({
+  isExpanded,
+  onToggle,
+  ref,
+}: {
+  isExpanded: boolean;
+  onToggle: () => void;
+  ref?: React.Ref<HTMLDivElement>;
+}) {
+  return (
+    <div
+      ref={ref}
+      data-read-more-footer
+      className="border-t border-white/20 px-3 py-3 text-right sm:px-4 md:px-6"
+    >
+      <ReadMoreCapsule isExpanded={isExpanded} onToggle={onToggle} />
+    </div>
   );
 }
 
 function NavNotesList({
   className = "",
+  ref,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { ref?: React.Ref<HTMLDivElement> }) {
   return (
-    <div className={className} {...props}>
+    <div ref={ref} className={className} {...props}>
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
         Good to know
       </p>
@@ -155,15 +135,30 @@ function NavNotesList({
   );
 }
 
+const tableClassName =
+  "w-full table-fixed border-collapse text-left text-sm min-w-[36rem] sm:min-w-[40rem] xl:min-w-0";
+
 export default function MutualFundsNavTable() {
   const sectionRef = useRef<HTMLElement>(null);
+  const visibleTableRef = useRef<HTMLTableElement>(null);
   const extraRowsRef = useRef<HTMLDivElement>(null);
+  const notesRef = useRef<HTMLDivElement>(null);
+  const measureTableRef = useRef<HTMLTableElement>(null);
+  const measureFooterRef = useRef<HTMLDivElement>(null);
   const expandTweenRef = useRef<gsap.core.Tween | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const hasMoreRows = navApplicabilityRows.length > INITIAL_VISIBLE_ROWS;
-  const initialRows = navApplicabilityRows.slice(0, INITIAL_VISIBLE_ROWS);
-  const extraRows = navApplicabilityRows.slice(INITIAL_VISIBLE_ROWS);
+  const { visibleRowCount } = useNavTableVisibleRows({
+    notesRef,
+    measureTableRef,
+    measureFooterRef,
+    visibleTableRef,
+    totalRows: navApplicabilityRows.length,
+  });
+
+  const hasMoreRows = navApplicabilityRows.length > visibleRowCount;
+  const initialRows = navApplicabilityRows.slice(0, visibleRowCount);
+  const extraRows = navApplicabilityRows.slice(visibleRowCount);
 
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
@@ -233,7 +228,7 @@ export default function MutualFundsNavTable() {
     return () => {
       expandTweenRef.current?.kill();
     };
-  }, [hasMoreRows, isExpanded]);
+  }, [hasMoreRows, isExpanded, visibleRowCount]);
 
   useGsapAfterLoader(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -274,10 +269,35 @@ export default function MutualFundsNavTable() {
 
   const tableColGroup = (
     <colgroup>
-      <col className="w-[28%] sm:w-[26%]" />
-      <col className="w-[34%] sm:w-[36%]" />
-      <col className="w-[38%] sm:w-[38%]" />
+      <col className="w-[30%] sm:w-[28%]" />
+      <col className="w-[46%] sm:w-[48%]" />
+      <col className="w-[24%] sm:w-[24%]" />
     </colgroup>
+  );
+
+  const tableHead = (
+    <thead>
+      <tr className="border-b-2 border-white/30 bg-white/[0.04]">
+        <th
+          scope="col"
+          className="px-3 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
+        >
+          Transaction Type
+        </th>
+        <th
+          scope="col"
+          className="px-3 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
+        >
+          Condition
+        </th>
+        <th
+          scope="col"
+          className="px-3 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
+        >
+          Applicable NAV
+        </th>
+      </tr>
+    </thead>
   );
 
   return (
@@ -290,79 +310,80 @@ export default function MutualFundsNavTable() {
         description="Understand how transaction timing affects the Net Asset Value applied to your mutual fund purchases, redemptions, and switches."
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(200px,240px)] xl:items-start xl:gap-10">
-          <div
-            data-mf-nav-table
-            className="min-w-0 overflow-x-auto rounded-2xl border border-white/10 opacity-0"
-          >
-            <table className="w-full min-w-[36rem] table-fixed border-collapse text-left text-sm sm:min-w-[40rem]">
-              {tableColGroup}
-              <thead>
-                <tr className="border-b border-white/10 bg-white/[0.04]">
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
-                  >
-                    Transaction Type
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
-                  >
-                    Condition
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
-                  >
-                    Applicable NAV
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <NavTableRows
-                  rows={initialRows}
-                  readMoreOnLastRow={hasMoreRows && !isExpanded}
-                  isExpanded={isExpanded}
-                  onToggleReadMore={hasMoreRows ? toggleExpanded : undefined}
-                />
-              </tbody>
-            </table>
-
-            {hasMoreRows ? (
-              <div
-                ref={extraRowsRef}
-                className="overflow-hidden"
-                style={{ height: 0, opacity: 0 }}
-                aria-hidden={!isExpanded}
-              >
-                <table className="w-full min-w-[36rem] table-fixed border-collapse text-left text-sm sm:min-w-[40rem]">
-                  {tableColGroup}
-                  <tbody>
-                    <NavTableRows
-                      rows={extraRows}
-                      startIndex={INITIAL_VISIBLE_ROWS}
-                      readMoreOnLastRow={isExpanded}
-                      isExpanded={isExpanded}
-                      onToggleReadMore={toggleExpanded}
-                    />
-                  </tbody>
-                </table>
-              </div>
-            ) : null}
-
-            <NavNotesList
+      <div className="section-shell">
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(200px,240px)] xl:items-start xl:gap-10">
+          <div className="min-w-0">
+            <div
               aria-hidden
-              className="border-t border-white/8 px-3 py-5 sm:px-4 md:px-6 xl:hidden"
-            />
+              className="pointer-events-none fixed top-0 -left-[9999px] opacity-0"
+            >
+              <table ref={measureTableRef} className={tableClassName}>
+                {tableColGroup}
+                {tableHead}
+                <tbody>
+                  <NavTableRows rows={navApplicabilityRows} />
+                </tbody>
+              </table>
+              <NavReadMoreFooter
+                ref={measureFooterRef}
+                isExpanded={false}
+                onToggle={() => undefined}
+              />
+            </div>
+
+            <div
+              data-mf-nav-table
+              className="min-w-0 overflow-x-auto rounded-2xl border-2 border-white/30 opacity-0 xl:overflow-hidden"
+            >
+              <table ref={visibleTableRef} className={tableClassName}>
+                {tableColGroup}
+                {tableHead}
+                <tbody>
+                  <NavTableRows rows={initialRows} />
+                </tbody>
+              </table>
+
+              {hasMoreRows ? (
+                <div
+                  ref={extraRowsRef}
+                  className="overflow-hidden"
+                  style={{ height: 0, opacity: 0 }}
+                  aria-hidden={!isExpanded}
+                >
+                  <table className={tableClassName}>
+                    {tableColGroup}
+                    <tbody>
+                      <NavTableRows
+                        rows={extraRows}
+                        startIndex={visibleRowCount}
+                      />
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+
+              {hasMoreRows ? (
+                <NavReadMoreFooter
+                  isExpanded={isExpanded}
+                  onToggle={toggleExpanded}
+                />
+              ) : null}
+
+              <NavNotesList
+                aria-hidden
+                className="border-t-2 border-white/30 px-3 py-5 sm:px-4 md:px-6 xl:hidden"
+              />
+            </div>
           </div>
 
           <aside
             data-mf-nav-notes
             className="hidden min-w-0 opacity-0 xl:block xl:sticky xl:top-28"
           >
-            <NavNotesList className="border-l border-white/12 pl-5 xl:pl-6" />
+            <NavNotesList
+              ref={notesRef}
+              className="rounded-xl border-2 border-white/30 p-5"
+            />
           </aside>
         </div>
       </div>

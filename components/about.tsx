@@ -15,7 +15,7 @@ export function AboutPurpose() {
         onSurface
       />
 
-      <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
+      <div className="section-shell pb-20 md:pb-28">
         <AboutValueCards />
       </div>
     </section>
@@ -32,7 +32,7 @@ export function AboutLeaders() {
         onSurface
       />
 
-      <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
+      <div className="section-shell pb-20 md:pb-28">
         <LegacyShowcase
           members={teamMembers.slice(0, 2)}
           showReadMore

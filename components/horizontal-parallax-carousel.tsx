@@ -9,6 +9,8 @@ import {
   type ReactNode,
 } from "react";
 
+import gsap from "gsap";
+
 const PARALLAX_INTENSITY = 0.16;
 const SCALE_MIN = 0.9;
 const SCALE_MAX = 1.06;
@@ -33,7 +35,25 @@ export function getCarouselScrollDistance(
   track: HTMLElement | null,
 ) {
   if (!container || !track) return 0;
-  return Math.max(0, track.scrollWidth - container.clientWidth);
+
+  const cards = track.querySelectorAll<HTMLElement>("[data-parallax-card]");
+  if (cards.length === 0) {
+    return Math.max(0, track.scrollWidth - container.clientWidth);
+  }
+
+  const containerRect = container.getBoundingClientRect();
+  const firstCardRect = cards[0].getBoundingClientRect();
+  const lastCardRect = cards[cards.length - 1].getBoundingClientRect();
+
+  const currentX = (gsap.getProperty(track, "x") as number) || 0;
+
+  const firstCardLeftUnshifted = firstCardRect.left - containerRect.left - currentX;
+  const lastCardRightUnshifted = lastCardRect.right - containerRect.left - currentX;
+
+  const targetRight = containerRect.width - Math.max(0, firstCardLeftUnshifted);
+  const distance = lastCardRightUnshifted - targetRight;
+
+  return Math.max(0, Math.round(distance));
 }
 
 export function measureCarouselCards(
@@ -271,7 +291,7 @@ export function HorizontalParallaxCarousel({
       <div
         ref={trackRef}
         data-parallax-track
-        className="flex w-max items-center gap-5 py-4 pl-[max(1.5rem,calc(50%-9.75rem))] pr-[max(1.5rem,calc(50%-10.5rem))] sm:gap-6 sm:pl-[max(1.5rem,calc(50%-10.5rem))] sm:pr-[max(1.5rem,calc(50%-10.5rem))]"
+        className="flex w-max items-center gap-5 py-4 px-4 sm:gap-6 sm:px-6 lg:px-8 xl:px-12"
       >
         {children}
       </div>
@@ -292,7 +312,7 @@ export function ParallaxCard({
     <article
       data-parallax-card
       {...rest}
-      className={`parallax-card relative shrink-0 snap-center overflow-hidden rounded-3xl border border-charcoal/10 bg-charcoal shadow-[0_24px_64px_-28px_rgba(0,0,0,0.55)] ${className}`}
+      className={`parallax-card group/parallax-card relative shrink-0 snap-center overflow-hidden rounded-3xl border border-charcoal/10 bg-charcoal shadow-[0_24px_64px_-28px_rgba(0,0,0,0.55)] transition-all duration-500 ease-out hover:scale-[1.03] hover:border-white/30 hover:shadow-[0_32px_80px_-20px_rgba(0,0,0,0.7)] ${className}`}
     >
       <div
         data-parallax-card-surface
@@ -316,7 +336,7 @@ export function ParallaxCardImage({
   return (
     <div
       data-parallax-image
-      className={`absolute inset-y-0 left-[-10%] h-full w-[120%] ${className}`}
+      className={`absolute inset-y-0 left-[-10%] h-full w-[120%] transition-transform duration-700 ease-out group-hover/parallax-card:scale-110 ${className}`}
       aria-hidden
     >
       <div className="relative h-full w-full">{children}</div>

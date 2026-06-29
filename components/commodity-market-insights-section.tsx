@@ -64,7 +64,7 @@ export default function CommodityMarketInsightsSection() {
       ref={sectionRef}
       className="border-t border-charcoal/10 bg-surface pt-20 text-charcoal md:pt-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
           {commodityMarketInsightsSection.eyebrow}
         </p>
@@ -77,10 +77,10 @@ export default function CommodityMarketInsightsSection() {
         className="pt-4"
       />
 
-      <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
+      <div className="section-shell pb-20 md:pb-28">
         <div
           data-market-insights-grid
-          className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5"
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5"
         >
           {commodityMarketInsights.map((item) => (
             <article

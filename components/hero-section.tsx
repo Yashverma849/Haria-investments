@@ -9,6 +9,20 @@ import { useGsapAfterLoader } from "@/hooks/use-gsap-after-loader";
 
 const VIDEO_SRC = "/background videos/The_Second_Complete_Wealth-ezremove.mp4";
 const TEXT_REVEAL_TIME = 2;
+const YOUTUBE_VIDEO_URL = "https://youtu.be/92RUhI16eXA?si=T8FfTY7nxhDy_dEZ";
+
+function YouTubeIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4 shrink-0"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -109,27 +123,27 @@ export default function HeroSection() {
 
       <div
         ref={contentRef}
-        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-6 pt-20 lg:px-8"
+        className="relative z-10 section-shell flex h-full flex-col pt-20"
       >
         <div className="viewport-frame flex min-h-0 flex-1 flex-col justify-start overflow-hidden pt-6 sm:pt-8 lg:pt-10">
-          <div className="mx-auto w-full max-w-2xl min-h-0 sm:mx-0">
+          <div className="w-full max-w-2xl min-h-0">
             <p
               data-hero-animate
-              className="text-fluid-eyebrow mb-3 text-center font-semibold uppercase tracking-[0.35em] text-brand-light sm:mb-4 sm:text-left"
+              className="text-fluid-eyebrow mb-3 text-left font-semibold uppercase tracking-[0.35em] text-brand-light sm:mb-4"
             >
               YOUR ONE STOP FINANCIAL SOLUTION
             </p>
 
             <h1
               data-hero-animate
-              className="text-fluid-hero text-balance text-center font-serif font-semibold tracking-tight text-white sm:text-left"
+              className="text-fluid-hero text-balance text-left font-serif font-semibold tracking-tight text-white"
             >
               Your One Stop Solution for Comprehensive Financial Planning
             </h1>
 
             <p
               data-hero-animate
-              className="text-fluid-body-hero mt-3 max-w-xl text-center text-white/80 sm:mt-4 sm:text-left"
+              className="text-fluid-body-hero mt-3 max-w-xl text-left text-white/80 sm:mt-4"
             >
               Insurance, Investments, and Wealth Solutions, All in One Place.
               Build your financial future with comprehensive planning backed by
@@ -138,7 +152,7 @@ export default function HeroSection() {
 
             <div
               data-hero-animate
-              className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10 sm:justify-start sm:gap-4"
+              className="mt-8 flex flex-wrap items-center justify-start gap-3 sm:mt-10 sm:gap-4"
             >
               <Link
                 href="/contact"
@@ -146,12 +160,15 @@ export default function HeroSection() {
               >
                 Schedule Consultation
               </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/10 sm:px-8 sm:py-3.5"
+              <a
+                href={YOUTUBE_VIDEO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/10 sm:px-8 sm:py-3.5"
               >
+                <YouTubeIcon />
                 Learn More
-              </Link>
+              </a>
             </div>
           </div>
         </div>

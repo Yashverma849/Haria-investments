@@ -166,10 +166,10 @@ export default function InvestmentCalculator({ type }: InvestmentCalculatorProps
         className="!pb-12 md:!pb-16"
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div
           data-calc-panel
-          className="mx-auto max-w-5xl rounded-2xl border border-charcoal/10 bg-white/70 p-6 backdrop-blur-sm md:p-10"
+          className="rounded-2xl border border-charcoal/10 bg-white/70 p-6 backdrop-blur-sm md:p-10"
         >
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
             <div>

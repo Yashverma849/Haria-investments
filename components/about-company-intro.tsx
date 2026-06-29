@@ -193,7 +193,7 @@ export default function AboutCompanyIntro({
       ref={sectionRef}
       className="overflow-x-clip bg-background pt-28 pb-20 md:pt-36 md:pb-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
           <div className="order-1 lg:col-span-3 lg:row-start-1">
             <h1

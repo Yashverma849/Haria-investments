@@ -63,7 +63,7 @@ export default function DerivativesApproachSection() {
       ref={sectionRef}
       className="border-t border-charcoal/10 bg-surface pt-20 text-charcoal md:pt-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
           {derivativesApproachSection.eyebrow}
         </p>
@@ -76,10 +76,10 @@ export default function DerivativesApproachSection() {
         className="pt-4"
       />
 
-      <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
+      <div className="section-shell pb-20 md:pb-28">
         <ol
           data-approach-list
-          className="mx-auto max-w-5xl divide-y divide-charcoal/10"
+          className="divide-y divide-charcoal/10"
         >
           {derivativesApproachSteps.map((step) => (
             <li
@@ -111,7 +111,7 @@ export default function DerivativesApproachSection() {
           ))}
         </ol>
 
-        <div className="mx-auto mt-12 flex max-w-5xl flex-col items-center gap-4 sm:mt-14">
+        <div className="mt-12 flex flex-col items-center gap-4 sm:mt-14">
           <Link
             href={scheduleConsultation.href}
             className="btn-primary inline-flex items-center justify-center rounded-full px-8 py-3.5 text-sm font-semibold"

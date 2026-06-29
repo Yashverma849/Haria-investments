@@ -207,13 +207,13 @@ export default function CommodityHighlightsSection({
         description={content.sectionDescription}
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div
           data-commodity-grid
           className={
             isExpandable
               ? "mx-auto flex max-w-2xl flex-col gap-4 lg:max-w-3xl lg:gap-5"
-              : "mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:gap-5"
+              : "grid gap-4 sm:grid-cols-2 lg:gap-5"
           }
         >
           {content.highlights.map((item) =>
@@ -231,7 +231,7 @@ export default function CommodityHighlightsSection({
           )}
         </div>
 
-        <div className="mx-auto mt-12 flex max-w-6xl justify-center">
+        <div className="mt-12 flex justify-center">
           <Link
             href={scheduleConsultation.href}
             className="btn-primary inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold"

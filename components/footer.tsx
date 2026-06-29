@@ -5,9 +5,9 @@ import FooterNewsletter from "@/components/newsletter-section";
 import {
   contactInfo,
   credentials,
+  footerServiceColumns,
   googleMapsUrl,
   quickLinks,
-  serviceLinks,
 } from "@/lib/footer-data";
 
 const linkClass =
@@ -59,16 +59,38 @@ function FooterColumn({
 export default function Footer() {
   return (
     <footer className="overflow-hidden bg-surface">
-      <div className="mx-auto max-w-7xl px-6 pt-16 pb-6 md:px-8 lg:pt-20 lg:pb-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-0 xl:gap-x-12">
+      <div className="section-shell pt-16 pb-6 lg:pt-20 lg:pb-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-8 lg:gap-y-0 xl:gap-x-10">
           <FooterColumn>
             <FooterHeading>Quick Links</FooterHeading>
             <FooterLinkList links={quickLinks} />
           </FooterColumn>
 
-          <FooterColumn>
-            <FooterHeading>Our Services</FooterHeading>
-            <FooterLinkList links={serviceLinks} />
+          <FooterColumn className="sm:col-span-2 lg:col-span-2">
+            <h3 className="font-serif text-lg font-semibold leading-tight text-charcoal text-center sm:text-center">
+              Our Services
+            </h3>
+            <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-3">
+              {footerServiceColumns.map((col) => (
+                <div key={col.title}>
+                  <Link
+                    href={col.href}
+                    className="text-xs font-semibold uppercase tracking-[0.16em] text-charcoal/80 transition-colors hover:text-charcoal"
+                  >
+                    {col.title}
+                  </Link>
+                  <ul className="mt-2.5 space-y-2">
+                    {col.links.map((link) => (
+                      <li key={link.label}>
+                        <Link href={link.href} className={linkClass}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </FooterColumn>
 
           <FooterColumn>
@@ -119,7 +141,7 @@ export default function Footer() {
 
         <FooterEngravedBrand />
 
-        <div className="relative z-10 mt-12 flex flex-col gap-6 border-t border-charcoal/10 pt-10 lg:mt-16 md:flex-row md:items-center md:justify-between">
+        <div className="relative z-10 mt-6 flex flex-col gap-6 border-t border-charcoal/10 pt-8 lg:mt-8 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="group flex items-center gap-3">
             <Image
               src="/logo/haria-logo.png"

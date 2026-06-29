@@ -258,7 +258,7 @@ export default function FixedIncomeLadder() {
       id="laddering"
       className="scroll-mt-24 border-t border-charcoal/10 bg-surface py-20 text-charcoal md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
+      <div className="section-shell pb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-charcoal/50">
           Investment Strategy
         </p>
@@ -270,11 +270,11 @@ export default function FixedIncomeLadder() {
         className="!pb-12 md:!pb-16"
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div
           ref={gridRef}
           data-fi-ladder-grid
-          className="fi-ladder-flow relative mx-auto max-w-5xl"
+          className="fi-ladder-flow relative w-full"
         >
           <svg
             ref={svgRef}

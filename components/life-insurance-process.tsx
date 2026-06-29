@@ -109,7 +109,7 @@ export default function LifeInsuranceProcess() {
       id="how-it-works"
       className="scroll-mt-24 border-t border-white/10 bg-background pt-20 md:pt-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
           How It Works
         </p>
@@ -121,10 +121,10 @@ export default function LifeInsuranceProcess() {
         className="pt-4"
       />
 
-      <div className="mx-auto max-w-7xl px-6 pb-20 md:pb-28 lg:px-8">
+      <div className="section-shell pb-20 md:pb-28">
         <div
           data-li-process-panel
-          className="mx-auto max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-brand/[0.03]"
+          className="overflow-hidden rounded-2xl border border-white/10 bg-brand/[0.03]"
         >
           <div
             role="tablist"

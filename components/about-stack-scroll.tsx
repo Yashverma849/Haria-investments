@@ -66,12 +66,6 @@ export default function AboutStackScroll({ intro, legacy }: AboutStackScrollProp
             scrub: 0.85,
             anticipatePin: 1,
             invalidateOnRefresh: true,
-            snap: {
-              snapTo: [0, 1],
-              duration: { min: 0.2, max: 0.55 },
-              delay: 0.04,
-              ease: "power2.inOut",
-            },
             onUpdate: (self) => {
               const isAtEnd = self.progress >= 0.97;
               if (isAtEnd !== wasAtEnd) {

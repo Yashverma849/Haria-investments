@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import AboutStackScroll from "@/components/about-stack-scroll";
 import InsurancePlansSection from "@/components/insurance-plans-section";
 import InsuranceWhyChooseSection from "@/components/insurance-why-choose-section";
-import JourneyCtaSection from "@/components/journey-cta-section";
 import ServiceStackIntro from "@/components/service-stack-intro";
 import { serviceIntros } from "@/lib/service-intro-data";
 
@@ -21,7 +20,6 @@ export default function GeneralInsurancePage() {
           <>
             <InsurancePlansSection />
             <InsuranceWhyChooseSection />
-            <JourneyCtaSection tone="light" />
           </>
         }
       />

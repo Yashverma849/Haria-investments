@@ -28,7 +28,7 @@ export default function AboutPage() {
               />
             </div>
 
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="section-shell">
               <LegacyShowcase members={teamMembers} scrollReplay onSurface />
             </div>
           </section>

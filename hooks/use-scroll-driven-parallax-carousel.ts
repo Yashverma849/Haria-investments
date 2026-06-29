@@ -38,12 +38,13 @@ export function useScrollDrivenParallaxCarousel(
     };
 
     const setup = () => {
+      carouselTrigger?.kill();
+      gsap.set(track, { x: 0 });
+
       const distance = getCarouselScrollDistance(container, track);
       if (distance <= 0) return false;
 
-      carouselTrigger?.kill();
       section.style.height = `${getViewportHeight() + distance}px`;
-      gsap.set(track, { x: 0 });
 
       carouselTrigger = ScrollTrigger.create({
         trigger: section,

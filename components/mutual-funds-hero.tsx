@@ -35,7 +35,7 @@ export default function MutualFundsHero() {
       className="relative overflow-hidden border-b border-white/10 bg-background pt-28 pb-20 md:pt-36 md:pb-28"
     >
       <PageHeroBackground src={heroBackgrounds.mutualFunds} />
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative section-shell">
         <p
           data-mf-hero
           className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light opacity-0"

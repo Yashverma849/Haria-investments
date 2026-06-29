@@ -86,7 +86,7 @@ export default function FixedIncomeCalculator() {
       id="calculator"
       className="scroll-mt-24 border-t border-white/10 bg-background py-20 text-cream md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
+      <div className="section-shell pb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-light">
           Calculate Returns
         </p>
@@ -97,10 +97,10 @@ export default function FixedIncomeCalculator() {
         className="!pb-12 md:!pb-16"
       />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="section-shell">
         <div
           data-fi-calc-panel
-          className="mx-auto max-w-5xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm md:p-10"
+          className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm md:p-10"
         >
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
             <div>

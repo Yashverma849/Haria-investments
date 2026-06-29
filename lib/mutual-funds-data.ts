@@ -229,10 +229,7 @@ export const amcPartners: AmcPartner[] = [
 ];
 
 export const partnersSection = {
-  eyebrow: "Trusted Partners",
-  title: "Invest with 45+ Trusted AMCs",
-  description:
-    "Access a curated universe of mutual funds and portfolios from India's leading Asset Management Companies, all in one place.",
+  label: "Trusted Partners",
 };
 
 export const navApplicabilityRows: NavTableRow[] = [

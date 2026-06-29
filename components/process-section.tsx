@@ -15,20 +15,7 @@ import {
 import { scheduleConsultation } from "@/lib/nav-links";
 
 const FOCUS_RATIO = 0.42;
-const EXPAND_ENTER_PROGRESS = 0.44;
-const EXPAND_EXIT_PROGRESS = 0.26;
-const SPINE_THUMB_SIZE = 8;
-
-function getCursorYFromProgress(progress: number, nodeYs: number[]) {
-  if (nodeYs.length === 0) return 0;
-  if (nodeYs.length === 1) return nodeYs[0];
-
-  const scaled = progress * (nodeYs.length - 1);
-  const index = Math.min(Math.floor(scaled), nodeYs.length - 2);
-  const fraction = scaled - index;
-
-  return nodeYs[index] + fraction * (nodeYs[index + 1] - nodeYs[index]);
-}
+const SPINE_THUMB_SIZE = 10;
 
 const inter = Inter({
   subsets: ["latin"],
@@ -91,10 +78,10 @@ function ProcessStepCard({
     <article
       data-process-card
       data-active={isActive ? "true" : "false"}
-      className={`process-step-card process-step-card--${side} ${isActive ? "is-active is-expanded" : ""} ${isNear && !isActive ? "is-near" : ""}`}
+      className={`process-step-card process-step-card--${side} max-w-none w-full ${isActive ? "is-active is-expanded" : ""} ${isNear && !isActive ? "is-near" : ""}`}
       tabIndex={0}
     >
-      <div className="process-step-card-shell rounded-lg border border-[#333333] bg-[rgba(10,10,10,0.8)] backdrop-blur-[10px]">
+      <div className="process-step-card-shell rounded-xl border border-[#333333] bg-[rgba(10,10,10,0.85)] backdrop-blur-[10px] shadow-lg transition-all duration-300 hover:border-white/30">
         <div className="process-step-card-header flex items-stretch gap-0 border-b border-[#333333]">
           <div className="process-timeline-mono flex w-14 shrink-0 items-center justify-center border-r border-[#333333] text-sm font-medium text-white sm:w-16">
             {stepNumber}
@@ -177,15 +164,24 @@ export default function ProcessSection() {
   const trackRef = useRef<HTMLDivElement>(null);
   const spineTrackRef = useRef<SVGLineElement>(null);
   const spineThumbRef = useRef<SVGRectElement>(null);
-  const spineBranchRef = useRef<SVGPolylineElement>(null);
-  const rowsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const nodesRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const spineBranchLeftRef = useRef<SVGLineElement>(null);
+  const spineBranchRightRef = useRef<SVGLineElement>(null);
+  const spineBranchMobileRef = useRef<SVGPolylineElement>(null);
+  
+  const rowsDesktopRef = useRef<(HTMLDivElement | null)[]>([]);
+  const rowsMobileRef = useRef<(HTMLDivElement | null)[]>([]);
+  const nodesMobileRef = useRef<(HTMLSpanElement | null)[]>([]);
+
   const activeIndexRef = useRef(-1);
   const nearIndexRef = useRef(0);
-  const syncFromScrollRef = useRef<(() => void) | null>(null);
 
   const [activeIndex, setActiveIndex] = useState(-1);
   const [nearIndex, setNearIndex] = useState(0);
+
+  const stepPairs = [
+    [processSteps[0], processSteps[1]],
+    [processSteps[2], processSteps[3]],
+  ];
 
   const getStrokeLength = useCallback((stroke: SVGElement) => {
     if (stroke instanceof SVGGeometryElement) {
@@ -226,10 +222,8 @@ export default function ProcessSection() {
       activeIndexRef.current = index;
       setActiveIndex(index);
 
-      if (previous >= 0) animateRowStrokes(rows[previous], false);
-      if (index >= 0) animateRowStrokes(rows[index], true);
-
-      gsap.delayedCall(0.58, () => syncFromScrollRef.current?.());
+      if (previous >= 0 && rows[previous]) animateRowStrokes(rows[previous], false);
+      if (index >= 0 && rows[index]) animateRowStrokes(rows[index], true);
     },
     [animateRowStrokes],
   );
@@ -240,10 +234,8 @@ export default function ProcessSection() {
     let closestDistance = Number.POSITIVE_INFINITY;
 
     rows.forEach((row, index) => {
-      const node = nodesRef.current[index];
-      const anchor = node ?? row;
-      const rect = anchor.getBoundingClientRect();
-      const anchorY = rect.top + rect.height / 2;
+      const rect = row.getBoundingClientRect();
+      const anchorY = rect.top + 36;
       const distance = Math.abs(anchorY - focusY);
 
       if (distance < closestDistance) {
@@ -255,60 +247,120 @@ export default function ProcessSection() {
     return closestIndex;
   }, []);
 
-  const resolveExpandedIndex = useCallback(
-    (rows: HTMLElement[], currentExpanded: number) => {
-      const focusY = window.innerHeight * FOCUS_RATIO;
+  const resolveExpandedIndex = useCallback((rows: HTMLElement[], currentExpanded: number) => {
+    const focusY = window.innerHeight * FOCUS_RATIO;
 
-      if (currentExpanded >= 0 && currentExpanded < rows.length) {
-        const currentRow = rows[currentExpanded];
-        const rect = currentRow.getBoundingClientRect();
-
-        if (focusY >= rect.top && focusY <= rect.bottom) {
-          const progress = (focusY - rect.top) / rect.height;
-          if (progress >= EXPAND_EXIT_PROGRESS) return currentExpanded;
-        }
+    // 1. Check if currently expanded card should stay open (stable hysteresis)
+    if (currentExpanded >= 0 && currentExpanded < rows.length) {
+      const rect = rows[currentExpanded].getBoundingClientRect();
+      if (rect.top <= focusY + 140 && rect.bottom >= focusY - 100) {
+        return currentExpanded;
       }
+    }
 
-      for (let index = 0; index < rows.length; index += 1) {
-        const rect = rows[index].getBoundingClientRect();
-
-        if (focusY < rect.top || focusY > rect.bottom) continue;
-
-        const progress = (focusY - rect.top) / rect.height;
-        if (progress >= EXPAND_ENTER_PROGRESS) return index;
+    // 2. Otherwise find new entering card
+    for (let index = 0; index < rows.length; index += 1) {
+      const rect = rows[index].getBoundingClientRect();
+      if (rect.top <= focusY + 80 && rect.bottom >= focusY - 40) {
+        return index;
       }
+    }
 
-      return -1;
-    },
-    [],
-  );
+    return -1;
+  }, []);
 
   const updateSpineGraphics = useCallback(
     (
       track: HTMLElement,
       trackLine: SVGLineElement,
       thumb: SVGRectElement,
-      branch: SVGPolylineElement,
+      branchLeft: SVGLineElement,
+      branchRight: SVGLineElement,
+      branchMobile: SVGPolylineElement,
       rows: HTMLElement[],
       highlightIndex: number,
       scrollProgress: number,
     ) => {
-      const nodes = nodesRef.current.filter(Boolean) as HTMLElement[];
-      if (nodes.length === 0) return 0;
+      if (rows.length === 0) return 0;
 
+      const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
       const trackRect = track.getBoundingClientRect();
       const spineHeight = track.offsetHeight;
-      const anchorNode = nodes[0];
-      const anchorRect = anchorNode.getBoundingClientRect();
-      const spineX = anchorRect.left + anchorRect.width / 2 - trackRect.left;
-
-      const nodeYs = nodes.map(
-        (node) => node.getBoundingClientRect().top + node.offsetHeight / 2 - trackRect.top,
-      );
-
-      const cursorY = getCursorYFromProgress(scrollProgress, nodeYs);
       const visible = trackRect.bottom > 0 && trackRect.top < window.innerHeight;
       const thumbOffset = SPINE_THUMB_SIZE / 2;
+
+      const firstRowTop = rows[0].getBoundingClientRect().top + 36 - trackRect.top;
+      const lastRowTop = rows[rows.length - 1].getBoundingClientRect().top + 36 - trackRect.top;
+      const progressClamped = gsap.utils.clamp(0, 1, scrollProgress);
+      const cursorY = firstRowTop + progressClamped * (lastRowTop - firstRowTop);
+
+      if (isDesktop) {
+        branchMobile.style.opacity = "0";
+        branchMobile.setAttribute("points", "");
+
+        let currentSpineX = trackRect.width / 2;
+
+        if (highlightIndex >= 0 && highlightIndex < rows.length) {
+          const activeRow = rows[highlightIndex];
+          const cards = activeRow.querySelectorAll<HTMLElement>("[data-process-card]");
+
+          if (cards.length >= 2) {
+            const leftShell = cards[0].querySelector<HTMLElement>(".process-step-card-shell") ?? cards[0];
+            const rightShell = cards[1].querySelector<HTMLElement>(".process-step-card-shell") ?? cards[1];
+
+            const leftRect = leftShell.getBoundingClientRect();
+            const rightRect = rightShell.getBoundingClientRect();
+
+            currentSpineX = (leftRect.right + rightRect.left) / 2 - trackRect.left;
+
+            const leftTargetX = leftRect.right - trackRect.left;
+            const rightTargetX = rightRect.left - trackRect.left;
+
+            branchLeft.setAttribute("x1", String(currentSpineX));
+            branchLeft.setAttribute("y1", String(cursorY));
+            branchLeft.setAttribute("x2", String(leftTargetX));
+            branchLeft.setAttribute("y2", String(cursorY));
+
+            branchRight.setAttribute("x1", String(currentSpineX));
+            branchRight.setAttribute("y1", String(cursorY));
+            branchRight.setAttribute("x2", String(rightTargetX));
+            branchRight.setAttribute("y2", String(cursorY));
+
+            branchLeft.style.opacity = visible ? "1" : "0";
+            branchRight.style.opacity = visible ? "1" : "0";
+          } else {
+            branchLeft.style.opacity = "0";
+            branchRight.style.opacity = "0";
+          }
+        } else {
+          branchLeft.style.opacity = "0";
+          branchRight.style.opacity = "0";
+        }
+
+        trackLine.setAttribute("x1", String(currentSpineX));
+        trackLine.setAttribute("x2", String(currentSpineX));
+        trackLine.setAttribute("y1", "0");
+        trackLine.setAttribute("y2", String(spineHeight));
+        trackLine.style.opacity = visible ? "1" : "0";
+
+        thumb.setAttribute("x", String(currentSpineX - thumbOffset));
+        thumb.setAttribute("y", String(cursorY - thumbOffset));
+        thumb.setAttribute("width", String(SPINE_THUMB_SIZE));
+        thumb.setAttribute("height", String(SPINE_THUMB_SIZE));
+        thumb.style.opacity = visible ? "1" : "0";
+
+        return cursorY;
+      }
+
+      // MOBILE VIEW IMPLEMENTATION
+      branchLeft.style.opacity = "0";
+      branchRight.style.opacity = "0";
+
+      const nodes = nodesMobileRef.current.filter(Boolean) as HTMLElement[];
+      const anchorNode = nodes[0];
+      const spineX = anchorNode
+        ? anchorNode.getBoundingClientRect().left + anchorNode.offsetWidth / 2 - trackRect.left
+        : 16;
 
       trackLine.setAttribute("x1", String(spineX));
       trackLine.setAttribute("x2", String(spineX));
@@ -322,34 +374,30 @@ export default function ProcessSection() {
       thumb.setAttribute("height", String(SPINE_THUMB_SIZE));
       thumb.style.opacity = visible ? "1" : "0";
 
-      if (highlightIndex < 0 || highlightIndex >= rows.length) {
-        branch.style.opacity = "0";
-        branch.setAttribute("points", "");
-        return cursorY;
+      if (highlightIndex >= 0 && highlightIndex < rows.length) {
+        const activeRow = rows[highlightIndex];
+        const headerEl = activeRow.querySelector<HTMLElement>(".process-step-card-header");
+        const shell = activeRow.querySelector<HTMLElement>(".process-step-card-shell");
+
+        if (headerEl && shell) {
+          const headerRect = headerEl.getBoundingClientRect();
+          const shellRect = shell.getBoundingClientRect();
+          const joinX = shellRect.left - trackRect.left;
+          const cornerY = headerRect.top - trackRect.top + headerRect.height / 2;
+
+          branchMobile.setAttribute(
+            "points",
+            `${spineX},${cursorY} ${joinX},${cursorY} ${joinX},${cornerY}`,
+          );
+          branchMobile.style.opacity = visible ? "1" : "0";
+        } else {
+          branchMobile.style.opacity = "0";
+          branchMobile.setAttribute("points", "");
+        }
+      } else {
+        branchMobile.style.opacity = "0";
+        branchMobile.setAttribute("points", "");
       }
-
-      const row = rows[highlightIndex];
-      const header = row.querySelector<HTMLElement>(".process-step-card-header");
-      const shell = row.querySelector<HTMLElement>(".process-step-card-shell");
-      if (!header || !shell) {
-        branch.style.opacity = "0";
-        branch.setAttribute("points", "");
-        return cursorY;
-      }
-
-      const headerRect = header.getBoundingClientRect();
-      const shellRect = shell.getBoundingClientRect();
-      const isLeft = row.classList.contains("process-step-row--left");
-      const joinX = isLeft
-        ? shellRect.right - trackRect.left
-        : shellRect.left - trackRect.left;
-      const cornerY = headerRect.top - trackRect.top;
-
-      branch.setAttribute(
-        "points",
-        `${spineX},${cursorY} ${joinX},${cursorY} ${joinX},${cornerY}`,
-      );
-      branch.style.opacity = visible ? "1" : "0";
 
       return cursorY;
     },
@@ -360,8 +408,8 @@ export default function ProcessSection() {
     const focusY = window.innerHeight * FOCUS_RATIO;
 
     rows.forEach((row, index) => {
-      const card = row.querySelector<HTMLElement>("[data-process-card]");
-      if (!card) return;
+      const cards = row.querySelectorAll<HTMLElement>("[data-process-card]");
+      if (!cards.length) return;
 
       const rect = row.getBoundingClientRect();
       const distance = Math.abs(rect.top + rect.height / 2 - focusY);
@@ -369,9 +417,11 @@ export default function ProcessSection() {
       const proximity = gsap.utils.clamp(0, 1, 1 - distance / maxDistance);
       const isHighlight = index === highlightIndex;
 
-      gsap.set(card, {
-        opacity: isHighlight ? 1 : 0.34 + proximity * 0.38,
-        y: isHighlight ? 0 : (1 - proximity) * 14,
+      cards.forEach((card) => {
+        gsap.set(card, {
+          opacity: isHighlight ? 1 : 0.34 + proximity * 0.38,
+          y: isHighlight ? 0 : (1 - proximity) * 14,
+        });
       });
     });
   }, []);
@@ -383,11 +433,17 @@ export default function ProcessSection() {
     const track = trackRef.current;
     const trackLine = spineTrackRef.current;
     const thumb = spineThumbRef.current;
-    const branch = spineBranchRef.current;
+    const branchLeft = spineBranchLeftRef.current;
+    const branchRight = spineBranchRightRef.current;
+    const branchMobile = spineBranchMobileRef.current;
 
-    if (!section || !track || !trackLine || !thumb || !branch) return;
+    if (!section || !track || !trackLine || !thumb || !branchLeft || !branchRight || !branchMobile) return;
 
-    const rows = rowsRef.current.filter(Boolean) as HTMLElement[];
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    const rows = isDesktop
+      ? (rowsDesktopRef.current.filter(Boolean) as HTMLElement[])
+      : (rowsMobileRef.current.filter(Boolean) as HTMLElement[]);
+
     const triggers: ScrollTrigger[] = [];
 
     const prepareAllStrokes = () => {
@@ -401,7 +457,12 @@ export default function ProcessSection() {
     };
 
     const syncFromScroll = (self?: ScrollTrigger) => {
-      const nearest = findNearestIndex(rows);
+      const activeRows = isDesktop
+        ? (rowsDesktopRef.current.filter(Boolean) as HTMLElement[])
+        : (rowsMobileRef.current.filter(Boolean) as HTMLElement[]);
+
+      const nearest = findNearestIndex(activeRows);
+      const expanded = resolveExpandedIndex(activeRows, activeIndexRef.current);
       const scrollProgress = self?.progress ?? 0;
 
       if (nearest !== nearIndexRef.current) {
@@ -409,15 +470,12 @@ export default function ProcessSection() {
         setNearIndex(nearest);
       }
 
-      const expanded = resolveExpandedIndex(rows, activeIndexRef.current);
-      setExpandedStep(expanded, rows);
+      setExpandedStep(expanded, activeRows);
 
       const highlightIndex = expanded >= 0 ? expanded : nearest;
-      updateSpineGraphics(track, trackLine, thumb, branch, rows, highlightIndex, scrollProgress);
-      updateRowHighlights(rows, highlightIndex);
+      updateSpineGraphics(track, trackLine, thumb, branchLeft, branchRight, branchMobile, activeRows, highlightIndex, scrollProgress);
+      updateRowHighlights(activeRows, highlightIndex);
     };
-
-    syncFromScrollRef.current = syncFromScroll;
 
     const mm = gsap.matchMedia();
 
@@ -427,34 +485,38 @@ export default function ProcessSection() {
         row.querySelectorAll<SVGElement>("[data-process-stroke]").forEach((stroke) => {
           stroke.style.strokeDashoffset = index === 0 ? "0" : getStrokeLength(stroke).toString();
         });
-        const card = row.querySelector<HTMLElement>("[data-process-card]");
-        if (card) gsap.set(card, { opacity: index === 0 ? 1 : 0.55, y: 0 });
+        row.querySelectorAll<HTMLElement>("[data-process-card]").forEach((card) => {
+          gsap.set(card, { opacity: index === 0 ? 1 : 0.55, y: 0 });
+        });
       });
       activeIndexRef.current = 0;
       setActiveIndex(0);
       setNearIndex(0);
-      updateSpineGraphics(track, trackLine, thumb, branch, rows, 0, 0);
+      updateSpineGraphics(track, trackLine, thumb, branchLeft, branchRight, branchMobile, rows, 0, 0);
     });
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       prepareAllStrokes();
       trackLine.style.opacity = "0";
       thumb.style.opacity = "0";
-      branch.style.opacity = "0";
+      branchLeft.style.opacity = "0";
+      branchRight.style.opacity = "0";
+      branchMobile.style.opacity = "0";
       activeIndexRef.current = -1;
       nearIndexRef.current = 0;
       setActiveIndex(-1);
       setNearIndex(0);
 
       rows.forEach((row) => {
-        const card = row.querySelector<HTMLElement>("[data-process-card]");
-        if (card) gsap.set(card, { opacity: 0.55, y: 0 });
+        row.querySelectorAll<HTMLElement>("[data-process-card]").forEach((card) => {
+          gsap.set(card, { opacity: 0.55, y: 0 });
+        });
       });
 
       const scrollTrigger = ScrollTrigger.create({
         trigger: track,
-        start: "top center",
-        end: "bottom center",
+        start: "top 75%",
+        end: "bottom 25%",
         scrub: true,
         invalidateOnRefresh: true,
         onUpdate: syncFromScroll,
@@ -462,10 +524,10 @@ export default function ProcessSection() {
 
       triggers.push(scrollTrigger);
 
-      const onRefresh = () => syncFromScroll(scrollTrigger);
+      const onRefresh = () => syncFromScroll();
       ScrollTrigger.addEventListener("refresh", onRefresh);
 
-      syncFromScroll(scrollTrigger);
+      syncFromScroll();
 
       return () => {
         ScrollTrigger.removeEventListener("refresh", onRefresh);
@@ -473,7 +535,6 @@ export default function ProcessSection() {
     });
 
     return () => {
-      syncFromScrollRef.current = null;
       triggers.forEach((trigger) => trigger.kill());
       mm.revert();
       ScrollTrigger.getAll().forEach((trigger) => {
@@ -503,48 +564,97 @@ export default function ProcessSection() {
         className="py-20 md:py-28 lg:pb-16"
       />
 
-      <div className="process-timeline-scroll mx-auto w-full max-w-[1100px] px-6 pb-20 md:pb-28 lg:px-8">
-        <div ref={trackRef} className="process-timeline-track">
+      <div className="process-timeline-scroll section-shell pb-20 md:pb-28">
+        <div ref={trackRef} className="process-timeline-track max-w-6xl mx-auto w-full">
           <div className="process-timeline-spine" aria-hidden="true">
             <svg className="process-timeline-spine-svg">
               <line ref={spineTrackRef} className="process-timeline-spine-track" />
-              <polyline ref={spineBranchRef} className="process-timeline-spine-branch" />
+              <line ref={spineBranchLeftRef} className="process-timeline-spine-branch hidden lg:block" />
+              <line ref={spineBranchRightRef} className="process-timeline-spine-branch hidden lg:block" />
+              <polyline ref={spineBranchMobileRef} className="process-timeline-spine-branch lg:hidden" />
               <rect ref={spineThumbRef} className="process-timeline-spine-thumb" />
             </svg>
           </div>
 
-          {processSteps.map((step, index) => {
-            const side = index % 2 === 0 ? "left" : "right";
+          {/* DESKTOP VIEW: Paired 2 Cards Per Row */}
+          <div className="hidden lg:flex lg:flex-col lg:gap-16">
+            {stepPairs.map((pair, rowIndex) => {
+              const firstIndex = rowIndex * 2;
+              const secondIndex = rowIndex * 2 + 1;
+              const isRowActive = activeIndex === rowIndex;
+              const isRowNear = nearIndex === rowIndex;
 
-            return (
-              <div
-                key={step.id}
-                ref={(element) => {
-                  rowsRef.current[index] = element;
-                }}
-                data-process-row
-                className={`process-step-row process-step-row--${side}`}
-              >
-                <div className="process-step-rail" aria-hidden="true">
-                  <span
-                    ref={(element) => {
-                      nodesRef.current[index] = element;
-                    }}
-                    data-process-node
-                    className="process-step-node"
-                  />
+              return (
+                <div
+                  key={`desktop-row-${rowIndex}`}
+                  ref={(element) => {
+                    rowsDesktopRef.current[rowIndex] = element;
+                  }}
+                  data-process-row
+                  className="process-step-row relative flex flex-row items-start gap-16 justify-between w-full"
+                >
+                  <div className="flex-1 min-w-0">
+                    <ProcessStepCard
+                      step={pair[0]}
+                      index={firstIndex}
+                      side="left"
+                      isActive={isRowActive}
+                      isNear={isRowNear}
+                    />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <ProcessStepCard
+                      step={pair[1]}
+                      index={secondIndex}
+                      side="right"
+                      isActive={isRowActive}
+                      isNear={isRowNear}
+                    />
+                  </div>
                 </div>
+              );
+            })}
+          </div>
 
-                <ProcessStepCard
-                  step={step}
-                  index={index}
-                  side={side}
-                  isActive={activeIndex === index}
-                  isNear={nearIndex === index}
-                />
-              </div>
-            );
-          })}
+          {/* MOBILE VIEW: Single Card At A Time */}
+          <div className="flex flex-col gap-8 lg:hidden">
+            {processSteps.map((step, stepIndex) => {
+              const isActive = activeIndex === stepIndex;
+              const isNear = nearIndex === stepIndex;
+
+              return (
+                <div
+                  key={`mobile-step-${stepIndex}`}
+                  ref={(element) => {
+                    rowsMobileRef.current[stepIndex] = element;
+                  }}
+                  data-process-row
+                  className="process-step-row process-step-row--left relative flex flex-col gap-8 w-full"
+                >
+                  <div className="process-step-rail" aria-hidden="true">
+                    <span
+                      ref={(element) => {
+                        nodesMobileRef.current[stepIndex] = element;
+                      }}
+                      data-process-node
+                      className="process-step-node"
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <ProcessStepCard
+                      step={step}
+                      index={stepIndex}
+                      side="left"
+                      isActive={isActive}
+                      isNear={isNear}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <div className="mt-16 flex justify-center md:mt-20">

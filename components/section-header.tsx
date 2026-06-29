@@ -168,7 +168,7 @@ export default function SectionHeader({
   return (
     <div
       ref={headerRef}
-      className={`mx-auto max-w-7xl px-6 pb-16 md:pb-24 lg:pb-28 lg:px-8 ${className}`}
+      className={`section-shell pb-16 md:pb-24 lg:pb-28 ${className}`}
     >
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] xl:gap-16">
         <h2
