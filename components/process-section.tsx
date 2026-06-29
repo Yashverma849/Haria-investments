@@ -247,21 +247,36 @@ export default function ProcessSection() {
     return closestIndex;
   }, []);
 
-  const resolveExpandedIndex = useCallback((rows: HTMLElement[], currentExpanded: number) => {
-    const focusY = window.innerHeight * FOCUS_RATIO;
-
-    // 1. Check if currently expanded card should stay open (stable hysteresis)
+  const resolveExpandedIndex = useCallback((
+    rows: HTMLElement[],
+    currentExpanded: number,
+    cursorY: number,
+    trackRect: DOMRect
+  ) => {
+    // 1. Stable Hysteresis
     if (currentExpanded >= 0 && currentExpanded < rows.length) {
-      const rect = rows[currentExpanded].getBoundingClientRect();
-      if (rect.top <= focusY + 140 && rect.bottom >= focusY - 100) {
+      const row = rows[currentExpanded];
+      const headerEl = row.querySelector<HTMLElement>(".process-step-card-header");
+      const rowHeaderTop = headerEl
+        ? headerEl.getBoundingClientRect().top - trackRect.top
+        : row.getBoundingClientRect().top - trackRect.top;
+      const rowBottom = row.getBoundingClientRect().bottom - trackRect.top;
+
+      if (cursorY >= rowHeaderTop - 80 && cursorY <= rowBottom + 60) {
         return currentExpanded;
       }
     }
 
-    // 2. Otherwise find new entering card
+    // 2. Expand when pointer gets within 60px of row header
     for (let index = 0; index < rows.length; index += 1) {
-      const rect = rows[index].getBoundingClientRect();
-      if (rect.top <= focusY + 80 && rect.bottom >= focusY - 40) {
+      const row = rows[index];
+      const headerEl = row.querySelector<HTMLElement>(".process-step-card-header");
+      const rowHeaderTop = headerEl
+        ? headerEl.getBoundingClientRect().top - trackRect.top
+        : row.getBoundingClientRect().top - trackRect.top;
+      const rowBottom = row.getBoundingClientRect().bottom - trackRect.top;
+
+      if (cursorY >= rowHeaderTop - 60 && cursorY <= rowBottom + 20) {
         return index;
       }
     }
@@ -279,7 +294,7 @@ export default function ProcessSection() {
       branchMobile: SVGPolylineElement,
       rows: HTMLElement[],
       highlightIndex: number,
-      scrollProgress: number,
+      cursorY: number,
     ) => {
       if (rows.length === 0) return 0;
 
@@ -288,11 +303,6 @@ export default function ProcessSection() {
       const spineHeight = track.offsetHeight;
       const visible = trackRect.bottom > 0 && trackRect.top < window.innerHeight;
       const thumbOffset = SPINE_THUMB_SIZE / 2;
-
-      const firstRowTop = rows[0].getBoundingClientRect().top + 36 - trackRect.top;
-      const lastRowTop = rows[rows.length - 1].getBoundingClientRect().top + 36 - trackRect.top;
-      const progressClamped = gsap.utils.clamp(0, 1, scrollProgress);
-      const cursorY = firstRowTop + progressClamped * (lastRowTop - firstRowTop);
 
       if (isDesktop) {
         branchMobile.style.opacity = "0";
@@ -456,14 +466,27 @@ export default function ProcessSection() {
       });
     };
 
+    let activeScrollTrigger: ScrollTrigger | null = null;
+
     const syncFromScroll = (self?: ScrollTrigger) => {
+      const st = self ?? activeScrollTrigger;
       const activeRows = isDesktop
         ? (rowsDesktopRef.current.filter(Boolean) as HTMLElement[])
         : (rowsMobileRef.current.filter(Boolean) as HTMLElement[]);
 
+      if (activeRows.length === 0) return;
+
+      const trackRect = track.getBoundingClientRect();
+      const firstRowTop = activeRows[0].getBoundingClientRect().top + 36 - trackRect.top;
+      const lastRow = activeRows[activeRows.length - 1];
+      const lastRowCenter = lastRow.getBoundingClientRect().top + lastRow.offsetHeight / 2 - trackRect.top;
+      
+      const scrollProgress = st?.progress ?? 0;
+      const progressClamped = gsap.utils.clamp(0, 1, scrollProgress);
+      const cursorY = firstRowTop + progressClamped * (lastRowCenter - firstRowTop);
+
       const nearest = findNearestIndex(activeRows);
-      const expanded = resolveExpandedIndex(activeRows, activeIndexRef.current);
-      const scrollProgress = self?.progress ?? 0;
+      const expanded = resolveExpandedIndex(activeRows, activeIndexRef.current, cursorY, trackRect);
 
       if (nearest !== nearIndexRef.current) {
         nearIndexRef.current = nearest;
@@ -473,7 +496,7 @@ export default function ProcessSection() {
       setExpandedStep(expanded, activeRows);
 
       const highlightIndex = expanded >= 0 ? expanded : nearest;
-      updateSpineGraphics(track, trackLine, thumb, branchLeft, branchRight, branchMobile, activeRows, highlightIndex, scrollProgress);
+      updateSpineGraphics(track, trackLine, thumb, branchLeft, branchRight, branchMobile, activeRows, highlightIndex, cursorY);
       updateRowHighlights(activeRows, highlightIndex);
     };
 
@@ -497,11 +520,6 @@ export default function ProcessSection() {
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       prepareAllStrokes();
-      trackLine.style.opacity = "0";
-      thumb.style.opacity = "0";
-      branchLeft.style.opacity = "0";
-      branchRight.style.opacity = "0";
-      branchMobile.style.opacity = "0";
       activeIndexRef.current = -1;
       nearIndexRef.current = 0;
       setActiveIndex(-1);
@@ -515,26 +533,37 @@ export default function ProcessSection() {
 
       const scrollTrigger = ScrollTrigger.create({
         trigger: track,
-        start: "top 75%",
-        end: "bottom 25%",
+        start: "top 70%",
+        end: "bottom 50%",
         scrub: true,
         invalidateOnRefresh: true,
-        onUpdate: syncFromScroll,
+        onUpdate: (self) => syncFromScroll(self),
       });
 
+      activeScrollTrigger = scrollTrigger;
       triggers.push(scrollTrigger);
 
-      const onRefresh = () => syncFromScroll();
+      const onRefresh = () => syncFromScroll(scrollTrigger);
       ScrollTrigger.addEventListener("refresh", onRefresh);
 
-      syncFromScroll();
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        syncFromScroll(scrollTrigger);
+      });
+
+      const refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+        syncFromScroll(scrollTrigger);
+      }, 150);
 
       return () => {
+        clearTimeout(refreshTimer);
         ScrollTrigger.removeEventListener("refresh", onRefresh);
       };
     });
 
     return () => {
+      activeScrollTrigger = null;
       triggers.forEach((trigger) => trigger.kill());
       mm.revert();
       ScrollTrigger.getAll().forEach((trigger) => {
