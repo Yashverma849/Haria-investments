@@ -401,6 +401,7 @@ export default function FinancialHealthForm() {
                       <li key={section.id}>
                         <button
                           type="button"
+                          suppressHydrationWarning
                           onClick={() => goToStep(index)}
                           aria-current={isActive ? "step" : undefined}
                           className={`w-full text-left rounded-xl border px-3 py-2.5 transition-all cursor-pointer ${
@@ -485,6 +486,7 @@ export default function FinancialHealthForm() {
                 <div className="flex justify-end">
                   <button
                     type="submit"
+                    suppressHydrationWarning
                     className="btn-primary inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold sm:w-auto"
                   >
                     Submit Assessment

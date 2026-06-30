@@ -35,6 +35,7 @@ export default function FaqSection() {
           <div className="mt-8 flex justify-center md:mt-10">
             <button
               type="button"
+              suppressHydrationWarning
               onClick={() => setExpanded((prev) => !prev)}
               aria-expanded={expanded}
               className="group inline-flex items-center gap-2 rounded-full border border-charcoal/20 bg-charcoal/5 px-7 py-3 text-sm font-semibold text-charcoal backdrop-blur-sm transition-all hover:border-charcoal/35 hover:bg-charcoal/10 cursor-pointer"

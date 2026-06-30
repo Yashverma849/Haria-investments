@@ -34,7 +34,7 @@ export const commodityTradingProducts: ProtectionPlan[] = [
       "Flexible strategies",
       "Multiple trading approaches",
     ],
-    image: "/images/services/commodities-derivation.jpg",
+    image: "/images/commodities/options-trading.jpg",
   },
   {
     id: "commodity-trading",

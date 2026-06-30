@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useRef, type ReactNode } from "react";
+import { useRef, useEffect, type ReactNode } from "react";
 import gsap from "gsap";
 import ScrollSmoother from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -25,6 +25,29 @@ export default function ScrollSmootherShell({ children }: ScrollSmootherShellPro
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const smootherDisabled = SMOOTHER_DISABLED_ROUTES.includes(pathname);
+
+  useEffect(() => {
+    const resetScroll = () => {
+      const smoother = ScrollSmoother.get();
+      if (smoother) {
+        smoother.scrollTop(0);
+        ScrollTrigger.refresh();
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    resetScroll();
+
+    // Reset again after DOM update and next paints to avoid Next.js router scroll restoration override
+    const frame = requestAnimationFrame(resetScroll);
+    const timer = setTimeout(resetScroll, 80);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+  }, [pathname]);
 
   useGsapAfterLoader(() => {
     if (smootherDisabled) {

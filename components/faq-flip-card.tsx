@@ -17,6 +17,7 @@ export default function FaqFlipCard({ item }: FaqCardProps) {
     >
       <button
         type="button"
+        suppressHydrationWarning
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-label={`${item.question}. ${isOpen ? "Collapse answer" : "Expand answer"}`}

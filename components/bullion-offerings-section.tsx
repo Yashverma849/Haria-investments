@@ -55,8 +55,8 @@ function BullionCardPanel({ offering }: { offering: BullionOffering }) {
         </dl>
       </div>
 
-      <div className="mf-fund-category-card__panel-footer">
-        <ul className="flex min-w-0 flex-1 flex-wrap gap-1.5">
+      <div className="mf-fund-category-card__panel-footer flex flex-col items-stretch gap-3">
+        <ul className="flex min-w-0 flex-wrap gap-1.5">
           {offering.benefits.map((benefit) => (
             <li
               key={benefit}
@@ -67,17 +67,17 @@ function BullionCardPanel({ offering }: { offering: BullionOffering }) {
           ))}
         </ul>
 
-        <div className="flex shrink-0 flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full">
           <Link
             href={scheduleConsultation.href}
-            className="btn-primary inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-fluid-stat-label font-semibold sm:px-5 sm:py-2.5 sm:text-sm"
+            className="btn-primary inline-flex flex-1 min-w-[120px] items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-fluid-stat-label font-semibold sm:px-5 sm:py-2.5 sm:text-sm"
             onClick={(event) => event.stopPropagation()}
           >
             Invest Now
           </Link>
           <Link
             href={scheduleConsultation.href}
-            className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-white/30 bg-white/10 px-3.5 py-1.5 text-fluid-stat-label font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/15 sm:px-4 sm:py-2 sm:text-xs"
+            className="inline-flex flex-1 min-w-[150px] items-center justify-center whitespace-nowrap rounded-full border border-white/30 bg-white/10 px-3.5 py-1.5 text-fluid-stat-label font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/15 sm:px-4 sm:py-2 sm:text-xs"
             onClick={(event) => event.stopPropagation()}
           >
             {scheduleConsultation.label}
