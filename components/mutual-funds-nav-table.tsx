@@ -68,15 +68,15 @@ function NavTableRows({
           key={`${row.transactionType}-${row.condition}-${startIndex + index}`}
           className="border-b border-white/20 transition-colors hover:bg-white/[0.03]"
         >
-          <td className={`${cellPadding} align-top font-medium text-white`}>
+          <td className={`${cellPadding} align-top font-medium text-white text-center border-r border-dotted border-white/20`}>
             <span className="block min-w-0 leading-relaxed">
               {row.transactionType}
             </span>
           </td>
-          <td className={`${cellPadding} align-top text-white/75`}>
+          <td className={`${cellPadding} align-top text-white/75 text-center border-r border-dotted border-white/20`}>
             <span className="block min-w-0 leading-relaxed">{row.condition}</span>
           </td>
-          <td className={`${cellPadding} align-top text-white/80`}>
+          <td className={`${cellPadding} align-top text-white/80 text-center`}>
             <span className="block min-w-0 leading-relaxed">
               {row.applicableNav}
             </span>
@@ -280,13 +280,13 @@ export default function MutualFundsNavTable() {
       <tr className="border-b-2 border-white/30 bg-white/[0.04]">
         <th
           scope="col"
-          className="px-3 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
+          className="px-3 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6 border-r border-dotted border-white/30"
         >
           Transaction Type
         </th>
         <th
           scope="col"
-          className="px-3 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6"
+          className="px-3 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 sm:px-4 sm:py-4 sm:text-xs sm:tracking-[0.16em] md:px-6 border-r border-dotted border-white/30"
         >
           Condition
         </th>
