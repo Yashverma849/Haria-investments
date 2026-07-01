@@ -143,6 +143,12 @@ export const serviceCategories: ServiceCategory[] = [
         description: "Derivatives and advanced instruments.",
         image: serviceImages.derivation,
       },
+      {
+        label: "Research & Insights",
+        href: "/commodities/research",
+        description: "Technical analysis, market reports, and trading signals.",
+        image: serviceImages.commodities,
+      },
     ],
   },
 ];

@@ -19,6 +19,7 @@ const SMOOTHER_DISABLED_ROUTES = [
   "/commodities/silver-gold",
   "/commodities/trading",
   "/commodities/derivation",
+  "/commodities/research",
 ];
 
 export default function ScrollSmootherShell({ children }: ScrollSmootherShellProps) {

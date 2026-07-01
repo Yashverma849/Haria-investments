@@ -97,7 +97,7 @@ function InvestmentParallaxCard({ option }: { option: InvestmentOption }) {
         <div className="mt-auto grid shrink-0 grid-cols-2 gap-2 pt-5 sm:gap-3">
           <div className="min-w-0">
             <Link
-              href={scheduleConsultation.href}
+              href={`/invest-now?title=${encodeURIComponent(option.title)}&tenure=${encodeURIComponent(option.tenure)}&minAmount=${encodeURIComponent(option.minAmount)}&service=investment`}
               className="btn-primary flex h-11 w-full items-center justify-center rounded-full px-3 text-center text-xs font-semibold sm:h-12 sm:px-4 sm:text-sm"
             >
               Invest Now

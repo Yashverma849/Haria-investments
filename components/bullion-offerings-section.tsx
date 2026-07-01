@@ -69,7 +69,7 @@ function BullionCardPanel({ offering }: { offering: BullionOffering }) {
 
         <div className="flex flex-wrap items-center gap-2 w-full">
           <Link
-            href={scheduleConsultation.href}
+            href={`/invest-now?title=${encodeURIComponent(offering.title)}&tenure=${encodeURIComponent(offering.tenure || "")}&minAmount=${encodeURIComponent(offering.minAmount || "")}&service=commodities`}
             className="btn-primary inline-flex flex-1 min-w-[120px] items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-fluid-stat-label font-semibold sm:px-5 sm:py-2.5 sm:text-sm"
             onClick={(event) => event.stopPropagation()}
           >

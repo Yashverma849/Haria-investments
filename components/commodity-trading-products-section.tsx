@@ -80,6 +80,7 @@ export default function CommodityTradingProductsSection() {
           plans={commodityTradingProducts}
           ctaLabel="Invest Now"
           showScheduleConsultation
+          service="commodities"
         />
       </div>
     </section>

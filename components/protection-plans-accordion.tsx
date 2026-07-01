@@ -10,6 +10,7 @@ type ProtectionPlansAccordionProps = {
   plans: ProtectionPlan[];
   ctaLabel?: string;
   showScheduleConsultation?: boolean;
+  service?: string;
 };
 
 type ProtectionPlanCardProps = {
@@ -21,6 +22,7 @@ type ProtectionPlanCardProps = {
   onActivate: (id: string) => void;
   onDeactivate: () => void;
   onToggle: (id: string) => void;
+  service: string;
 };
 
 const ProtectionPlanCard = memo(function ProtectionPlanCard({
@@ -32,6 +34,7 @@ const ProtectionPlanCard = memo(function ProtectionPlanCard({
   onActivate,
   onDeactivate,
   onToggle,
+  service,
 }: ProtectionPlanCardProps) {
   return (
     <article
@@ -145,7 +148,7 @@ const ProtectionPlanCard = memo(function ProtectionPlanCard({
 
           <div className="mt-5 flex flex-wrap items-center gap-2 sm:gap-3">
             <Link
-              href={scheduleConsultation.href}
+              href={`/invest-now?title=${encodeURIComponent(plan.title)}&tenure=${encodeURIComponent(plan.tenure || "")}&minAmount=${encodeURIComponent(plan.minAmount || "")}&service=${encodeURIComponent(service)}`}
               className="btn-primary inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full px-6 py-2.5 text-sm font-semibold transition-transform duration-300 hover:scale-[1.02]"
               onClick={(event) => event.stopPropagation()}
             >
@@ -171,6 +174,7 @@ export default function ProtectionPlansAccordion({
   plans,
   ctaLabel = "Invest Now",
   showScheduleConsultation = false,
+  service = "insurance",
 }: ProtectionPlansAccordionProps) {
   const groupId = useId();
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -219,6 +223,7 @@ export default function ProtectionPlansAccordion({
             onActivate={handleActivate}
             onDeactivate={handleDeactivate}
             onToggle={handleToggle}
+            service={service}
           />
         );
       })}

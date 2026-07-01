@@ -143,7 +143,7 @@ export default function GeneralInsurancePlansAccordion({
 
                 <div className="mt-5 flex flex-wrap items-center gap-2 lg:flex-nowrap lg:gap-3">
                   <Link
-                    href={scheduleConsultation.href}
+                    href={`/invest-now?title=${encodeURIComponent(plan.title)}&tenure=${encodeURIComponent(plan.tenure || "")}&minAmount=${encodeURIComponent(plan.minAmount || "")}&service=insurance`}
                     className="btn-primary inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition-transform duration-300 hover:scale-[1.02] lg:px-6 lg:py-2.5"
                     onClick={(event) => event.stopPropagation()}
                   >

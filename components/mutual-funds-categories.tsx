@@ -167,7 +167,7 @@ const FundAccordionCard = memo(function FundAccordionCard({
 
           <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
             <Link
-              href={scheduleConsultation.href}
+              href={`/invest-now?title=${encodeURIComponent(fund.title)}&tenure=${encodeURIComponent(fund.tenure)}&minAmount=${encodeURIComponent(fund.minAmount)}&service=investment`}
               className="btn-primary inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full px-5 py-2 text-xs font-semibold transition-transform duration-300 hover:scale-[1.02] sm:px-6 sm:py-2.5 sm:text-sm"
               onClick={(event) => event.stopPropagation()}
             >

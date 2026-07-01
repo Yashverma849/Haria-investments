@@ -68,6 +68,7 @@ export const footerServiceColumns: FooterServiceColumn[] = [
       { label: "Commodities Trading", href: "/commodities/trading" },
       { label: "Silver and Gold", href: "/commodities/silver-gold" },
       { label: "Other Derivatives", href: "/commodities/derivation" },
+      { label: "Research & Insights", href: "/commodities/research" },
     ],
   },
 ];
@@ -81,6 +82,7 @@ export const serviceLinks: FooterLink[] = [
   { label: "Commodity Trading", href: "/commodities/trading" },
   { label: "Gold & Silver", href: "/commodities/silver-gold" },
   { label: "Other Derivatives", href: "/commodities/derivation" },
+  { label: "Research & Insights", href: "/commodities/research" },
   { label: "Financial Health Form", href: "/financial-health" },
 ];
 
