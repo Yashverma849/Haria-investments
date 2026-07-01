@@ -101,6 +101,8 @@ export const contactInfo = {
     "https://wa.me/917738686126?text=Get%20in%20touch%20for%20more",
   email: "hariainvestments9@gmail.com",
   emailHref: "mailto:hariainvestments9@gmail.com",
+  instagram: "@hariainvestments",
+  instagramHref: "https://www.instagram.com/hariainvestments/",
 };
 
 export const googleMapsUrl =
