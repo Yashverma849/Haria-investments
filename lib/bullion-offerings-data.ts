@@ -36,22 +36,6 @@ export const bullionOfferings: BullionOffering[] = [
     image: "/images/commodities/silver-gold/bullion-futures.jpg",
   },
   {
-    id: "gold-silver-etf",
-    title: "Gold and Silver ETF",
-    badge: "Liquid",
-    description:
-      "Invest in gold and silver through Exchange Traded Funds for easy liquidity and diversification.",
-    tenure: "Flexible",
-    minAmount: "Variable",
-    benefits: [
-      "High liquidity",
-      "Easy trading",
-      "Portfolio diversification",
-      "Transparent pricing",
-    ],
-    image: "/images/commodities/silver-gold/gold-silver-etf.jpg",
-  },
-  {
     id: "gold-silver-sip",
     title: "Systematic Investment in Gold and Silver Mutual Funds",
     badge: "Disciplined",
@@ -66,5 +50,21 @@ export const bullionOfferings: BullionOffering[] = [
       "Professional fund management",
     ],
     image: "/images/commodities/silver-gold/gold-silver-sip-mutual-funds.jpg",
+  },
+  {
+    id: "gold-silver-etf",
+    title: "Gold and Silver ETF",
+    badge: "Liquid",
+    description:
+      "Invest in gold and silver through Exchange Traded Funds for easy liquidity and diversification.",
+    tenure: "Flexible",
+    minAmount: "Variable",
+    benefits: [
+      "High liquidity",
+      "Easy trading",
+      "Portfolio diversification",
+      "Transparent pricing",
+    ],
+    image: "/images/commodities/silver-gold/gold-silver-etf.jpg",
   },
 ];

@@ -112,7 +112,7 @@ const ProtectionPlanCard = memo(function ProtectionPlanCard({
           ) : null}
 
           {plan.tenure || plan.minAmount ? (
-            <dl className="mt-4 grid gap-1.5 text-sm text-white/75 sm:grid-cols-2">
+            <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1.5 text-sm text-white/75">
               {plan.tenure ? (
                 <div className="flex gap-2">
                   <dt className="shrink-0 font-medium text-white/90">Tenure:</dt>

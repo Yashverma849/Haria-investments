@@ -39,17 +39,21 @@ function FixedIncomeParallaxCard({ product }: { product: FixedIncomeProduct }) {
 
       <div className="relative z-10 flex h-full min-h-0 flex-col p-5 text-white sm:p-6">
         <div className="flex flex-col items-start gap-2">
-          <h2 className="text-fluid-service-title font-serif font-semibold tracking-tight text-white">
-            {product.title}
-          </h2>
+          <div className="min-h-[3rem] sm:min-h-[3.5rem] lg:min-h-[4rem] flex items-start">
+            <h2 className="text-fluid-service-title font-serif font-semibold tracking-tight text-white leading-tight">
+              {product.title}
+            </h2>
+          </div>
           <span className="shrink-0 rounded-full border border-white/25 bg-white/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-charcoal">
             {product.rateRange}
           </span>
         </div>
 
-        <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-white/80 sm:text-base">
-          {product.description}
-        </p>
+        <div className="mt-4 min-h-[2.5rem] sm:min-h-[3rem] lg:min-h-[3.5rem] flex items-start">
+          <p className="line-clamp-4 text-sm leading-relaxed text-white/80 sm:text-base">
+            {product.description}
+          </p>
+        </div>
 
         <dl className="mt-5 grid grid-cols-2 gap-4 border-y border-white/12 py-4">
           <div>
@@ -70,11 +74,11 @@ function FixedIncomeParallaxCard({ product }: { product: FixedIncomeProduct }) {
           </div>
         </dl>
 
-        <ul className="mt-4 flex flex-wrap gap-2">
+        <ul className="mt-4 grid grid-cols-2 gap-2">
           {product.features.map((feature) => (
             <li
               key={feature}
-              className="rounded-full border border-white/12 bg-white/8 px-3 py-1 text-xs font-medium text-white/75"
+              className="flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-2.5 py-1.5 text-center text-xs font-medium text-white/75 leading-tight"
             >
               {feature}
             </li>
