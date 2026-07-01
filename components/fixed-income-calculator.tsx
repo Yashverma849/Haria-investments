@@ -169,7 +169,7 @@ export default function FixedIncomeCalculator() {
               <button
                 type="button"
                 onClick={handleCalculate}
-                className="btn-primary mt-8 inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold"
+                className="btn-off-white-gradient mt-8 inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold"
               >
                 Calculate
               </button>

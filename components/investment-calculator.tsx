@@ -208,14 +208,21 @@ export default function InvestmentCalculator({ type }: InvestmentCalculatorProps
               <button
                 type="button"
                 onClick={handleCalculate}
-                className="btn-primary mt-8 inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold"
+                className="btn-calc mt-8 inline-flex w-full items-center justify-center rounded-full px-8 py-3 text-sm font-semibold"
               >
                 Calculate
               </button>
             </div>
 
-            <div className="flex flex-col justify-center rounded-2xl border border-charcoal/10 bg-surface p-6 md:p-8">
-              <p className="text-fluid-stat-large font-serif font-semibold text-charcoal">
+            <div
+              className="relative flex flex-col justify-center rounded-2xl border border-white/10 p-6 md:p-8 overflow-hidden text-white"
+              style={{
+                backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('/images/calculator/wmremove-transformed%20(1).png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <p className="text-fluid-stat-large font-serif font-semibold text-white">
                 <AnimatedCalculatorValue
                   value={results.primary}
                   format={results.primaryFormat}
@@ -223,14 +230,14 @@ export default function InvestmentCalculator({ type }: InvestmentCalculatorProps
                   animationKey={animationKey}
                 />
               </p>
-              <p className="mt-1 text-sm font-medium uppercase tracking-wider text-charcoal/60">
+              <p className="mt-1 text-sm font-medium uppercase tracking-wider text-white/60">
                 {config.primaryLabel}
               </p>
 
-              <dl className="mt-8 space-y-4 border-t border-charcoal/10 pt-6">
+              <dl className="mt-8 space-y-4 border-t border-white/10 pt-6">
                 <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-sm text-charcoal/70">{config.secondaryLabel}</dt>
-                  <dd className="text-fluid-stat font-semibold text-charcoal">
+                  <dt className="text-sm text-white/70">{config.secondaryLabel}</dt>
+                  <dd className="text-fluid-stat font-semibold text-white">
                     <AnimatedCalculatorValue
                       value={results.secondary}
                       format="currency"
@@ -241,8 +248,8 @@ export default function InvestmentCalculator({ type }: InvestmentCalculatorProps
                 </div>
                 {config.tertiaryLabel ? (
                   <div className="flex items-baseline justify-between gap-4">
-                    <dt className="text-sm text-charcoal/70">{config.tertiaryLabel}</dt>
-                    <dd className="text-fluid-stat font-semibold text-charcoal">
+                    <dt className="text-sm text-white/70">{config.tertiaryLabel}</dt>
+                    <dd className="text-fluid-stat font-semibold text-white">
                       <AnimatedCalculatorValue
                         value={results.tertiary}
                         format="currency"

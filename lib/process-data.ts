@@ -25,7 +25,6 @@ export const processSteps: ProcessStep[] = [
       "No-pressure environment focused on understanding your needs",
       "Comprehensive discussion of financial goals and timeline",
       "Review of current investment portfolio and strategies",
-      "Clear explanation of our services and potential fit",
     ],
     yourPreparation: [
       "Bring recent investment statements",

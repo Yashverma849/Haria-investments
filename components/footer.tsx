@@ -67,23 +67,23 @@ export default function Footer() {
           </FooterColumn>
 
           <FooterColumn className="sm:col-span-2 lg:col-span-2">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className="flex flex-col gap-6 sm:flex-row sm:gap-x-10 lg:gap-x-12 xl:gap-x-16">
               {footerServiceColumns.map((col, idx) => (
-                <div key={col.title} className="flex flex-col">
+                <div key={col.title} className="flex flex-col sm:min-w-[110px]">
                   {/* Desktop Title & Spacers for Alignment */}
                   {idx === 1 ? (
-                    <h3 className="hidden sm:block font-serif text-lg font-semibold leading-tight text-charcoal text-center mb-4">
+                    <h3 className="hidden sm:block font-serif text-lg font-semibold leading-tight text-charcoal mb-4">
                       Our Services
                     </h3>
                   ) : (
-                    <h3 className="hidden sm:block font-serif text-lg font-semibold leading-tight text-transparent select-none text-center mb-4" aria-hidden>
+                    <h3 className="hidden sm:block font-serif text-lg font-semibold leading-tight text-transparent select-none mb-4" aria-hidden>
                       Spacer
                     </h3>
                   )}
 
                   {/* Mobile Title */}
                   {idx === 0 && (
-                    <h3 className="block sm:hidden font-serif text-lg font-semibold leading-tight text-charcoal text-center mb-4">
+                    <h3 className="block sm:hidden font-serif text-lg font-semibold leading-tight text-charcoal mb-4">
                       Our Services
                     </h3>
                   )}

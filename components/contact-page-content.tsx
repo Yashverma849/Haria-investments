@@ -132,7 +132,7 @@ export default function ContactPageContent() {
                     setMessage("");
                     setIsSubmitted(false);
                   }}
-                  className="btn-primary rounded-full px-8 py-3 text-sm font-semibold cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="btn-dark rounded-full px-8 py-3 text-sm font-semibold cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Send Another Message
                 </button>
@@ -274,7 +274,7 @@ export default function ContactPageContent() {
                     <button
                       type="submit"
                       suppressHydrationWarning
-                      className="btn-primary w-full inline-flex items-center justify-center rounded-full py-3.5 text-sm font-semibold cursor-pointer transition-transform hover:scale-[1.01] active:scale-[0.99]"
+                      className="btn-dark w-full inline-flex items-center justify-center rounded-full py-3.5 text-sm font-semibold cursor-pointer transition-transform hover:scale-[1.01] active:scale-[0.99]"
                     >
                       Send Message
                     </button>

@@ -42,6 +42,7 @@ export default function CalculatorDropdown() {
     >
       <button
         type="button"
+        suppressHydrationWarning
         className={`inline-flex items-center gap-1.5 rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${
           isOpen
             ? "border-white/40 bg-white/10 text-white"

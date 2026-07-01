@@ -108,7 +108,7 @@ function ProcessStepCard({
 
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-stretch sm:gap-x-5">
                 <div>
-                  <h4 className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
+                  <h4 className="process-timeline-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
                     What to Expect
                   </h4>
                   <ul className="mt-3 space-y-2">
@@ -123,7 +123,7 @@ function ProcessStepCard({
                 <div aria-hidden="true" className="process-step-card-column-divider" />
 
                 <div>
-                  <h4 className="process-timeline-mono text-[10px] font-medium uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
+                  <h4 className="process-timeline-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#a0a0a0] sm:text-xs">
                     Your Preparation
                   </h4>
                   <ul className="mt-3 space-y-2">
