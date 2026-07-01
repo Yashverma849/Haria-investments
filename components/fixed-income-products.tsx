@@ -38,7 +38,7 @@ function FixedIncomeParallaxCard({ product }: { product: FixedIncomeProduct }) {
       />
 
       <div className="relative z-10 flex h-full min-h-0 flex-col p-5 text-white sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-col items-start gap-2">
           <h2 className="text-fluid-service-title font-serif font-semibold tracking-tight text-white">
             {product.title}
           </h2>
